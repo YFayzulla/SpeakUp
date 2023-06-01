@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserCantroller;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,14 +14,9 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-//
-//Route::get('/', function () {
-//    return view('dashboard');
-//})->middleware(['auth']);
 
-Route::get('/dashboard', function () {
-    return view('admin.teachers.index');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::resource('/dashboard',UserCantroller::class)->middleware(['auth', 'verified']);
+
 
 
 //profile

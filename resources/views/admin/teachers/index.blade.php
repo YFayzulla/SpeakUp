@@ -24,7 +24,11 @@
                     <th><img src="Photo/{{$user->image}}" alt="" width="70px"></th>
                     <th class="text-center">
                         <a href="{{route('dashboard.edit',$user->id)}}" class="btn-outline-warning btn m-2">edit</a>
-                        <button href="#" type="button" class="btn-outline-danger btn m-2">del</button>
+                        <form action="{{route('dashboard.destroy',$user->id)}}" method="post" onsubmit="return confirm('are you sure');">
+                            @csrf
+                            @method('DELETE')
+                        <button type="submit" class="btn-outline-danger btn m-2">del</button>
+                        </form>
                     </th>
                 </tr>
                 @endforeach

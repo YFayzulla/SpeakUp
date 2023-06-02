@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\User;
 use Illuminate\Http\Request;
-//use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 class UserCantroller extends Controller
@@ -13,8 +13,8 @@ class UserCantroller extends Controller
      */
     public function index()
     {
-        $users=User::all();
-        return view('admin.teachers.index',compact('users'));
+        $users = User::all();
+        return view('admin.teachers.index', compact('users'));
     }
 
     /**
@@ -31,22 +31,26 @@ class UserCantroller extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'=>'required|string',
-            'tel'=>'required|string',
-            'password'=>'required|string',
-            'email'=>'required|email',
+            'name' => 'required|string',
+            'tel' => 'required|string',
+            'password' => 'required|string',
+            'email' => 'required|email',
         ]);
-        $data=new User();
-        if($request->hasfile('image')){
-            $file= $request->file('image');
-            $filename = date('YmdHi').$file->getClientOriginalName();
-            $file->move(public_path('Photo'),$filename);
-            $data['name']=$request->name;
-            $data['email']=$request->email;
-            $data['password']=$request->password;
-            $data['tel']=$request->tel;
-            $data['desc']=$request->desc;
-            $data['image']=$filename;
+        $data = new User();
+        if ($request->hasfile('image')) {
+            Storage::allFiles();
+            if (isset($user->image)) {
+                Storage::delete($user->image);
+            }
+            $file = $request->file('image');
+            $filename = date('YmdHi') . $file->getClientOriginalName();
+            $file->move(public_path('Photo'), $filename);
+            $data['name'] = $request->name;
+            $data['email'] = $request->email;
+            $data['password'] = $request->password;
+            $data['tel'] = $request->tel;
+            $data['desc'] = $request->desc;
+            $data['image'] = $filename;
         }
         $data->save();
         return redirect()->route('dashboard.index')->with('success');
@@ -65,8 +69,8 @@ class UserCantroller extends Controller
      */
     public function edit(string $id)
     {
-        $user=User::find($id);
-        return view('admin.teachers.edit',compact('user'));
+        $user = User::find($id);
+        return view('admin.teachers.edit', compact('user'));
     }
 
     /**
@@ -75,40 +79,39 @@ class UserCantroller extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'name'=>'required|string',
-            'tel'=>'required|string',
-            'password'=>'required|string',
-            'email'=>'required|email',
+            'name' => 'required|string',
+            'tel' => 'required|string',
+            'password' => 'required|string',
+            'email' => 'required|email',
         ]);
-        $data=User::find($id);
+        $data = User::find($id);
 
-        if($request->hasfile('image')){
-            $file= $request->file('image');
-            $filename = date('YmdHi').$file->getClientOriginalName();
-            $file->move(public_path('Photo'),$filename);
-            $data['name']=$request->name;
-            $data['email']=$request->email;
-            $data['password']=$request->password;
-            $data['tel']=$request->tel;
-            $data['desc']=$request->desc;
-            $data['image']=$filename;
+        if ($request->hasfile('image')) {
+            $file = $request->file('image');
+            $filename = date('YmdHi') . $file->getClientOriginalName();
+            $file->move(public_path('Photo'), $filename);
+            $data['name'] = $request->name;
+            $data['email'] = $request->email;
+            $data['password'] = $request->password;
+            $data['tel'] = $request->tel;
+            $data['desc'] = $request->desc;
+            $data['image'] = $filename;
         }
         $data->save();
         return redirect()->route('dashboard.index')->with('success');
     }
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-            $news = User::findOrFail($id);
-
-            if (isset($news->image)){
-//            dd('salom');
-                Storage::delete($news->image);
-            }
-            $news->delete();
-            return redirect()->back()->with('success');
+        $user = User::findOrFail($id);
+//        dd(Storage::allFiles());
+        if (isset($user->image)) {
+            Storage::delete($user->image);
         }
-
+        $user->delete();
+        return redirect()->back()->with('success');
+    }
 }

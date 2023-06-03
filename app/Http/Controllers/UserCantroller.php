@@ -13,7 +13,8 @@ class UserCantroller extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $name=auth()->user()->name;
+        $users = User::where('name','!=',$name)->get();
         return view('admin.teachers.index', compact('users'));
     }
 
@@ -36,23 +37,19 @@ class UserCantroller extends Controller
             'password' => 'required|string',
             'email' => 'required|email',
         ]);
-        $data = new User();
-        if ($request->hasfile('image')) {
-            Storage::allFiles();
-            if (isset($user->image)) {
-                Storage::delete($user->image);
-            }
-            $file = $request->file('image');
-            $filename = date('YmdHi') . $file->getClientOriginalName();
-            $file->move(public_path('Photo'), $filename);
-            $data['name'] = $request->name;
-            $data['email'] = $request->email;
-            $data['password'] = $request->password;
-            $data['tel'] = $request->tel;
-            $data['desc'] = $request->desc;
-            $data['image'] = $filename;
+        if ($request->hasFile('image')){
+            $name = $request->file('image')->getClientOriginalName();
+            $path = $request->file('image')->storeAs('Photo',$name);
         }
-        $data->save();
+
+        $user = User::create([
+            'name'=> $request->name,
+            'email'=> $request->email,
+            'password'=> bcrypt($request->name),
+            'tel'=> $request->tel,
+            'desc'=> $request->desc,
+            'image'=> $path ?? null,
+        ]);
         return redirect()->route('dashboard.index')->with('success');
     }
 
@@ -83,22 +80,27 @@ class UserCantroller extends Controller
             'tel' => 'required|string',
             'password' => 'required|string',
             'email' => 'required|email',
+            'image' => 'required',
         ]);
-        $data = User::find($id);
 
-        if ($request->hasfile('image')) {
-            $file = $request->file('image');
-            $filename = date('YmdHi') . $file->getClientOriginalName();
-            $file->move(public_path('Photo'), $filename);
-            $data['name'] = $request->name;
-            $data['email'] = $request->email;
-            $data['password'] = $request->password;
-            $data['tel'] = $request->tel;
-            $data['desc'] = $request->desc;
-            $data['image'] = $filename;
+        $user=User::find($id);
+        if ($request->hasFile('image')){
+            if (isset($user->image)){
+                Storage::delete($user->image);
+            }
+            $name = $request->file('image')->getClientOriginalName();
+            $path = $request->file('image')->storeAs('Photo',$name);
         }
-        $data->save();
-        return redirect()->route('dashboard.index')->with('success');
+
+
+        $user->update([
+            'name' => $request->name,
+            'tel' => $request->tel,
+            'password' => bcrypt($request->password),
+            'email' => $request->email,
+            'image' => $path ??null,
+        ]);
+        return redirect()->route('dashboard.index');
     }
 
     /**
@@ -107,7 +109,6 @@ class UserCantroller extends Controller
     public function destroy(string $id)
     {
         $user = User::findOrFail($id);
-//        dd(Storage::allFiles());
         if (isset($user->image)) {
             Storage::delete($user->image);
         }

@@ -38,5 +38,18 @@
                 @endforeach
             </table>
     </div>
+<script>
+    @if(session('success'))
+    Swal.fire({
+    icon: 'success',
+    title: '{{session('success')}}',
+    showConfirmButton: false,
+    timer: 1500
+    })
+    @endif
+
+
+
+</script>
 
 @endsection

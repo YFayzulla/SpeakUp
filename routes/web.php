@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::resource('/dashboard',UserCantroller::class)->middleware(['auth', 'verified']);
-
+Route::delete('dashboard/destroy',[UserCantroller::class,'destroy'])->middleware(['auth','verified']);
 
 
 //profile

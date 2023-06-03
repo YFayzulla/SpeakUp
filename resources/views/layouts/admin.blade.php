@@ -20,12 +20,16 @@
     <!-- Core CSS -->
     <link rel="stylesheet" href="{{asset('../assets/vendor/css/core.css')}}" class="template-customizer-core-css"/>
     <link rel="stylesheet" href="{{asset('/assets/vendor/css/theme-default.css')}}" class="template-customizer-theme-css"/>
-    <link rel="stylesheet" href="{{asset('../assets/css/demo.css')}}">
-{{--    <link rel="preconnect" href="https://fonts.bunny.net">--}}
-{{--    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />--}}
+    <link rel="stylesheet" href="{{asset('../assets/css/demo.css')}}">}
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="{{asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}"/>
-    <script src="{{asset('../assets/vendor/js/helpers.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+
+
+
+    {{--    <script src="{{asset('../assets/vendor/js/helpers.js')}}"></script> --}}
     <script src="{{asset('../assets/js/config.js')}}"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 

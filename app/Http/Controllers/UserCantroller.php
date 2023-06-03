@@ -50,7 +50,7 @@ class UserCantroller extends Controller
             'desc'=> $request->desc,
             'image'=> $path ?? null,
         ]);
-        return redirect()->route('dashboard.index')->with('success');
+        return redirect()->route('dashboard.index')->with('success','data created');
     }
 
     /**
@@ -80,7 +80,6 @@ class UserCantroller extends Controller
             'tel' => 'required|string',
             'password' => 'required|string',
             'email' => 'required|email',
-            'image' => 'required',
         ]);
 
         $user=User::find($id);
@@ -98,9 +97,9 @@ class UserCantroller extends Controller
             'tel' => $request->tel,
             'password' => bcrypt($request->password),
             'email' => $request->email,
-            'image' => $path ??null,
+            'image' => $path ?? $user->image,
         ]);
-        return redirect()->route('dashboard.index');
+        return redirect()->route('dashboard.index')->with('success','data updated');
     }
 
     /**
@@ -109,10 +108,11 @@ class UserCantroller extends Controller
     public function destroy(string $id)
     {
         $user = User::findOrFail($id);
+//        dd('salom');
         if (isset($user->image)) {
             Storage::delete($user->image);
         }
         $user->delete();
-        return redirect()->back()->with('success');
+        return redirect()->back()->with('success','data deleted');
     }
 }

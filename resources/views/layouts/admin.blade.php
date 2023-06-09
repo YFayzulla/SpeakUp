@@ -6,7 +6,7 @@
         class="light-style layout-menu-fixed"
         dir="ltr"
         data-theme="theme-default"
-        data-assets-path="{{asset('../assets/')}}"
+{{--        data-assets-path="{{asset('../assets/')}}"--}}
         data-template="vertical-menu-template-free"
 >
 <head>
@@ -195,12 +195,13 @@
                                         <div class="d-flex">
                                             <div class="flex-shrink-0 me-3">
                                                 <div class="avatar avatar-online">
-                                                    <img src="" alt
-                                                         class="w-px-40 h-auto rounded-circle"/>
+{{--                                                    @dd( auth()->user() )--}}
+{{--                                                    <img src="{{auth()->user()->image}}" alt--}}
+{{--                                                         class="w-px-40 h-auto rounded-circle"/>--}}
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
-                                                <span class="fw-semibold d-block">{{auth()->user()->name}}</span>
+                                                <span class="fw-semibold d-block">{{auth()->user()->image}}</span>
 {{--                                                <small class="text-muted">Admin</small>--}}
                                             </div>
                                         </div>
@@ -285,6 +286,17 @@
     >Upgrade to Pro</a>
 </div>
 
+<script>
+    @if(session('success'))
+    Swal.fire({
+        icon: 'success',
+        title: 'Your work has been saved',
+        showConfirmButton: false,
+        timer: 1500
+    })
+    @endif
+
+</script>
 <!-- Core JS -->
 <!-- Main JS -->
 <script src="{{asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js')}}"></script>

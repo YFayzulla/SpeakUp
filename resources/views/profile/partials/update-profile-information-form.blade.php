@@ -13,7 +13,7 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}"  enctype="multipart/form-data" class="mt-6 space-y-6">
         @csrf
         @method('patch')
 
@@ -22,7 +22,6 @@
             <x-text-input id="name" name="name" type="text" class="mt-1 m-2 block w-full bg-white text-dark" :value="old('name', $user->name)" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
-
         <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" name="email" type="email" class="mt-1 m-2 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
@@ -46,7 +45,6 @@
                 </div>
             @endif
         </div>
-
         <div class="flex items-center gap-4" >
             <button class="btn btn-primary">{{ __('Save') }}</button>
 
@@ -61,4 +59,5 @@
             @endif
         </div>
     </form>
+
 </section>

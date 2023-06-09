@@ -45,11 +45,14 @@ class UserCantroller extends Controller
         $user = User::create([
             'name'=> $request->name,
             'email'=> $request->email,
-            'password'=> bcrypt($request->name),
+            'email_verified_at' => now(),
+            'password'=> bcrypt($request->password),
             'tel'=> $request->tel,
             'desc'=> $request->desc,
             'image'=> $path ?? null,
         ]);
+//        $request->user()->save();
+
         return redirect()->route('dashboard.index')->with('success','data created');
     }
 

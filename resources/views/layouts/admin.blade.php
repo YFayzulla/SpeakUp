@@ -26,13 +26,22 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js">
 
 
         <script src="{{asset('../assets/vendor/js/helpers.js')}}"></script>
     <script src="{{asset('../assets/js/config.js')}}"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
+    <script>
+        $(document).ready(function(){
+            $("#myInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
 </head>
 
 
@@ -158,6 +167,7 @@
                         <div class="nav-item d-flex align-items-center">
                             <i class="bx bx-search fs-4 lh-0"></i>
                             <input
+                                    id="myInput"
                                     type="text"
                                     class="form-control border-0 shadow-none"
                                     placeholder="Search..."

@@ -47,9 +47,9 @@ class ProfileController extends Controller
         ]);
 //        $user=User::find($id);
         if ($request->hasFile('image')) {
-//            if (isset($user->image)) {
-//                Storage::delete($user->image);
-//            }
+            if (isset(auth()->user()->image)) {
+                Storage::delete(auth()->user()->image);
+            }
             $name = $request->file('image')->getClientOriginalName();
             $path = $request->file('image')->storeAs('Photo', $name);
         }

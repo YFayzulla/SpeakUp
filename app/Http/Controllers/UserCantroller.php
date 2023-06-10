@@ -14,7 +14,7 @@ class UserCantroller extends Controller
     public function index()
     {
         $name=auth()->user()->name;
-        $users = User::where('name','!=',$name)->get();
+        $users = User::where('name','!=',$name)->where('name','!=','admin')->get();
         return view('admin.teachers.index', compact('users'));
     }
 

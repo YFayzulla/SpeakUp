@@ -6,7 +6,7 @@
         class="light-style layout-menu-fixed"
         dir="ltr"
         data-theme="theme-default"
-{{--        data-assets-path="{{asset('../assets/')}}"--}}
+        data-assets-path="{{asset('../assets/')}}"
         data-template="vertical-menu-template-free"
 >
 <head>
@@ -29,7 +29,7 @@
 
 
 
-    {{--    <script src="{{asset('../assets/vendor/js/helpers.js')}}"></script> --}}
+        <script src="{{asset('../assets/vendor/js/helpers.js')}}"></script>
     <script src="{{asset('../assets/js/config.js')}}"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -110,8 +110,8 @@
 
             <ul class="menu-inner py-1">
                 <!-- Dashboard -->
-                <li class="menu-item active">
-                    <a href="#" class="menu-link">
+                <li class="menu-item @if(route('dashboard.index')) active @endif">
+                    <a href="{{route('dashboard.index')}}" class="menu-link">
                         <i class="menu-icon tf-icons bx bx-home-circle"></i>
                         <div data-i18n="Analytics">Dashboard</div>
                     </a>
@@ -126,7 +126,7 @@
 
                     <ul class="menu-sub">
                         <li class="menu-item">
-                            <a href="#" class="menu-link">
+                            <a href="{{route('profile.edit')}}" class="menu-link">
                                 <div data-i18n="Without menu">Without menu</div>
                             </a>
                         </li>
@@ -177,8 +177,7 @@
                                     data-size="large"
                                     data-show-count="true"
                                     aria-label="Star themeselection/sneat-html-admin-template-free on GitHub"
-                            >Star</a
-                            >
+                            >Star</a>
                         </li>
 
                         <!-- User -->
@@ -186,22 +185,25 @@
                             <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
                                data-bs-toggle="dropdown">
                                 <div class="avatar avatar-online">
+
+                                    <img src="{{asset('storage/'.auth()->user()->image)}}" alt="" width="100%"
+                                         class="w-px-200 h-auto rounded-circle"/>
 {{--                                    <img src="{{asset('../assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle"/>--}}
                                 </div>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" href="{{route('dashboard.index')}}">
+{{--')}}">--}}
                                         <div class="d-flex">
                                             <div class="flex-shrink-0 me-3">
                                                 <div class="avatar avatar-online">
-{{--                                                    @dd( auth()->user() )--}}
-{{--                                                    <img src="{{auth()->user()->image}}" alt--}}
-{{--                                                         class="w-px-40 h-auto rounded-circle"/>--}}
+                                                    <img src="{{asset('storage/'.auth()->user()->image)}}" alt="" width="100%"
+                                                         class="w-px-200 h-auto rounded-circle"/>
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
-                                                <span class="fw-semibold d-block">{{auth()->user()->image}}</span>
+                                                <span class="fw-semibold d-block">{{auth()->user()->name}}</span>
 {{--                                                <small class="text-muted">Admin</small>--}}
                                             </div>
                                         </div>

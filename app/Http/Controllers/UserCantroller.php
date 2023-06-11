@@ -13,8 +13,9 @@ class UserCantroller extends Controller
      */
     public function index()
     {
-        $users = User::where('id','!=','1')->orderby('created_at')->paginate(10);
-        return view('admin.teachers.index', compact('users'));
+        $managers = User::role('manager')->orderby('created_at')->get();
+        $teachers= User::role('teacher')->orderby('created_at')->get();
+        return view('admin.teachers.index', compact('managers','teachers'));
     }
 
     /**
@@ -41,7 +42,7 @@ class UserCantroller extends Controller
             $path = $request->file('image')->storeAs('Photo',$name);
         }
 
-        $user = User::create([
+        User::create([
             'name'=> $request->name,
             'email'=> $request->email,
             'email_verified_at' => now(),
@@ -49,7 +50,7 @@ class UserCantroller extends Controller
             'tel'=> $request->tel,
             'desc'=> $request->desc,
             'image'=> $path ?? null,
-        ])->assignRole('teacher');
+        ])->assignRole('manager');
 
         return redirect()->route('dashboard.index')->with('success','data created');
     }

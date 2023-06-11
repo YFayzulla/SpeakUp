@@ -14,7 +14,9 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+Route::get('/',function (){
+    return view('welcome');
+});
 Route::resource('/dashboard',UserCantroller::class)->middleware(['auth', 'verified']);
 Route::delete('dashboard/destroy',[UserCantroller::class,'destroy'])->middleware(['auth','verified']);
 

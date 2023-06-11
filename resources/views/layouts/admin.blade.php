@@ -20,17 +20,14 @@
     <!-- Core CSS -->
     <link rel="stylesheet" href="{{asset('../assets/vendor/css/core.css')}}" class="template-customizer-core-css"/>
     <link rel="stylesheet" href="{{asset('/assets/vendor/css/theme-default.css')}}" class="template-customizer-theme-css"/>
-    <link rel="stylesheet" href="{{asset('../assets/css/demo.css')}}">}
+    <link rel="stylesheet" href="{{asset('../assets/css/demo.css')}}">
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="{{asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}"/>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js">
-
-
-        <script src="{{asset('../assets/vendor/js/helpers.js')}}"></script>
-    <script src="{{asset('../assets/js/config.js')}}"></script>
+    <script src="{{asset('../assets/vendor/js/helpers.js')}}"></script>
+{{--    <script src="{{asset('../assets/js/config.js')}}"></script>--}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script>
         $(document).ready(function(){
@@ -114,8 +111,8 @@
             </div>
 
             <div class="menu-inner-shadow"></div>
-
             <ul class="menu-inner py-1">
+                @role('admin|manager')
                 <!-- Dashboard -->
                 <li class="menu-item @if(route('dashboard.index')) active @endif">
                     <a href="{{route('dashboard.index')}}" class="menu-link">
@@ -123,7 +120,7 @@
                         <div data-i18n="Analytics">Partners</div>
                     </a>
                 </li>
-
+                @endrole
                 <!-- Layouts -->
                 <li class="menu-item">
                     <a href="javascript:void(0);" class="menu-link menu-toggle">

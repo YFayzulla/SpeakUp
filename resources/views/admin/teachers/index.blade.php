@@ -1,9 +1,12 @@
 @extends('layouts.admin')
 @section('content')
     <div class="p-4 m-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg ">
+        @role('admin')
+
         <h1 class="text-center">Manager</h1>
 
         <a href="{{route('dashboard.create')}}" type="button" class="btn-outline-success btn m-2"> new</a>
+
         <table class="table">
             <thead>
             <tr>
@@ -47,8 +50,9 @@
                 </tr>
                 </tbody>
             @endforeach
-            {{--                {{$users->links()}}--}}
         </table>
+        @endrole
+
         <br>
         <h1 class="text-center">teachers</h1>
         <a href="{{route('extra.create')}}" type="button" class="btn-outline-success btn m-2"> new</a>

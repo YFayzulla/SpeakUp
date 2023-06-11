@@ -16,11 +16,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/',function (){return view('welcome');});
-Route::middleware('auth')->group(function () {
+Route::middleware('auth' , 'role:admin|manager' )->group(function () {
     Route::resource('/dashboard', UserCantroller::class)->middleware(['auth', 'verified']);
     Route::resource('/extra', ExtraController::class)->middleware(['auth', 'verified']);
 //    Route::delete('dashboard/destroy', [UserCantroller::class, 'destroy'])->middleware(['auth', 'verified']);
-
 });
 
 

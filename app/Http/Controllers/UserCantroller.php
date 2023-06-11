@@ -85,6 +85,7 @@ class UserCantroller extends Controller
         ]);
 
         $user=User::find($id);
+
         if ($request->hasFile('image')){
             if (isset($user->image)){
                 Storage::delete($user->image);

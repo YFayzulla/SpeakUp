@@ -37,8 +37,8 @@
 
                 <x-input-label for="n" :value="__('Take a Photo !')" class="text-dark"/>
                 <x-text-input id="n" name="image" type="file" class="mt-1 block bg-light text-dark" />
-                <button class="btn btn-outline-primary" type="submit">Save</button>
-                <a href="{{route('dashboard.index')}}" class="btn-outline-danger btn">bekor qilish</a>
+                <button class="btn btn-outline-primary m-2" type="submit">Save</button>
+                <a href="{{route('dashboard.index')}}" class="btn-outline-danger btn m-2">bekor qilish</a>
 
 
             </form>

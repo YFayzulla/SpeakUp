@@ -80,7 +80,7 @@ class UserCantroller extends Controller
         $request->validate([
             'name' => 'required|string',
             'tel' => 'required|string',
-            'password' => 'required|string',
+//            'password' => 'required|string',
             'email' => 'required|email',
         ]);
 
@@ -97,7 +97,7 @@ class UserCantroller extends Controller
         $user->update([
             'name' => $request->name,
             'tel' => $request->tel,
-            'password' => bcrypt($request->password),
+            'password' => bcrypt($request->password) ??  $user->password,
             'email' => $request->email,
             'image' => $path ?? $user->image,
         ]);

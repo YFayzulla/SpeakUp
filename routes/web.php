@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ExtraController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserCantroller;
 use Illuminate\Support\Facades\Route;
@@ -14,11 +15,13 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('/',function (){
-    return view('welcome');
+Route::get('/',function (){return view('welcome');});
+Route::middleware('auth')->group(function () {
+    Route::resource('/dashboard', UserCantroller::class)->middleware(['auth', 'verified']);
+    Route::resource('/extra', ExtraController::class)->middleware(['auth', 'verified']);
+//    Route::delete('dashboard/destroy', [UserCantroller::class, 'destroy'])->middleware(['auth', 'verified']);
+
 });
-Route::resource('/dashboard',UserCantroller::class)->middleware(['auth', 'verified']);
-Route::delete('dashboard/destroy',[UserCantroller::class,'destroy'])->middleware(['auth','verified']);
 
 
 //profile

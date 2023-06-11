@@ -13,8 +13,7 @@ class UserCantroller extends Controller
      */
     public function index()
     {
-        $name=auth()->user()->name;
-        $users = User::where('name','!=',$name)->where('name','!=','admin')->paginate(10);
+        $users = User::where('id','!=','1')->orderby('created_at')->paginate(10);
         return view('admin.teachers.index', compact('users'));
     }
 
@@ -50,8 +49,7 @@ class UserCantroller extends Controller
             'tel'=> $request->tel,
             'desc'=> $request->desc,
             'image'=> $path ?? null,
-        ]);
-//        $request->user()->save();
+        ])->assignRole('teacher');
 
         return redirect()->route('dashboard.index')->with('success','data created');
     }

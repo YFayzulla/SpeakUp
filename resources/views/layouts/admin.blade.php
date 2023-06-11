@@ -43,8 +43,6 @@
         });
     </script>
 </head>
-
-
 <body>
 <!-- Layout wrapper -->
 <div class="layout-wrapper layout-content-navbar">
@@ -122,7 +120,7 @@
                 <li class="menu-item @if(route('dashboard.index')) active @endif">
                     <a href="{{route('dashboard.index')}}" class="menu-link">
                         <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                        <div data-i18n="Analytics">Dashboard</div>
+                        <div data-i18n="Analytics">Partners</div>
                     </a>
                 </li>
 

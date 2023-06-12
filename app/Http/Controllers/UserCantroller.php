@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class UserCantroller extends Controller
@@ -17,6 +18,9 @@ class UserCantroller extends Controller
         $teachers= User::role('teacher')->orderby('created_at')->get();
         return view('admin.teachers.index', compact('managers','teachers'));
     }
+    /**
+     * Display a listing of the resource.
+     */
 
     /**
      * Show the form for creating a new resource.
@@ -66,10 +70,16 @@ class UserCantroller extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $u_id)
     {
-        $user = User::find($id);
-        return view('admin.teachers.edit', compact('user'));
+            $user = User::find($u_id);
+            if(!$user->hasRole('admin')) {
+                return view('admin.teachers.edit', compact('user'));
+            }
+            else
+                return abort(419);
+//        }
+//        return redirect()->back();
     }
 
     /**

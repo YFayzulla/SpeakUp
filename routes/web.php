@@ -15,14 +15,19 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 Route::get('/',function (){return view('welcome');});
+
+// admin panel
 Route::middleware('auth' , 'role:admin|manager' )->group(function () {
     Route::resource('/dashboard', UserCantroller::class)->middleware(['auth', 'verified']);
     Route::resource('/extra', ExtraController::class)->middleware(['auth', 'verified']);
-//    Route::delete('dashboard/destroy', [UserCantroller::class, 'destroy'])->middleware(['auth', 'verified']);
 });
 
+// user
+Route::middleware('auth',)->group(function () {
 
+});
 //profile
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

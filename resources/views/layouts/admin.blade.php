@@ -130,8 +130,8 @@
 
                     <ul class="menu-sub">
                         <li class="menu-item">
-                            <a href="{{route('profile.edit')}}" class="menu-link">
-                                <div data-i18n="Without menu">Without menu</div>
+                            <a href="{{route('extra.index')}}" class="menu-link">
+                                <div data-i18n="Without menu">students</div>
                             </a>
                         </li>
                     </ul>

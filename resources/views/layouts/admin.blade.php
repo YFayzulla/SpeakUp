@@ -19,7 +19,8 @@
     <meta name="description" content=""/>
     <!-- Core CSS -->
     <link rel="stylesheet" href="{{asset('../assets/vendor/css/core.css')}}" class="template-customizer-core-css"/>
-    <link rel="stylesheet" href="{{asset('/assets/vendor/css/theme-default.css')}}" class="template-customizer-theme-css"/>
+    <link rel="stylesheet" href="{{asset('/assets/vendor/css/theme-default.css')}}"
+          class="template-customizer-theme-css"/>
     <link rel="stylesheet" href="{{asset('../assets/css/demo.css')}}">
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="{{asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}"/>
@@ -27,13 +28,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
     <script src="{{asset('../assets/vendor/js/helpers.js')}}"></script>
-{{--    <script src="{{asset('../assets/js/config.js')}}"></script>--}}
+    {{--    <script src="{{asset('../assets/js/config.js')}}"></script>--}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script>
-        $(document).ready(function(){
-            $("#myInput").on("keyup", function() {
+        $(document).ready(function () {
+            $("#myInput").on("keyup", function () {
                 var value = $(this).val().toLowerCase();
-                $("#myTable tr").filter(function() {
+                $("#myTable tr").filter(function () {
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                 });
             });
@@ -109,12 +110,16 @@
                 {{--              <i class="bx bx-chevron-left bx-sm align-middle"></i>--}}
                 {{--            </a>--}}
             </div>
-
             <div class="menu-inner-shadow"></div>
             <ul class="menu-inner py-1">
                 @role('admin|manager')
                 <!-- Dashboard -->
-                <li class="menu-item @if(route('dashboard.index')) active @endif">
+
+                <li class="menu-header small text-uppercase">
+                    <span class="menu-header-text"><P></P>artners</span>
+                </li>
+
+                <li class="menu-item @if(Route::is('dashboard.index')) active @endif">
                     <a href="{{route('dashboard.index')}}" class="menu-link">
                         <i class="menu-icon tf-icons bx bx-home-circle"></i>
                         <div data-i18n="Analytics">Partners</div>
@@ -122,20 +127,28 @@
                 </li>
                 @endrole
                 <!-- Layouts -->
-                <li class="menu-item">
-                    <a href="javascript:void(0);" class="menu-link menu-toggle">
-                        <i class="menu-icon tf-icons bx bx-layout"></i>
-                        <div data-i18n="Layouts">Layouts</div>
-                    </a>
+                {{--                <li class="menu-item">--}}
+                {{--                    <a href="javascript:void(0);" class="menu-link menu-toggle">--}}
+                {{--                        <i class="menu-icon tf-icons bx bx-layout"></i>--}}
+                {{--                        <div data-i18n="Layouts">Layouts</div>--}}
+                {{--                    </a>--}}
 
-                    <ul class="menu-sub">
-                        <li class="menu-item">
-                            <a href="{{route('extra.index')}}" class="menu-link">
-                                <div data-i18n="Without menu">students</div>
-                            </a>
-                        </li>
-                    </ul>
+                {{--                    <ul class="menu-sub ">--}}
+                {{--                        <li class="menu-item  @if(route('student.index')) active @endif">--}}
+                {{--                            <a href="{{route('student.index')}}" class="menu-link">--}}
+                {{--                                <div data-i18n="Without menu">students</div>--}}
+                {{--                            </a>--}}
+                {{--                        </li>--}}
+                {{--                    </ul>--}}
+                {{--                </li>--}}
+
+                <li class="menu-item @if(Route::is('student.index')) active @endif">
+                    <a href="{{route('student.index')}}" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                        <div data-i18n="Analytics">Students</div>
+                    </a>
                 </li>
+
 
                 <li class="menu-header small text-uppercase">
                     <span class="menu-header-text">Pages</span>
@@ -182,23 +195,24 @@
 
                                     <img src="{{asset('storage/'.auth()->user()->image)}}" alt="" width="100%"
                                          class="w-px-200 h-auto rounded-circle"/>
-{{--                                    <img src="{{asset('../assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle"/>--}}
+                                    {{--                                    <img src="{{asset('../assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle"/>--}}
                                 </div>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
                                     <a class="dropdown-item" href="{{route('dashboard.index')}}">
-{{--')}}">--}}
+                                        {{--')}}">--}}
                                         <div class="d-flex">
                                             <div class="flex-shrink-0 me-3">
                                                 <div class="avatar avatar-online">
-                                                    <img src="{{asset('storage/'.auth()->user()->image)}}" alt="" width="100%"
+                                                    <img src="{{asset('storage/'.auth()->user()->image)}}" alt=""
+                                                         width="100%"
                                                          class="w-px-200 h-auto rounded-circle"/>
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
                                                 <span class="fw-semibold d-block">{{auth()->user()->name}}</span>
-{{--                                                <small class="text-muted">Admin</small>--}}
+                                                {{--                                                <small class="text-muted">Admin</small>--}}
                                             </div>
                                         </div>
                                     </a>
@@ -206,8 +220,8 @@
                                 <li>
                                     <div class="dropdown-divider"></div>
                                 </li>
-                              <a class="dropdown-item" href="{{route('profile.edit')}}">
-                                <i class="bx bx-cog me-2"></i>
+                                <a class="dropdown-item" href="{{route('profile.edit')}}">
+                                    <i class="bx bx-cog me-2"></i>
                                     <span class="align-middle text-dark">Profile edit</span></a>
                                 <li>
                                     <div class="dropdown-divider"></div>
@@ -216,7 +230,7 @@
                                     <form method="POST" action="{{ route('logout')}}">
                                         @csrf
                                         <a :href="route('logout')" class="dropdown-item"
-                                                         onclick="event.preventDefault();
+                                           onclick="event.preventDefault();
                                                 this.closest('form').submit();">
                                             {{ __('Log Out') }}
                                         </a>
@@ -282,23 +296,15 @@
     >Upgrade to Pro</a>
 </div>
 
-<script>
-    @if(session('success'))
-    Swal.fire({
-        icon: 'success',
-        title: 'Your work has been saved',
-        showConfirmButton: false,
-        timer: 1500
-    })
-    @endif
-
-</script>
+@yield('scripts')
 <!-- Core JS -->
 <!-- Main JS -->
 <script src="{{asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js')}}"></script>
 <script src="{{asset('../assets/vendor/js/menu.js')}}"></script>
 <script src="{{asset('../assets/js/main.js')}}"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
 
 </body>
 </html>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ExtraController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\UserCantroller;
 use Illuminate\Support\Facades\Route;
 
@@ -22,11 +23,11 @@ Route::get('/',function (){return view('welcome');});
 Route::middleware('auth' , 'role:admin|manager' )->group(function () {
     Route::resource('/dashboard', UserCantroller::class)->middleware(['auth', 'verified']);
     Route::resource('/extra', ExtraController::class)->middleware(['auth', 'verified']);
+    Route::resource('/student', StudentController::class)->middleware(['auth', 'verified']);
 });
 
 // user
 Route::middleware('auth',)->group(function () {
-
 });
 //profile
 Route::middleware('auth')->group(function () {

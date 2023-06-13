@@ -5,7 +5,7 @@
 
 
     <div class="max-w-xl">
-        <h1 class="text-center">ADD Partner</h1>
+        <h1 class="text-center">Create Student</h1>
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -17,7 +17,7 @@
         @endif
 
 
-        <form action="{{route('dashboard.store')}}" method="post" enctype="multipart/form-data">
+        <form action="{{route('student.store')}}" method="post" enctype="multipart/form-data">
         @csrf
         <x-input-label for="password text-dark" :value="__('name')" class="text-dark"/>
         <x-text-input id="current_password" name="name" type="text" class="mt-1 block w-full bg-light text-dark text-dark"/>

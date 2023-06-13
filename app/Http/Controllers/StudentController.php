@@ -4,30 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-class UserCantroller extends Controller
+class StudentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $managers = User::role('manager')->orderby('created_at')->get();
-        $teachers= User::role('teacher')->orderby('created_at')->get();
-        return view('admin.teachers.index', compact('managers','teachers'));
+        $students=User::role('user')->get();
+        return view('admin.students.index',compact('students'));
     }
-    /**
-     * Display a listing of the resource.
-     */
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return view('admin.teachers.create');
+        return view('admin.students.create');
     }
 
     /**
@@ -35,11 +30,12 @@ class UserCantroller extends Controller
      */
     public function store(Request $request)
     {
+        $students=User::role('user')->get();
         $request->validate([
             'name' => 'required|string',
             'tel' => 'required|string',
             'password' => 'required|string',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users'
         ]);
         if ($request->hasFile('image')){
             $name = $request->file('image')->getClientOriginalName();
@@ -54,10 +50,12 @@ class UserCantroller extends Controller
             'tel'=> $request->tel,
             'desc'=> $request->desc,
             'image'=> $path ?? null,
-        ])->assignRole('manager');
+        ])->assignRole('user');
 
-        return redirect()->route('dashboard.index')->with('success','User created');
-    }
+        return redirect()->route('student.index')->with('success','User created');
+
+
+}
 
     /**
      * Display the specified resource.
@@ -70,16 +68,10 @@ class UserCantroller extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $u_id)
+    public function edit(string $id)
     {
-            $user = User::find($u_id);
-            if(!$user->hasRole('admin')) {
-                return view('admin.teachers.edit', compact('user'));
-            }
-            else
-                return abort(419);
-//        }
-//        return redirect()->back();
+        $user = User::find($id);
+        return view('admin.students.edit',compact('user'));
     }
 
     /**
@@ -90,8 +82,7 @@ class UserCantroller extends Controller
         $request->validate([
             'name' => 'required|string',
             'tel' => 'required|string',
-//            'password' => 'required|string',
-            'email' => 'required|email',
+            'email' => 'required|email'
         ]);
 
         $user=User::find($id);
@@ -112,7 +103,7 @@ class UserCantroller extends Controller
             'email' => $request->email,
             'image' => $path ?? $user->image,
         ]);
-        return redirect()->route('dashboard.index')->with('success','Data updated');
+        return redirect()->route('dashboard.index')->with('success','User updated');
     }
 
     /**
@@ -121,7 +112,6 @@ class UserCantroller extends Controller
     public function destroy(string $id)
     {
         $user = User::findOrFail($id);
-//        dd('salom');
         if (isset($user->image)) {
             Storage::delete($user->image);
         }

@@ -116,7 +116,7 @@
                 <!-- Dashboard -->
 
                 <li class="menu-header small text-uppercase">
-                    <span class="menu-header-text">Partners</span>
+                    <span class="menu-header-text"><P></P>artners</span>
                 </li>
 
                 <li class="menu-item @if(Route::is('dashboard.index')) active @endif">

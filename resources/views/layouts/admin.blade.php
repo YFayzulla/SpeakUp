@@ -28,6 +28,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
     <script src="{{asset('../assets/vendor/js/helpers.js')}}"></script>
+
     {{--    <script src="{{asset('../assets/js/config.js')}}"></script>--}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script>
@@ -252,25 +253,7 @@
                         <script>
                             document.write(new Date().getFullYear());
                         </script>
-                        , made with ❤️ by
-                        <a href="https://themeselection.com" target="_blank" class="footer-link fw-bolder">ThemeSelection</a>
-                    </div>
-                    <div>
-                        <a href="https://themeselection.com/license/" class="footer-link me-4"
-                           target="_blank">License</a>
-                        <a href="https://themeselection.com/" target="_blank" class="footer-link me-4">More Themes</a>
-
-                        <a href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
-                           target="_blank" class="footer-link me-4"
-                        >Documentation</a
-                        >
-
-                        <a
-                                href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
-                                target="_blank"
-                                class="footer-link me-4"
-                        >Support</a
-                        >
+                        , made with ❤️
                     </div>
                 </div>
             </footer>
@@ -299,12 +282,12 @@
 @yield('scripts')
 <!-- Core JS -->
 <!-- Main JS -->
-<script src="{{asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js')}}"></script>
-<script src="{{asset('../assets/vendor/js/menu.js')}}"></script>
-<script src="{{asset('../assets/js/main.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
+<script src="{{asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js')}}"></script>
+<script src="{{asset('../assets/vendor/js/menu.js')}}"></script>
+<script src="{{asset('../assets/js/main.js')}}"></script>
 
 </body>
 </html>

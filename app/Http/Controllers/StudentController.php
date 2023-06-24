@@ -74,7 +74,8 @@ class StudentController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $student=User::find($id);
+        return view('admin.students.history',compact('student'));
     }
 
     /**

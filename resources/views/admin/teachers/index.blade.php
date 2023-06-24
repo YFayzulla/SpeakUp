@@ -28,7 +28,7 @@
                     <th>{{$manager->email}}</th>
                     <th>{{$manager->desc}}</th>
                     <th><img src="{{asset('storage/'.$manager->image)}}" alt="" width="70px"></th>
-                    <th class="d-flex">
+                    <th class="text-center">
                         <a href="{{route('dashboard.edit',$manager->id)}}" class="btn-outline-warning btn m-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-pencil-fill" viewBox="0 0 16 16">
@@ -77,7 +77,7 @@
                     <th>{{$teacher->email}}</th>
                     <th>{{$teacher->desc}}</th>
                     <th><img src="{{asset('storage/'.$teacher->image)}}" alt="" width="70px"></th>
-                    <th class="d-flex">
+                    <th class="text-center">
                         <a href="{{route('dashboard.edit',$teacher->id)}}" class="btn-outline-warning btn m-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-pencil-fill" viewBox="0 0 16 16">

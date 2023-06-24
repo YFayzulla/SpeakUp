@@ -8,10 +8,10 @@
             <tr>
                 <th>id</th>
                 <th>name</th>
-                <th>tel</th>
                 <th>email</th>
-                <th>desc</th>
-                <th>image</th>
+                <th>tel</th>
+                <th>Parents tel</th>
+                <th>status</th>
                 <th class="text-md-center">action</th>
             </tr>
             </thead>
@@ -20,9 +20,10 @@
                 <tr>
                     <th>{{$loop->index+1}}</th>
                     <th>{{$student->name}}</th>
-                    <th>{{$student->tel}}</th>
                     <th>{{$student->email}}</th>
-                    <th>{{$student->desc}}</th>
+                    <th>{{$student->tel}}</th>
+                    <th>{{$student->parents_tel}}</th>
+                    <th></th>
                     <th><img src="{{asset('storage/'.$student->image)}}" alt="" width="70px"></th>
                     <th class="d-flex">
 
@@ -58,7 +59,7 @@
     @if(session('success'))
     Swal.fire({
         icon: 'success',
-        title: @session('success'),
+        title: '{{@session('success')}}',
         showConfirmButton: false,
         timer: 1500
     })

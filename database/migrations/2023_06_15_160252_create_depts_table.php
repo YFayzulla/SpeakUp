@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('depts', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
+            $table->foreignId('user_id')
+                ->constrained()
+                ->onDelete('cascade');
             $table->bigInteger('monthly_payment');
             $table->bigInteger('sum')->nullable();
             $table->string('end_day');

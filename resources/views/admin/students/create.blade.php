@@ -31,10 +31,13 @@
         <x-input-label for="text" :value="__('Phone Number')" class="text-dark"/>
         <x-text-input id="text" name="tel" type="number" class="mt-1 block w-full bg-light text-dark"  />
 
-        <x-input-label for="dark" :value="__('Description')" class="text-dark"/>
-        <x-text-input id="dark" name="desc" type="text" class="mt-1 block w-full bg-light text-dark" />
+        <x-input-label for="text" :value="__('Parents phone Number')" class="text-dark"/>
+        <x-text-input id="text" name="parents_tel" type="number" class="mt-1 block w-full bg-light text-dark"  />
 
-        <x-input-label for="n" :value="__('Take a Photo !')" class="text-dark"/>
+        <x-input-label for="text" :value="__('monthly payment')" class="text-dark"/>
+        <x-text-input id="text" name="payment" value="400000" type="number" class="mt-1 block w-full bg-light text-dark"  />
+
+        <x-input-label for="n" :value="__('Take a Photo.Not necessary !')" class="text-dark"/>
         <x-text-input id="n" name="image" type="file" class="mt-1 block bg-light text-dark" />
         <button class="btn btn-primary">{{ __('Save') }}</button>
 

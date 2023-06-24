@@ -24,7 +24,9 @@ class User extends Authenticatable
         'email',
         'password',
         'tel',
+        'parents_tel',
         'desc',
+        'group_id',
         'image'
     ];
 

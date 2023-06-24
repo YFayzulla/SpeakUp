@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dept;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 class StudentController extends Controller
@@ -30,27 +32,37 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        $students=User::role('user')->get();
         $request->validate([
             'name' => 'required|string',
+            'email' => 'required|email|unique:users',
             'tel' => 'required|string',
+            'parents_tel' => 'required|string',
             'password' => 'required|string',
-            'email' => 'required|email|unique:users'
         ]);
         if ($request->hasFile('image')){
             $name = $request->file('image')->getClientOriginalName();
             $path = $request->file('image')->storeAs('Photo',$name);
         }
 
-        User::create([
+        $student=User::create([
             'name'=> $request->name,
             'email'=> $request->email,
-            'email_verified_at' => now(),
+            'email_verified_at' => Carbon::now(),
             'password'=> bcrypt($request->password),
             'tel'=> $request->tel,
-            'desc'=> $request->desc,
+            'parents_tel'=> $request->parents_tel,
+            'desc'=> $request->desc ?? null,
             'image'=> $path ?? null,
         ])->assignRole('user');
+        $debt=Dept::create([
+            'user_id'=>$student->id,
+            'monthly_payment'=>$request->payment,
+            'end_day'=>Carbon::now()->addDays(30),
+            'manager'=>auth()->user()->name,
+        ]);
+        $debt->sum += $request->payment;
+        $debt->save();
+
 
         return redirect()->route('student.index')->with('success','User created');
 
@@ -112,6 +124,7 @@ class StudentController extends Controller
     public function destroy(string $id)
     {
         $user = User::findOrFail($id);
+//        $debt = Dept::where('user_id','==',$id);
         if (isset($user->image)) {
             Storage::delete($user->image);
         }

@@ -56,11 +56,22 @@ class StudentController extends Controller
         ])->assignRole('user');
         $debt=Dept::create([
             'user_id'=>$student->id,
-            'monthly_payment'=>$request->payment,
             'end_day'=>Carbon::now()->addDays(30),
             'manager'=>auth()->user()->name,
         ]);
-        $debt->sum += $request->payment;
+
+        $debt->little +=$request->payment;
+
+        if ($request->payment == '400000'){
+            $debt->monthly_payment = $request->payment;
+        }
+        else
+            $debt->little = $request->payment;
+
+
+//        $request->payment;
+
+        $debt->sum += $debt->monthy_payment;
         $debt->save();
 
 

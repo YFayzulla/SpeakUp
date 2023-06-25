@@ -11,6 +11,7 @@
                 <th>email</th>
                 <th>tel</th>
                 <th>Parents tel</th>
+                <th>Payment</th>
                 <th>status</th>
                 <th class="text-center">actions</th>
             </tr>
@@ -23,6 +24,7 @@
                     <th>{{$student->email}}</th>
                     <th>{{$student->tel}}</th>
                     <th>{{$student->parents_tel}}</th>
+                    <td>@if($student->monthly_payment==400000) {{'toliq tolangan'}} @else {{$student->little}} @endif</td>
                     <th></th>
                     <th class="d-flex">
 

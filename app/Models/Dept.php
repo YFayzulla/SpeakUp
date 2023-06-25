@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Dept extends Model
 {
     use HasFactory;
-    protected $fillable=['user_id','monthly_payment','sum','end_day','manager'];
+    protected $fillable=['user_id','monthly_payment','little','sum','end_day','manager'];
 }

@@ -28,7 +28,7 @@ class DeptController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**

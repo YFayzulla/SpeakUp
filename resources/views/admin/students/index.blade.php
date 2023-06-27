@@ -11,7 +11,6 @@
                 <th>email</th>
                 <th>tel</th>
                 <th>Parents tel</th>
-                <th>Payment</th>
                 <th>status</th>
                 <th class="text-center">actions</th>
             </tr>
@@ -24,8 +23,7 @@
                     <th>{{$student->email}}</th>
                     <th>{{$student->tel}}</th>
                     <th>{{$student->parents_tel}}</th>
-                    <td>@if($student->monthly_payment==400000) {{'toliq tolangan'}} @else {{$student->little}} @endif</td>
-                    <th></th>
+                    <td>@if( $student -> status == 1 ) {{'toliq tolangan'}} @elseif( $student -> status == 2 ) {{'o`rtiq tolangan'}} @else {{ 'tolanmagan' }} @endif</td>
                     <th class="d-flex">
 
                         <button type="button" class="btn-outline-success btn m-2" data-bs-toggle="modal"

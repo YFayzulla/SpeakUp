@@ -27,8 +27,12 @@ class User extends Authenticatable
         'parents_tel',
         'desc',
         'group_id',
-        'image'
+        'image',
+        'status'
     ];
+    public function dept(){
+        return $this->belongsto(Dept::class,'id','==','user_id');
+    }
 
     /**
      * The attributes that should be hidden for serialization.

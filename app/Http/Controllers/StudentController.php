@@ -43,7 +43,7 @@ class StudentController extends Controller
             $name = $request->file('image')->getClientOriginalName();
             $path = $request->file('image')->storeAs('Photo',$name);
         }
-
+//
         $student=User::create([
             'name'=> $request->name,
             'email'=> $request->email,
@@ -56,23 +56,35 @@ class StudentController extends Controller
         ])->assignRole('user');
         $debt=Dept::create([
             'user_id'=>$student->id,
-            'end_day'=>Carbon::now()->addDays(30),
             'manager'=>auth()->user()->name,
         ]);
+        if ($request->payment == '400000'){
+            $student->status = 1;
+            $debt->sum += $request->payment;
+            $debt->end_day = Carbon::now()->addDays(30);
+        }
+        elseif($request->payment > 400000){
+            $debt->little = $request->payment;
+            $debt->monthly_payment = 400000-$request->payment;
+            $student->status = 2;
+            $debt->sum += $request->payment;
+            $debt->end_day = Carbon::now()->addDays(round($request->payment/33000)*2);
+        }
+        else{
+            $debt->little = $request->payment;
+            $student->status = 0;
+            $debt->monthly_payment = $request->payment;
+            $debt->sum += $request->payment;
+            $debt->end_day = Carbon::now()->addDays(round($request->payment/33000)*2);
+        }
+
+
 
         $debt->little +=$request->payment;
 
-        if ($request->payment == '400000'){
-            $debt->monthly_payment = $request->payment;
-        }
-        else
-            $debt->little = $request->payment;
 
-
-//        $request->payment;
-
-        $debt->sum += $debt->monthy_payment;
         $debt->save();
+        $student->save();
 
 
         return redirect()->route('student.index')->with('success','User created');
@@ -126,7 +138,7 @@ class StudentController extends Controller
             'tel' => $request->tel,
             'password' => bcrypt($request->password) ??  $user->password,
             'email' => $request->email,
-            'image' => $path ?? $user->image,
+            'image' => $path ?? $user->image ?? null,
         ]);
         return redirect()->route('dashboard.index')->with('success','User updated');
     }

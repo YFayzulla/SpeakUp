@@ -19,7 +19,7 @@ return new class extends Migration
             $table->bigInteger('monthly_payment')->nullable();
             $table->bigInteger('little')->nullable();
             $table->bigInteger('sum')->nullable();
-            $table->string('end_day');
+            $table->string('end_day')->nullable();
             $table->string('manager');
             $table->timestamps();
         });

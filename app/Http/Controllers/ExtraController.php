@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dept;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -75,31 +76,10 @@ class ExtraController extends Controller
      */
     public function update(Request $request, string $id)
     {
-//        $request->validate([
-//            'name' => 'required|string',
-//            'tel' => 'required|string',
-//            'password' => 'required|string',
-//            'email' => 'required|email',
-//        ]);
-//
-//        $user=User::find($id);
-//        if ($request->hasFile('image')){
-//            if (isset($user->image)){
-//                Storage::delete($user->image);
-//            }
-//            $name = $request->file('image')->getClientOriginalName();
-//            $path = $request->file('image')->storeAs('Photo',$name);
-//        }
-//
-//
-//        $user->update([
-//            'name' => $request->name,
-//            'tel' => $request->tel,
-//            'password' => bcrypt($request->password),
-//            'email' => $request->email,
-//            'image' => $path ?? $user->image,
-//        ]);
-//        return redirect()->route('dashboard.index')->with('success','data updated');
+        $student=User::find($id);
+
+//        dd();
+        return redirect()->back()->with('success','SAVED');
     }
 
     /**

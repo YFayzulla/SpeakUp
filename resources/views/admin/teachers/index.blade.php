@@ -5,7 +5,11 @@
 
         <h1 class="text-center">Manager</h1>
 
-        <a href="{{route('dashboard.create')}}" type="button" class="btn-outline-success btn m-2"> new</a>
+        <a href="{{route('dashboard.create')}}" type="button" class="btn-outline-success btn m-2"> <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor"
+                                                                                                        class="bi bi-plus-lg" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                      d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+            </svg>  </a>
 
         <table class="table">
             <thead>
@@ -55,7 +59,11 @@
 
         <br>
         <h1 class="text-center">teachers</h1>
-        <a href="{{route('extra.create')}}" type="button" class="btn-outline-success btn m-2"> new</a>
+        <a href="{{route('extra.create')}}" type="button" class="btn-outline-success btn m-2"> <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor"
+                                                                                                    class="bi bi-plus-lg" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                      d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+            </svg></a>
         <table class="table table-hover table-striped">
             <thead class="">
             <tr>

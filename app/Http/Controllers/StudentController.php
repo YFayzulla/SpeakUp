@@ -67,7 +67,7 @@ class StudentController extends Controller
             $debt->end_day = Carbon::now()->addDays(30);
         }
         elseif($request->payment > 400000){
-            $debt->monthly_payment = 400000-$request->payment;
+            $debt->monthly_payment = $request->payment-400000;
             $student->status = 2;
             $debt->sum += $request->payment;
             $debt->little = $request->payment;
@@ -138,7 +138,7 @@ class StudentController extends Controller
             'email' => $request->email,
             'image' => $path ?? $user->image ?? null,
         ]);
-        return redirect()->route('dashboard.index')->with('success','User updated');
+        return redirect()->route('student.index')->with('success','User updated');
     }
 
     /**

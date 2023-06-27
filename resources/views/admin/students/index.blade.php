@@ -23,7 +23,7 @@
                     <th>{{$student->email}}</th>
                     <th>{{$student->tel}}</th>
                     <th>{{$student->parents_tel}}</th>
-                    <td>@if( $student -> status == 1 ) {{'toliq tolangan'}} @elseif( $student -> status == 2 ) {{'o`rtiq tolangan'}} @else {{ 'tolanmagan' }} @endif</td>
+                    <td>@if( $student -> status == 1 ) {{('toliq tolangan')}} @elseif( $student -> status == 2 ) {{'o`rtiq tolangan'}} @else {{ 'tolanmagan' }} @endif</td>
                     <th class="d-flex">
 
                         <button type="button" class="btn-outline-success btn m-2" data-bs-toggle="modal"

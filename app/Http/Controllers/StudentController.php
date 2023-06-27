@@ -15,7 +15,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $students=User::role('user')->get();
+        $students=User::role('user')->orderby('status')->orderby('created_at')->get();
         return view('admin.students.index',compact('students'));
     }
 
@@ -54,34 +54,32 @@ class StudentController extends Controller
             'desc'=> $request->desc ?? null,
             'image'=> $path ?? null,
         ])->assignRole('user');
+
         $debt=Dept::create([
             'user_id'=>$student->id,
             'manager'=>auth()->user()->name,
         ]);
-        if ($request->payment == '400000'){
+
+        if ($request->payment == 400000){
             $student->status = 1;
             $debt->sum += $request->payment;
+            $debt->little = $request->payment;
             $debt->end_day = Carbon::now()->addDays(30);
         }
         elseif($request->payment > 400000){
-            $debt->little = $request->payment;
             $debt->monthly_payment = 400000-$request->payment;
             $student->status = 2;
             $debt->sum += $request->payment;
+            $debt->little = $request->payment;
             $debt->end_day = Carbon::now()->addDays(round($request->payment/33000)*2);
         }
         else{
-            $debt->little = $request->payment;
             $student->status = 0;
             $debt->monthly_payment = $request->payment;
-            $debt->sum += $request->payment;
+            $debt->sum = $request->payment;
+            $debt->little = $request->payment;
             $debt->end_day = Carbon::now()->addDays(round($request->payment/33000)*2);
         }
-
-
-
-        $debt->little +=$request->payment;
-
 
         $debt->save();
         $student->save();

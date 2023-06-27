@@ -1,5 +1,6 @@
 @extends('layouts.admin')
 @section('content')
+    <?php $i=1 ?>
     <div class="p-4 m-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
         <center>
             <img style="margin:19px" src="{{asset('storage/'.$student->photo)}}"  width="150px" alt="null">
@@ -25,9 +26,7 @@
             <tbody>
             @foreach($dept as $student)
                 <tr>
-                    <th>@if($student->monthly_payment !== 400000)
-                            {{ $loop->index+1 .'-oy' }}
-                        @else {{'s'}} @endif</th>
+                    <th>{{ $i .'-oy' }}</th>
                     <td>{{$student->manager}}</td>
                     <td>@if($student->little==null)
                             {{'toliq tolangan'}}
@@ -40,7 +39,9 @@
                     <td rowspan="auto">{{$student->sum}}</td>
                     @endrole
                 </tr>
-
+                @if($student->monthly_payment === 0)
+                 {{$i+=1}}
+                @endif
             @endforeach
             </tbody>
         </table>

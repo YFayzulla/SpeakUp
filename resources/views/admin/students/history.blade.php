@@ -13,7 +13,7 @@
         <table class="table">
             <thead>
             <tr>
-                <th>month</th>
+{{--                <th>month</th>--}}
                 <th>registrar</th>
                 <th>paid</th>
                 <th>paid day</th>
@@ -25,7 +25,7 @@
             <tbody>
             @foreach($dept as $d)
                 <tr>
-                    <th>{{ $i .'-oy' }}</th>
+{{--                    <th>{{ $i .'-oy' }}</th>--}}
                     <td>{{$d->manager}}</td>
                     <th>{{$d->sum}}</th>
                     <td>{{$d->created_at}}</td>
@@ -35,9 +35,9 @@
                             echo $date->format('Y-m-d');
                             ?></td>
                 </tr>
-                @if($d->monthly_payment === 0)
-                    {{$i+=1}}
-                @endif
+{{--                @if($d->monthly_payment === 0)--}}
+{{--                    {{$i+=1}}--}}
+{{--                @endif--}}
             @endforeach
             </tbody>
         </table>

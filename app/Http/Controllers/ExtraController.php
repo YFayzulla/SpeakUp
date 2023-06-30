@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dept;
+use App\Models\MonthlyPayment;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -76,13 +77,19 @@ class ExtraController extends Controller
      */
     public function update(Request $request, string $id)
     {
-//        $student=User::find($id);
-//        $dept=Dept::create([
-//            'user_id'=>$id,
-//            'little'=>$request->payment,
-//            'sum'=>$request->payment,
-//        ]);
-//
+        $student=User::find($id);
+        $dept=Dept::create([
+            'user_id'=>$id,
+            'sum'=>$request->payment,
+            'manager'=>auth()->user()->name,
+        ]);
+
+        $monthly_payment=MonthlyPayment::find(1);
+        $daily=round($monthly_payment->sum / 30);
+        $student->day = round($request->sum / $daily);
+        $student->save();
+
+
         return redirect()->back()->with('success','SAVED');
     }
 

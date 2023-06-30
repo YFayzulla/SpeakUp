@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class MonthlyPayment extends Model
 {
     use HasFactory;
+    protected $fillable=['sum'];
 }

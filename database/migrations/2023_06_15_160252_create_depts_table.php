@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')
                 ->constrained()
                 ->onDelete('cascade');
-            $table->bigInteger('sum');
+            $table->bigInteger('sum')->nullable();
             $table->string('manager');
             $table->timestamps();
         });

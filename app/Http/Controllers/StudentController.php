@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dept;
+use App\Models\MonthlyPayment;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -15,6 +16,7 @@ class StudentController extends Controller
      */
     public function index()
     {
+
         $students=User::role('user')->orderby('status')->orderby('created_at')->get();
         return view('admin.students.index',compact('students'));
     }
@@ -32,6 +34,9 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
+        $monthly_payment=MonthlyPayment::find(1);
+        $daily=round($monthly_payment->sum / 30);
+
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
@@ -53,10 +58,17 @@ class StudentController extends Controller
             'desc'=> $request->desc ?? null,
             'image'=> $path ?? null,
         ])->assignRole('user');
+        $pay=Dept::create([
+           'manager'=>auth()->user()->name,
+            'user_id'=>$student->id,
+            'sum'=>$request->sum
+        ]);
 
+        $student->day = round($request->sum / $daily);
 
+        $student->save();
 
-    return redirect()->route('student.index')->with('success','User created');
+        return redirect()->route('student.index')->with('success','User created');
 
 
 }

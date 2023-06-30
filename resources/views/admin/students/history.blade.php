@@ -15,27 +15,27 @@
             <tr>
                 <th>month</th>
                 <th>registrar</th>
-                <th>-s sum +s</th>
+                <th>paid</th>
                 <th>paid day</th>
                 <th>end day</th>
                 @role('admin')
-                <th>summa</th>
                 @endrole
             </tr>
             </thead>
             <tbody>
-            @foreach($dept as $student)
+            @foreach($dept as $d)
                 <tr>
                     <th>{{ $i .'-oy' }}</th>
-                    <td>{{$student->manager}}</td>
-                    <td>{{$student->little}}</td>
-                    <td>{{$student->created_at}}</td>
-                    <td>{{$student->end_day}}</td>
-                    @role('admin')
-                    <td rowspan="auto">{{$student->sum}}</td>
-                    @endrole
+                    <td>{{$d->manager}}</td>
+                    <th>{{$d->sum}}</th>
+                    <td>{{$d->created_at}}</td>
+                    <td><?php
+                            $date = new DateTime();
+                            $date->modify("$student->day days");
+                            echo $date->format('Y-m-d');
+                            ?></td>
                 </tr>
-                @if($student->monthly_payment === 0)
+                @if($d->monthly_payment === 0)
                     {{$i+=1}}
                 @endif
             @endforeach

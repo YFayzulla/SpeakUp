@@ -16,10 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')
                 ->constrained()
                 ->onDelete('cascade');
-            $table->bigInteger('monthly_payment')->nullable();
-            $table->bigInteger('little')->nullable();
-            $table->bigInteger('sum')->nullable();
-            $table->string('end_day')->nullable();
+            $table->bigInteger('sum');
             $table->string('manager');
             $table->timestamps();
         });

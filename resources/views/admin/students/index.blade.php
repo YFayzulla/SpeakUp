@@ -17,7 +17,6 @@
                 <th>email</th>
                 <th>tel</th>
                 <th>Parents tel</th>
-                <th>status</th>
                 <th class="text-center">actions</th>
             </tr>
             </thead>
@@ -29,13 +28,6 @@
                     <th>{{$student->email}}</th>
                     <th>{{$student->tel}}</th>
                     <th>{{$student->parents_tel}}</th>
-                    <td>@if( $student -> status == 1 )
-                            {{('toliq tolangan')}}
-                        @elseif( $student -> status == 2 )
-                            {{'o`rtiq tolangan'}}
-                        @else
-                            {{ 'tolanmagan' }}
-                        @endif</td>
                     <th class="d-flex">
 
                         <button type="button" class="btn-outline-success btn m-2" data-bs-toggle="modal"
@@ -49,30 +41,30 @@
                             </svg>
                         </button>
                         {{--Modal--}}
-                        <div class="modal fade" id="exampleModal{{$student->id}}" tabindex="-1"
-                             aria-labelledby="exampleModalLabel"
-                             aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="exampleModalLabel">New pay</h1>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="{{route('extra.update',$student->id)}}" method="post">
-                                            @csrf
-                                            @method('PUT')
-                                            <label for="recipient-name"
-                                                   class="col-form-label">{{$student->name}}</label>
-                                            <div class="mb-3 d-flex">
-                                                <input type="number" class="form" value="400000" name="payment"
-                                                       id="recipient-name">
-                                                <button type="submit" class="btn btn-outline-primary m-2">save</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+{{--                        <div class="modal fade" id="exampleModal{{$student->id}}" tabindex="-1"--}}
+{{--                             aria-labelledby="exampleModalLabel"--}}
+{{--                             aria-hidden="true">--}}
+{{--                            <div class="modal-dialog">--}}
+{{--                                <div class="modal-content">--}}
+{{--                                    <div class="modal-header">--}}
+{{--                                        <h1 class="modal-title fs-5" id="exampleModalLabel">New pay</h1>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="modal-body">--}}
+{{--                                        <form action="{{route('extra.update',$student->id)}}" method="post">--}}
+{{--                                            @csrf--}}
+{{--                                            @method('PUT')--}}
+{{--                                            <label for="recipient-name"--}}
+{{--                                                   class="col-form-label">{{$student->name}}</label>--}}
+{{--                                            <div class="mb-3 d-flex">--}}
+{{--                                                <input type="number" class="form" value="400000" name="payment"--}}
+{{--                                                       id="recipient-name">--}}
+{{--                                                <button type="submit" class="btn btn-outline-primary m-2">save</button>--}}
+{{--                                            </div>--}}
+{{--                                        </form>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
 
                         <a href="{{route('student.show',$student->id)}}" class="btn-outline-warning btn m-2"
                            style="float:right">
@@ -83,7 +75,6 @@
                                 <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
                             </svg>
                         </a>
-
 
                         <a href="{{route('student.edit',$student->id)}}" class="btn-outline-primary btn m-2"
                            style="float:right">

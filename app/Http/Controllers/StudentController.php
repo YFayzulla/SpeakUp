@@ -39,11 +39,10 @@ class StudentController extends Controller
             'parents_tel' => 'required|string',
             'password' => 'required|string',
         ]);
-        if ($request->hasFile('image')){
+        if ($request->hasFile('image')) {
             $name = $request->file('image')->getClientOriginalName();
-            $path = $request->file('image')->storeAs('Photo',$name);
+            $path = $request->file('image')->storeAs('Photo', $name);
         }
-//
         $student=User::create([
             'name'=> $request->name,
             'email'=> $request->email,
@@ -55,37 +54,9 @@ class StudentController extends Controller
             'image'=> $path ?? null,
         ])->assignRole('user');
 
-        $debt=Dept::create([
-            'user_id'=>$student->id,
-            'manager'=>auth()->user()->name,
-        ]);
-
-        if ($request->payment == 400000){
-            $student->status = 1;
-            $debt->sum += $request->payment;
-            $debt->little = $request->payment;
-            $debt->end_day = Carbon::now()->addDays(30);
-        }
-        elseif($request->payment > 400000){
-            $debt->monthly_payment = $request->payment-400000;
-            $student->status = 2;
-            $debt->sum += $request->payment;
-            $debt->little = $request->payment;
-            $debt->end_day = Carbon::now()->addDays(round($request->payment/33000)*2);
-        }
-        else{
-            $student->status = 0;
-            $debt->monthly_payment = $request->payment;
-            $debt->sum = $request->payment;
-            $debt->little = $request->payment;
-            $debt->end_day = Carbon::now()->addDays(round($request->payment/33000)*2);
-        }
-
-        $debt->save();
-        $student->save();
 
 
-        return redirect()->route('student.index')->with('success','User created');
+    return redirect()->route('student.index')->with('success','User created');
 
 
 }

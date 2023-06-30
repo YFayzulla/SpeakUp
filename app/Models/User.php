@@ -28,6 +28,7 @@ class User extends Authenticatable
         'desc',
         'group_id',
         'image',
+        'day',
         'status'
     ];
     public function dept(){

@@ -76,9 +76,13 @@ class ExtraController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $student=User::find($id);
-
-//        dd();
+//        $student=User::find($id);
+//        $dept=Dept::create([
+//            'user_id'=>$id,
+//            'little'=>$request->payment,
+//            'sum'=>$request->payment,
+//        ]);
+//
         return redirect()->back()->with('success','SAVED');
     }
 

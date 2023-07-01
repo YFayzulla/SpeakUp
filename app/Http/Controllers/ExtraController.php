@@ -77,19 +77,19 @@ class ExtraController extends Controller
      */
     public function update(Request $request, string $id)
     {
+
+
         $student=User::find($id);
         $dept=Dept::create([
             'user_id'=>$id,
             'sum'=>$request->payment,
             'manager'=>auth()->user()->name,
         ]);
-
         $monthly_payment=MonthlyPayment::find(1);
         $daily=round($monthly_payment->sum / 30);
-        $student->day = round($request->sum / $daily);
+
+        $student->day +=(int)(((int)$request->payment)/$daily);
         $student->save();
-
-
         return redirect()->back()->with('success','SAVED');
     }
 

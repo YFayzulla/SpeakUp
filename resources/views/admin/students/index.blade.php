@@ -17,6 +17,7 @@
                 <th>email</th>
                 <th>tel</th>
                 <th>Parents tel</th>
+                <th>End Day</th>
                 <th class="text-center">actions</th>
             </tr>
             </thead>
@@ -28,6 +29,11 @@
                     <th>{{$student->email}}</th>
                     <th>{{$student->tel}}</th>
                     <th>{{$student->parents_tel}}</th>
+                    <td><?php
+                            $date = new DateTime();
+                            $date->modify("$student->day days");
+                            echo $date->format('Y-m-d');
+                            ?></td>
                     <th class="d-flex">
 
                         <button type="button" class="btn-outline-success btn m-2" data-bs-toggle="modal"

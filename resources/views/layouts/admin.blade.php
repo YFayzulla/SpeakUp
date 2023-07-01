@@ -96,6 +96,13 @@
                     </a>
                 </li>
 
+                <li class="menu-item @if(Route::is('group.index')) active @endif">
+                    <a href="{{route('group.index')}}" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                        <div data-i18n="Analytics">Groups</div>
+                    </a>
+                </li>
+
 
                 <li class="menu-header small text-uppercase">
                     <span class="menu-header-text">Pages</span>

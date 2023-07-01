@@ -16,7 +16,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $students=User::role('user')->orderby('day')->orderby('created_at')->get();
+        $students=User::role('user')->orderby('day')->get();
         return view('admin.students.index',compact('students'));
     }
 

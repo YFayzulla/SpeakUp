@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('desc')->nullable();
             $table->string('group_id')->nullable();
             $table->string('image')->nullable();
-            $table->string('day')->nullable();
+            $table->integer('day')->nullable();
             $table->tinyInteger('status')->nullable();
             $table->rememberToken();
             $table->timestamps();

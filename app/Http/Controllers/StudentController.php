@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dept;
+use App\Models\Group;
 use App\Models\MonthlyPayment;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -25,7 +26,8 @@ class StudentController extends Controller
      */
     public function create()
     {
-        return view('admin.students.create');
+        $groups=Group::all();
+        return view('admin.students.create',compact('groups'));
     }
 
     /**
@@ -54,6 +56,7 @@ class StudentController extends Controller
             'password'=> bcrypt($request->password),
             'tel'=> $request->tel,
             'parents_tel'=> $request->parents_tel,
+            'group_id'=> $request->group_id,
             'desc'=> $request->desc ?? null,
             'image'=> $path ?? null,
         ])->assignRole('user');
@@ -88,7 +91,8 @@ class StudentController extends Controller
     public function edit(string $id)
     {
         $user = User::find($id);
-        return view('admin.students.edit',compact('user'));
+        $groups = Group::all();
+        return view('admin.students.edit',compact('user','groups'));
     }
 
     /**
@@ -118,6 +122,8 @@ class StudentController extends Controller
             'tel' => $request->tel,
             'password' => bcrypt($request->password) ??  $user->password,
             'email' => $request->email,
+            'desc' => $request->desc,
+            'group_id'=> $request->group_id,
             'image' => $path ?? $user->image ?? null,
         ]);
         return redirect()->route('student.index')->with('success','User updated');

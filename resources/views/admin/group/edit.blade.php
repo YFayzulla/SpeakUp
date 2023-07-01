@@ -1,11 +1,11 @@
 @section('content')
-@extends('layouts.admin')
+    @extends('layouts.admin')
 
     <div class="p-4 m-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg ">
-{{--@dd($user)--}}
+        {{--@dd($user)--}}
 
         <div class="max-w-xl">
-            <h1 class="text-center">Edit User</h1>
+            <h1 class="text-center">Edit Group</h1>
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
@@ -17,29 +17,36 @@
             @endif
 
 
-            <form action="{{route('dashboard.update',$user->id)}}" method="post" enctype="multipart/form-data">
+            <form action="{{route('group.update',$group->id)}}" method="post" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <x-input-label for="password text-dark" :value="__('name')" class="text-dark"/>
-                <x-text-input id="current_password" name="name" type="text" value="{{$user->name}}" class="mt-1 block w-full bg-light text-dark text-dark"/>
+                <x-text-input id="current_password" name="name" value="{{$group->name}}" type="text"
+                              class="mt-1 block w-full bg-light text-dark text-dark"/>
 
-                <x-input-label for="p" :value="__('Email')" class="text-dark"/>
-                <x-text-input id="p" name="email" type="text" value="{{$user->email}}" class="mt-1 block w-full bg-light text-dark" />
+                <x-input-label for="password text-dark" :value="__('start time')" class="text-dark"/>
+                <x-text-input id="current_password" name="start_day" type="text" value="{{$group->start_day}}"
+                              class="mt-1 block w-full bg-light text-dark text-dark"/>
 
-                <x-input-label for="a" :value="__('Password')" class="text-dark"/>
-                <x-text-input id="a" name="password" type="password"  class="mt-1 block w-full bg-light text-dark" />
+                <x-input-label for="password text-dark" :value="__('end time')" class="text-dark"/>
+                <x-text-input id="current_password" name="end_day" type="text" value="{{$group->end_day}}"
+                              class="mt-1 block w-full bg-light text-dark text-dark"/>
 
-                <x-input-label for="text" :value="__('Phone Number')" class="text-dark"/>
-                <x-text-input id="text" name="tel" type="number" value="{{$user->tel}}" class="mt-1 block w-full bg-light text-dark"  />
+                <x-input-label :value="__('day')" class="text-dark"/>
+                <select id="current_password" name="days" class="mt-1 block w-full bg-light text-dark text-dark">
+                    <option value="odd_day">odd days</option>
+                    <option value="even_day">even days</option>
+                </select>
 
-                <x-input-label for="dark" :value="__('Description')" class="text-dark"/>
-                <x-text-input id="dark" name="desc" type="text" value="{{$user->desc}}" class="mt-1 block w-full bg-light text-dark" />
+                <x-input-label for="password text-dark" :value="__('teacher')" class="text-dark"/>
+                <select id="current_password" name="teacher" type="text"
+                        class="mt-1 block w-full bg-light text-dark text-dark">
+                    @foreach($teachers as $teacher)
+                        <option value="{{$teacher->id}}">{{$teacher->name}}</option>
+                    @endforeach
+                </select>
 
-                <x-input-label for="n" :value="__('Take a Photo !')" class="text-dark"/>
-                <x-text-input id="n" name="image" type="file" class="mt-1 block bg-light text-dark" />
-                <button class="btn btn-outline-primary m-2" type="submit">Save</button>
-                <a href="{{route('dashboard.index')}}" class="btn-outline-danger btn m-2">bekor qilish</a>
-
+                <button class="btn btn-primary">{{ __('Save') }}</button>
 
             </form>
         </div>

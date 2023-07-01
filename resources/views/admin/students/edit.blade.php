@@ -35,6 +35,13 @@
                 <x-input-label for="dark" :value="__('Description')" class="text-dark"/>
                 <x-text-input id="dark" name="desc" type="text" value="{{$user->desc}}" class="mt-1 block w-full bg-light text-dark" />
 
+                <x-input-label for="dark" :value="__('group')" class="text-dark"/>
+                <select name="group_id" id="" class="mt-1 block w-full bg-light text-dark">
+                    @foreach($groups as $group)
+                    <option value="{{$group->id}}">{{$group->name}}</option>
+                    @endforeach
+                </select>
+
                 <x-input-label for="n" :value="__('Take a Photo !')" class="text-dark"/>
                 <x-text-input id="n" name="image" type="file" class="mt-1 block bg-light text-dark" />
                 <button class="btn btn-outline-primary m-2" type="submit">Save</button>

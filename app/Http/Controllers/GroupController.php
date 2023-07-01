@@ -40,11 +40,12 @@ class GroupController extends Controller
             'teacher' => 'required',
         ]);
 //        dd($request);
+//        dd($request);
         Group::create([
             'name'=>$request->name,
             'end_day'=>$request->end_day,
             'start_day'=>$request->start_day,
-            'teacher'=>$request->teacher_id,
+            'teacher_id'=>$request->teacher,
         ]);
         return redirect()->route('group.index')->with('success','success');
     }
@@ -62,15 +63,24 @@ class GroupController extends Controller
      */
     public function edit(Group $group)
     {
-        //
+        $teachers=User::role('teacher')->get();
+        return view('admin.group.edit',compact('teachers','group'));
     }
 
     /**
      * Update the specified resource in storage.
      */
+
     public function update(Request $request, Group $group)
     {
-        //
+        $group->update([
+            'name'=>$request->name,
+            'start_day'=>$request->start_day,
+            'end_day'=>$request->end_day,
+            'days'=>$request->days,
+            'teacher_id'=>$request->teacher,
+        ]);
+        return redirect()->route('group.index')->with('success');
     }
 
     /**
@@ -78,6 +88,7 @@ class GroupController extends Controller
      */
     public function destroy(Group $group)
     {
-        //
+        $group->delete();
+        return redirect()->back()->with('success');
     }
 }

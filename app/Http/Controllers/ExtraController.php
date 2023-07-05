@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dept;
+use App\Models\Group;
 use App\Models\MonthlyPayment;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 class ExtraController extends Controller
@@ -16,6 +18,7 @@ class ExtraController extends Controller
     public function index()
     {
         $students = User::role('user')->get();
+        dd($students);
         return view('admin.student.index',compact('students'));
     }
 
@@ -60,7 +63,10 @@ class ExtraController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $teachers=User::role('teacher')->get();
+        $students=User::role('user')->get();
+        $groups=Group::all();
+        return view('admin.group_student',compact('teachers','students','groups'));
     }
 
     /**
@@ -89,6 +95,11 @@ class ExtraController extends Controller
         $daily=round($monthly_payment->sum / 30);
 
         $student->day +=(int)(((int)$request->payment)/$daily);
+//
+//        $dept->end_day = Carbon::now()->addDays((int)(((int)$request->payment)/$daily));
+//
+//        $dept->save();
+
         $student->save();
         return redirect()->back()->with('success','SAVED');
     }

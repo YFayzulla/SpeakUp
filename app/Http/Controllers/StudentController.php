@@ -6,6 +6,7 @@ use App\Models\Dept;
 use App\Models\Group;
 use App\Models\MonthlyPayment;
 use App\Models\User;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -42,7 +43,7 @@ class StudentController extends Controller
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
             'tel' => 'required|string',
-            'parents_tel' => 'required|string',
+//            'parents_tel' => 'required|string',
             'password' => 'required|string',
         ]);
         if ($request->hasFile('image')) {
@@ -60,6 +61,7 @@ class StudentController extends Controller
             'desc'=> $request->desc ?? null,
             'image'=> $path ?? null,
         ])->assignRole('user');
+
         $pay=Dept::create([
            'manager'=>auth()->user()->name,
             'user_id'=>$student->id,
@@ -67,7 +69,10 @@ class StudentController extends Controller
         ]);
 
         $student->day = round($request->sum / $daily);
-
+//
+//        $pay->end_day = Carbon::now()->addDays(round($request->sum / $daily)+1);
+//
+//        $pay->save();
         $student->save();
 
         return redirect()->route('student.index')->with('success','User created');

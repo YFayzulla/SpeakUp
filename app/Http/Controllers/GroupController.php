@@ -45,6 +45,7 @@ class GroupController extends Controller
             'name'=>$request->name,
             'end_day'=>$request->end_day,
             'start_day'=>$request->start_day,
+            'days'=>$request->days,
             'teacher_id'=>$request->teacher,
         ]);
         return redirect()->route('group.index')->with('success','success');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dept;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class DeptController extends Controller
@@ -12,7 +13,7 @@ class DeptController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
@@ -34,9 +35,14 @@ class DeptController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Dept $dept)
+    public function show(string $id)
     {
-        //
+//        dd('aslom');
+        if (($id == auth()->user()->id )) {
+            $student = User::find($id);
+            $dept = Dept::where('user_id', '=', $id)->get();
+            return view('admin.students.history', compact('student', 'dept'));
+        } else abort(419);
     }
 
     /**

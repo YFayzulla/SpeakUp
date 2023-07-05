@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DeptController;
 use App\Http\Controllers\ExtraController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\ProfileController;
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/',function (){return view('welcome');});
+Route::get('history/{id}',[DeptController::class,'show' ])->name('history');
 
 // admin panel
 Route::middleware('auth' , 'role:admin|manager' )->group(function () {

@@ -16,7 +16,6 @@
                 </div>
             @endif
 
-
             <form action="{{route('dashboard.update',$user->id)}}" method="post" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
@@ -27,10 +26,10 @@
                 <x-text-input id="p" name="email" type="text" value="{{$user->email}}" class="mt-1 block w-full bg-light text-dark" />
 
                 <x-input-label for="a" :value="__('Password')" class="text-dark"/>
-                <x-text-input id="a" name="password" type="password"  class="mt-1 block w-full bg-light text-dark" />
+                <x-text-input id="a" name="password" type="password" class="mt-1 block w-full bg-light text-dark" />
 
                 <x-input-label for="text" :value="__('Phone Number')" class="text-dark"/>
-                <x-text-input id="text" name="tel" type="number" value="{{$user->tel}}" class="mt-1 block w-full bg-light text-dark"  />
+                <x-text-input id="text" name="tel" type="number" value="{{$user->tel}}"  class="mt-1 block w-full bg-light text-dark"  />
 
                 <x-input-label for="dark" :value="__('Description')" class="text-dark"/>
                 <x-text-input id="dark" name="desc" type="text" value="{{$user->desc}}" class="mt-1 block w-full bg-light text-dark" />

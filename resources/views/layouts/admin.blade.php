@@ -57,9 +57,9 @@
                 <img src="{{asset('storage/Photo/logo.png')}}" alt="">
             </div>
             <div class="menu-inner-shadow"></div>
+            @role('admin|manager')
 
             <ul class="menu-inner py-1">
-                @role('admin|manager')
                 <!-- Dashboard -->
 
                 <li class="menu-header small text-uppercase">
@@ -72,7 +72,6 @@
                         <div data-i18n="Analytics">Partners</div>
                     </a>
                 </li>
-                @endrole
                 <!-- Layouts -->
                 {{--                <li class="menu-item">--}}
                 {{--                    <a href="javascript:void(0);" class="menu-link menu-toggle">--}}
@@ -102,12 +101,20 @@
                         <div data-i18n="Analytics">Groups</div>
                     </a>
                 </li>
+                <li class="menu-item @if(Route::is('extra.show')) active @endif">
+                    <a href="{{route('extra.show',1)}}" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                        <div data-i18n="Analytics">Groups&&Students</div>
+                    </a>
+                </li>
 
 
                 <li class="menu-header small text-uppercase">
                     <span class="menu-header-text">Pages</span>
                 </li>
             </ul>
+            @endrole
+
         </aside>
         <!-- / Menu -->
 
@@ -206,7 +213,7 @@
                         <script>
                             document.write(new Date().getFullYear());
                         </script>
-                        , made with ❤️
+                        , made with speakUP  ❤️
                     </div>
                 </div>
             </footer>

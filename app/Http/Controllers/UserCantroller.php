@@ -38,7 +38,7 @@ class UserCantroller extends Controller
         $request->validate([
             'name' => 'required|string',
             'tel' => 'required|string',
-            'password' => 'required|string',
+            'password' => 'required|string|min:8',
             'email' => 'required|email',
         ]);
         if ($request->hasFile('image')){
@@ -73,6 +73,7 @@ class UserCantroller extends Controller
     public function edit(string $u_id)
     {
             $user = User::find($u_id);
+
             if(!$user->hasRole('admin')) {
                 return view('admin.teachers.edit', compact('user'));
             }
@@ -90,7 +91,7 @@ class UserCantroller extends Controller
         $request->validate([
             'name' => 'required|string',
             'tel' => 'required|string',
-//            'password' => 'required|string',
+//            'password' => 'required|string|min:8',
             'email' => 'required|email',
         ]);
 

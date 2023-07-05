@@ -1,6 +1,7 @@
 @extends('layouts.admin')
 @section('content')
     <div class="p-4 m-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg ">
+
         @role('admin')
 
         <h1 class="text-center">Manager</h1>
@@ -64,7 +65,7 @@
                 <path fill-rule="evenodd"
                       d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
             </svg></a>
-        <table class="table table-hover table-striped">
+        <table class="table  ">
             <thead class="">
             <tr>
                 <th>id</th>
@@ -85,7 +86,8 @@
                     <th>{{$teacher->email}}</th>
                     <th>{{$teacher->desc}}</th>
                     <th><img src="{{asset('storage/'.$teacher->image)}}" alt="" width="70px"></th>
-                    <th class="d-flex">
+                    <th >
+                        <div class="d-flex">
                         <a href="{{route('dashboard.edit',$teacher->id)}}" class="btn-outline-warning btn m-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-pencil-fill" viewBox="0 0 16 16">
@@ -103,6 +105,7 @@
                                 </svg>
                             </button>
                         </form>
+                        </div>
                     </th>
                 </tr>
                 </tbody>

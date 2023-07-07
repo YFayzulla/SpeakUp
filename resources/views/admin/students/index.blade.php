@@ -1,5 +1,8 @@
 @extends('layouts.admin')
 @section('content')
+    <?php
+    use Carbon\Carbon;
+        ?>
     <div class="p-4 m-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
         <h1 class="text-center">Students</h1>
         <a href="{{route('student.create')}}" type="button" class="btn-outline-success btn m-2">
@@ -29,11 +32,17 @@
                     <th>{{$student->email}}</th>
                     <th>{{$student->tel}}</th>
                     <th>{{$student->parents_tel}}</th>
-                    <td><?php
-                            $date = new DateTime();
-                            $date->modify("$student->day days");
-                            echo $date->format('Y-m-d');
-                            ?></td>
+                    <td>@php
+                            if ($student->day > 0){
+
+                                $date = Carbon::now()->addDays($student->day);
+                                echo $date;
+                            }
+                           else echo '<h2 class="text-danger">'.'qarz'.'</h2>' ;
+
+                        @endphp
+
+                    </td>
                     <th class="d-flex">
 
                         <button type="button" class="btn-outline-success btn m-2" data-bs-toggle="modal"

@@ -23,9 +23,9 @@
           class="template-customizer-theme-css"/>
     <link rel="stylesheet" href="{{asset('../assets/css/demo.css')}}">
     <!-- Vendors CSS -->
-{{--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"--}}
-{{--          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">--}}
-{{--    --}}
+    {{--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"--}}
+    {{--          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">--}}
+    {{--    --}}
     <link rel="stylesheet" href="{{asset('../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}"/>
     {{--script--}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -51,7 +51,8 @@
 <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
         <!-- Menu -->
-
+        <?php
+        ?>
         <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
             <div class="app-brand demo">
                 <img src="{{asset('storage/Photo/logo.png')}}" alt="">
@@ -101,6 +102,7 @@
                         <div data-i18n="Analytics">Groups</div>
                     </a>
                 </li>
+
                 <li class="menu-item @if(Route::is('extra.show')) active @endif">
                     <a href="{{route('extra.show',1)}}" class="menu-link">
                         <i class="menu-icon tf-icons bx bx-home-circle"></i>
@@ -108,10 +110,10 @@
                     </a>
                 </li>
 
-
                 <li class="menu-header small text-uppercase">
                     <span class="menu-header-text">Pages</span>
                 </li>
+
             </ul>
             @endrole
 
@@ -213,7 +215,7 @@
                         <script>
                             document.write(new Date().getFullYear());
                         </script>
-                        , made with speakUP  ❤️
+                        , made with speakUP ❤️
                     </div>
                 </div>
             </footer>

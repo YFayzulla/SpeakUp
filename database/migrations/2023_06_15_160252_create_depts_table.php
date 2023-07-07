@@ -18,7 +18,6 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->bigInteger('sum')->nullable();
             $table->string('manager');
-//            $table->string('end_day')->nullable();
             $table->timestamps();
         });
     }

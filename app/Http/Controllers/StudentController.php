@@ -69,11 +69,12 @@ class StudentController extends Controller
         ]);
 
         $student->day = round($request->sum / $daily);
+
 //
-//        $pay->end_day = Carbon::now()->addDays(round($request->sum / $daily)+1);
-//
-//        $pay->save();
+//        $pay->day = $pay->create_at->addDays(round($request->sum / $daily) +1);
+
         $student->save();
+//        $pay->save();//
 
         return redirect()->route('student.index')->with('success','User created');
 

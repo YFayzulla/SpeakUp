@@ -9,7 +9,7 @@ class Group extends Model
 {
     use HasFactory;
     protected $fillable=['name','start_day','end_day','days','teacher_id'];
-    public function teacher(){
-        return $this->belongsTo(User::class,'teacher_id','id');
-    }
+//    public function teacher(){
+//        return $this->belongsTo(User::class,'teacher_id','id');
+//    }
 }

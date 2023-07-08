@@ -13,7 +13,6 @@
         <table class="table">
             <thead>
             <tr>
-{{--                <th>month</th>--}}
                 <th>registrar</th>
                 <th>paid</th>
                 <th>paid day</th>
@@ -43,6 +42,5 @@
             </tbody>
 
         </table>
-        {{--        @endrole--}}
     </div>
 @endsection

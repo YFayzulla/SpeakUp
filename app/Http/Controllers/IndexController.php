@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Attendance;
 use App\Models\Group;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -32,5 +33,10 @@ class IndexController extends Controller
         $students=User::role('user')->get();
 //        dd($user);
         return view('admin.teachers.attendance',compact('user','students','groups'));
+    }
+
+    public function store(Request $request){
+//        $attendance= new Attendance();
+//        $attendance-
     }
 }

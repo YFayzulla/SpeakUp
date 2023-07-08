@@ -33,8 +33,8 @@ Route::middleware('auth' , 'role:admin|manager' )->group(function () {
 });
 
 //admin panel for attendance
-Route::middleware('auth' ,'role:admin|manager|teacher')->group(function () {
-    Route::get('attendance', [IndexController::class,'attendance'])->name('index.attendance');
+Route::middleware('auth' ,'role:teacher')->group(function () {
+    Route::get('attendance/{id}', [IndexController::class,'attendance'])->name('index.attendance');
 });
 
 // user

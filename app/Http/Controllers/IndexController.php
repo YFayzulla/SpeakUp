@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Group;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,16 +17,20 @@ class IndexController extends Controller
             if ($user -> hasRole('admin') || $user -> hasRole('manager')) {
                 return redirect()->route('dashboard.index');
             } elseif ($user->hasRole('user')) {
-                return redirect()->route('history',\auth()->user()->id);
+                return redirect()->route('history',auth()->user()->id);
             }elseif ($user->hasRole('teacher')) {
-                return redirect()->route('history',\auth()->user()->id);
+                return redirect()->route('index.attendance',auth()->user()->id);
             }
         }
     }
     public function show(){
     }
 
-    public function attendance(){
-        return view('admin.teachers.attendance');
+    public function attendance($id){
+        $user=User::find($id);
+        $groups=Group::where('teacher_id','=',$id)->get();
+        $students=User::role('user')->get();
+//        dd($user);
+        return view('admin.teachers.attendance',compact('user','students','groups'));
     }
 }

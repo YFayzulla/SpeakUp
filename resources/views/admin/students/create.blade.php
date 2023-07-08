@@ -38,7 +38,7 @@
                 <x-input-label for="dark" :value="__('group')" class="text-dark" />
                 <select name="group_id" id="" class="mt-1 block w-full bg-light text-dark">
                     @foreach($groups as $group)
-                        <option value="{{$group->id}}">{{$group->name}}</option>
+                        <option value="{{$group->id}}">{{$group->name."_".$group->days.'_'.$group->start_day.':'.$group->end_day}} </option>
                     @endforeach
                 </select>
 

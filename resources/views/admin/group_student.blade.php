@@ -7,7 +7,7 @@
                     <table class="table border-top">
                         <tr class="box-header display-block">
                             <th>
-                                <h1 class="box-title display-block float-end"><span class='pull-right text-muted fs16'>{{$group->days}} " {{$group->start_day}} to {{$group->start_day}} "</span></h1>
+                                <h1 class="box-title display-block float-end"><span class='pull-right text-muted fs16'>{{$group->days}} " {{$group->start_day}} to {{$group->end_day}} "</span></h1>
                                 <h1 class="box-title display-block "><span class='tex text-muted fs16'> </span></h1>
                                 <h1>
                                     <span class="pull-left fs16"> {{$group->name}} </span>

@@ -103,6 +103,13 @@
                     </a>
                 </li>
 
+                <li class="menu-item @if(Route::is('index.attendance')) active @endif">
+                    <a href="{{route('index.attendance')}}" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                        <div data-i18n="Analytics">attendance</div>
+                    </a>
+                </li>
+
                 <li class="menu-item @if(Route::is('extra.show')) active @endif">
                     <a href="{{route('extra.show',1)}}" class="menu-link">
                         <i class="menu-icon tf-icons bx bx-home-circle"></i>

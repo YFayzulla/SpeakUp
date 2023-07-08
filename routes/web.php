@@ -26,16 +26,15 @@ Route::get('history/{id}',[DeptController::class,'show' ])->name('history');
 
 // admin panel
 Route::middleware('auth' , 'role:admin|manager' )->group(function () {
-    Route::get('davomad', [IndexController::class,'show'])->name('index.show');
     Route::resource('/dashboard', UserCantroller::class)->middleware(['auth', 'verified']);
     Route::resource('/extra', ExtraController::class)->middleware(['auth', 'verified']);
     Route::resource('/student', StudentController::class)->middleware(['auth', 'verified']);
     Route::resource('/group', GroupController::class)->middleware(['auth', 'verified']);
 });
 
-//admin panel for teachers
-Route::middleware('auth' ,'role:teacher')->group(function () {
-    Route::get('davomat', [IndexController::class,'edit'])->name('index.edit');
+//admin panel for attendance
+Route::middleware('auth' ,'role:admin|manager|teacher')->group(function () {
+    Route::get('attendance', [IndexController::class,'attendance'])->name('index.attendance');
 });
 
 // user

@@ -1,6 +1,8 @@
 @extends('layouts.admin')
 @section('content')
-    <?php $i = 1 ?>
+    <?php
+    use Carbon\Carbon;
+    ?>
     <div class="p-4 m-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
         <center>
             <img style="" class="card-img-right" src="{{asset('storage/'.$student->image)}}" width="150px" alt="null">
@@ -15,6 +17,7 @@
                 <th>registrar</th>
                 <th>paid</th>
                 <th>paid day</th>
+                <th>status</th>
             </tr>
             </thead>
             <tbody>
@@ -23,10 +26,22 @@
                     <td>{{$d->manager}}</td>
                     <th>{{$d->sum}}</th>
                     <td>{{$d->created_at}}</td>
-                    @endforeach
-                    <th colspan="2"></th>
+            @endforeach
+                    <th>
+                        <?php
+                        if ($student->day > 0) {
+
+                            $date = Carbon::now()->addDays($student->day);
+                            echo $date;
+                        }
+                        else echo '<h2 class="text-danger">'.'qarz'.'</h2>' ;
+
+                        ?>
+                    </th>
                 </tr>
+
             </tbody>
+
         </table>
         {{--        @endrole--}}
     </div>

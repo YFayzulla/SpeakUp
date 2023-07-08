@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class IndexController extends Controller
 {
@@ -16,14 +17,15 @@ class IndexController extends Controller
                 return redirect()->route('dashboard.index');
             } elseif ($user->hasRole('user')) {
                 return redirect()->route('history',\auth()->user()->id);
+            }elseif ($user->hasRole('teacher')) {
+                return redirect()->route('history',\auth()->user()->id);
             }
         }
     }
     public function show(){
     }
-    public function edit(){
-        $teacher=auth()->user();
-        $students = DB::select('SELECT * FROM users WHERE group_id = ?', [$teacher->id]);
-        return view('admin.teachers.davomad');
+
+    public function attendance(){
+        return view('admin.teachers.attendance');
     }
 }

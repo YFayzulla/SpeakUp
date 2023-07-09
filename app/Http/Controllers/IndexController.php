@@ -28,6 +28,7 @@ class IndexController extends Controller
     }
 
     public function attendance($id){
+
         $user=User::find($id);
         $groups=Group::where('teacher_id','=',$id)->get();
         $students=User::role('user')->get();
@@ -36,7 +37,25 @@ class IndexController extends Controller
     }
 
     public function store(Request $request){
-//        $attendance= new Attendance();
-//        $attendance-
+        $attendance= new Attendance();
+//        dd('salk');
+        foreach($request->status as $status=>$status){
+            $attendance['user_id'] = $status;
+            $attendance['group_id'] = $request->group_id;
+//            $attendance['date'] = now();
+            $attendance['status'] = 1 ;
+        }
+        $attendance->save();
+        return redirect()->back()->with('success');
     }
+
+    public function attendance_for_admin(){
+        $attendances= Attendance::orderby('date')->get() ;
+        return view('admin.attendance',compact('attendances'));
+    }
+    public function delete_attendance(Attendance $id){
+        $id->delete();
+        return redirect()->back()->with('success');
+    }
+
 }

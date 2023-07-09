@@ -22,7 +22,8 @@ class AttendanceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status'=>['number']
+            'status'=>['number'],
+//            'group_id'=>['number']
         ];
     }
 }

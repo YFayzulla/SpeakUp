@@ -30,6 +30,8 @@ Route::middleware('auth' , 'role:admin|manager' )->group(function () {
     Route::resource('/extra', ExtraController::class)->middleware(['auth', 'verified']);
     Route::resource('/student', StudentController::class)->middleware(['auth', 'verified']);
     Route::resource('/group', GroupController::class)->middleware(['auth', 'verified']);
+    Route::delete('attendance/delete/{id}',[IndexController::class,'delete_attendance'])->name('delete_attendance');
+    Route::get('/admin/attendance',[IndexController::class,'attendance_for_admin'])->name('attendance_for_admin');
 });
 
 //admin panel for attendance

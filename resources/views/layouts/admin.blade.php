@@ -108,6 +108,11 @@
                         <i class="menu-icon tf-icons bx bx-home-circle"></i>
                         <div data-i18n="Analytics">Groups&&Students</div>
                     </a>
+                <li class="menu-item @if(Route::is('attendance_for_admin')) active @endif">
+                    <a href="{{route('attendance_for_admin')}}" class="menu-link">
+                        <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                        <div data-i18n="Analytics">Attendance</div>
+                    </a>
                 </li>
 
                 <li class="menu-header small text-uppercase">

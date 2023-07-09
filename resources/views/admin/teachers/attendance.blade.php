@@ -2,6 +2,7 @@
 @section('content')
 
     <div class="p-4 m-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+{{--        @dd(session('success'))--}}
 
         <center>
             <h1>Attendance</h1><br>
@@ -26,7 +27,9 @@
                 @foreach($students as $student)
                     <tbody>
                     <tr>
+
                         <th style="padding-left: 30px">{{$student->name}}</th>
+                        <input type="hidden" value="{{$group->id}}" name="group_id">
                         <th><input type="checkbox" class="float-end" style="padding-left: 20px" name="status[{{$student->id}}]" value="on" ></th>
                     </tr>
                     </tbody>
@@ -39,5 +42,16 @@
             <br>
         @endforeach
     </div>
-
+    <script>
+        @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: '{{@session('success')}}',
+            showConfirmButton: false,
+            timer: 1500
+        })
+        @endif
+    </script>
 @endsection
+
+

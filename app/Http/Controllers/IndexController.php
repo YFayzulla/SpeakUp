@@ -46,7 +46,7 @@ class IndexController extends Controller
             $attendance['status'] = 1 ;
         }
         $attendance->save();
-        return redirect()->back()->with('success');
+        return redirect()->back()->with('success','saved');
     }
 
     public function attendance_for_admin(){
@@ -55,7 +55,6 @@ class IndexController extends Controller
     }
     public function delete_attendance(Attendance $id){
         $id->delete();
-        return redirect()->back()->with('success');
+        return redirect()->back()->with('success','deleted  ');
     }
-
 }

@@ -8,6 +8,7 @@
             <th>NO</th>
             <th>name</th>
             <th>group</th>
+            <th>number</th>
             <th>date</th>
             <th>delete</th>
         </tr>
@@ -16,6 +17,7 @@
             <th>{{$loop->index+1}}</th>
             <th>{{$attendance->student->name}}</th>
             <th>{{$attendance->group->name}}</th>
+            <th>{{$attendance->student->tel}}</th>
             <th>{{$attendance->created_at}}</th>
             <th>
                 <form action="{{route('delete_attendance',$attendance->id)}}" method="post">
@@ -34,18 +36,16 @@
 </div>
 
 
-@endsection
 
-@section('scripts')
+<script>
+    @if(session('success'))
+    Swal.fire({
+        icon: 'success',
+        title: '{{@session('success')}}',
+        showConfirmButton: false,
+        timer: 1500
+    })
+    @endif
+</script>
 
-    <script>
-        @if(session('success'))
-        Swal.fire({
-            icon: 'success',
-            title: '{{@session('success')}}',
-            showConfirmButton: false,
-            timer: 1500
-        })
-        @endif
-    </script>
 @endsection

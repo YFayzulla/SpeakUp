@@ -15,5 +15,8 @@ class Attendance extends Model
     public function group(){
         return $this->belongsTo(Group::class,'group_id','id');
     }
+//    public function teacher(){
+//        return $this->belongsTo(User::class,'teacher_id','id');
+//    }
 }
 

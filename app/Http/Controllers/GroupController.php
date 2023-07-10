@@ -90,6 +90,6 @@ class GroupController extends Controller
     public function destroy(Group $group)
     {
         $group->delete();
-        return redirect()->back()->with('success');
+        return redirect()->back()->with('success','group deleted');
     }
 }

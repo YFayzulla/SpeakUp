@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attendance;
 use App\Models\Dept;
 use App\Models\Group;
 use App\Models\MonthlyPayment;
@@ -88,7 +89,8 @@ class StudentController extends Controller
     {
         $student=User::find($id);
         $dept=Dept::where('user_id','=',$id)->get();
-        return view('admin.students.history',compact('student','dept'));
+        $attendances=Attendance::where('user_id','=',$id)->get();
+        return view('admin.students.history',compact('student','dept','attendances'));
     }
 
     /**

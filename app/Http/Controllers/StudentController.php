@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Attendance;
 use App\Models\Dept;
 use App\Models\Group;
@@ -19,7 +20,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $students=User::role('user')->orderby('day')->get();
+        $students=User::role('user')->orderby('day')->paginate(20);
         return view('admin.students.index',compact('students'));
     }
 
@@ -69,7 +70,7 @@ class StudentController extends Controller
             'sum'=>$request->sum
         ]);
 
-        $student->day = round($request->sum / $daily);
+        $student->day = round($request->sum / $daily)+1;
 
 //
 //        $pay->day = $pay->create_at->addDays(round($request->sum / $daily) +1);

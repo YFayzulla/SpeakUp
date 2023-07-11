@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
     {
 //        $schedule->command('reduce:number')->daily();
         // $schedule->command('inspire')->hourly();
+        $schedule->command('decrease:value')->hourly();
     }
 
     /**

@@ -117,6 +117,9 @@
         </table>
     </div>
     {{--    @dd(session('success'))--}}
+
+
+    {{ $students->links() }}
 @endsection
 @section('scripts')
 

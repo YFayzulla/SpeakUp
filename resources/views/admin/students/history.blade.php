@@ -18,7 +18,7 @@
                 <th>registrar</th>
                 <th>paid</th>
                 <th>paid day</th>
-                <th>status</th>
+{{--                <th>status</th>--}}
             </tr>
             </thead>
             <tbody>
@@ -28,7 +28,7 @@
                     <th>{{$d->sum}}</th>
                     <td>{{$d->created_at}}</td>
                     @endforeach
-                    <th>
+                  {{--  <th>
                         <?php
                         if ($student->day > 0) {
 
@@ -37,13 +37,13 @@
                         } else echo '<h2 class="text-danger">' . 'qarz' . '</h2>';
 
                         ?>
-                    </th>
+                    </th>--}}
                 </tr>
 
             </tbody>
 
         </table>
-        <h1 class="text-center m-5">Davomad</h1>
+        <h1 class="text-center m-5">Davomat</h1>
         <table class="table">
             <tr>
                 <th>NO</th>

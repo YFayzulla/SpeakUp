@@ -91,7 +91,8 @@ class StudentController extends Controller
         $student=User::find($id);
         $dept=Dept::where('user_id','=',$id)->get();
         $attendances=Attendance::where('user_id','=',$id)->get();
-        return view('admin.students.history',compact('student','dept','attendances'));
+        $money=MonthlyPayment::find(1);
+        return view('admin.students.history',compact('student','dept','attendances','money'));
     }
 
     /**
@@ -134,6 +135,7 @@ class StudentController extends Controller
             'desc' => $request->desc,
             'group_id'=> $request->group_id,
             'image' => $path ?? $user->image ?? null,
+            'status'=>$request->status,
         ]);
         return redirect()->route('student.index')->with('success','User updated');
     }

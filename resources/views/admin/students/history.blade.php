@@ -41,8 +41,11 @@
                 </tr>
 
             </tbody>
-
+            <tfoot class="footer">
+            </tfoot>
         </table>
+        <input class="btn" value="{{round($student->day * $money->sum / 30)}} sum">
+
         <h1 class="text-center m-5">Davomat</h1>
         <table class="table">
             <tr>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dept;
+use App\Models\MonthlyPayment;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -41,7 +42,9 @@ class DeptController extends Controller
         if (($id == auth()->user()->id )) {
             $student = User::find($id);
             $dept = Dept::where('user_id', '=', $id)->get();
-            return view('admin.students.history', compact('student', 'dept'));
+            $money=MonthlyPayment::find(1);
+            dd($money);
+            return view('admin.students.history', compact('student', 'dept','money'));
         } else abort(419);
     }
 

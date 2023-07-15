@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
     {
 //        $schedule->command('reduce:number')->daily();
         // $schedule->command('inspire')->hourly();
-        $schedule->command('decrease:value')->Daily();
+        $schedule->command('decrease:value')->DailyAt('11:32');
     }
 
     /**
@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
 
 
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

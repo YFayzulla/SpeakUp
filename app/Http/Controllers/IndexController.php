@@ -37,15 +37,14 @@ class IndexController extends Controller
     }
 
     public function store(Request $request){
-        $attendance= new Attendance();
-//        dd('salk');
         foreach($request->status as $status=>$status){
+            $attendance= new Attendance();
             $attendance['user_id'] = $status;
             $attendance['group_id'] = $request->group_id;
 //            $attendance['date'] = now();
             $attendance['status'] = 1 ;
+            $attendance->save();
         }
-        $attendance->save();
         return redirect()->back()->with('success','saved');
     }
 

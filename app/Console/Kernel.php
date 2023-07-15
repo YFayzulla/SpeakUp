@@ -14,10 +14,11 @@ class Kernel extends ConsoleKernel
     {
 //        $schedule->command('reduce:number')->daily();
         // $schedule->command('inspire')->hourly();
-        $schedule->command('decrease:value')->DailyAt('11:32');
+        $schedule->command('decrease:value')->DailyAt('15:05');
     }
 
     /**
+     *
      * Register the commands for the application.
      */
     protected function commands(): void

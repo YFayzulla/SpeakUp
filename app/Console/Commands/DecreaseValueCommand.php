@@ -27,24 +27,24 @@ class DecreaseValueCommand extends Command
      */
     public function handle()
     {
-//        $rows = DB::table('users')->whereNotNull('status')->get();
-//
-//        foreach ($rows as $row) {
-//            $this->info('Skipping cron job for row ID: ' . $row->id);
-//        }
-//
-//        DB::table('users')
-//            ->whereNull('status')
-//            ->decrement('day', 1);
-//
-//        $this->info('Value decreased successfully!');
+        $rows = DB::table('users')->whereNotNull('status')->get();
 
-        $rows = DB::table('users')->role('user')->where('status', '!=', '0')->get();
         foreach ($rows as $row) {
-            $newValue = $row->day - 2;
-            DB::table('users')->where('id', $row->id)->update(['day' => $newValue]);
+            $this->info('Skipping cron job for row ID: ' . $row->id);
         }
+
+        DB::table('users')
+            ->whereNull('status')
+            ->decrement('day', 1);
+
         $this->info('Value decreased successfully!');
 
+//        $rows = DB::table('users')->role('user')->where('status', '!=', '0')->get();
+//        foreach ($rows as $row) {
+//            $newValue = $row->day - 2;
+//            DB::table('users')->where('id', $row->id)->update(['day' => $newValue]);
+//        }
+//        $this->info('Value decreased successfully!');
+//
     }
 }

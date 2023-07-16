@@ -1,8 +1,10 @@
 @extends('layouts.admin')
 @section('content')
     <?php
+
     use Carbon\Carbon;
-        ?>
+
+    ?>
     <div class="p-4 m-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
         <h1 class="text-center">Students</h1>
         <a href="{{route('student.create')}}" type="button" class="btn-outline-success btn m-2">
@@ -27,19 +29,24 @@
             @foreach($students as $student)
                 <tbody id="myTable" class="table-group-divider">
                 <tr>
-                    <th>@if($student->status === 0) <h1 class="bg-success border-1">{{$loop->index+1}} </h1> @else <h1>{{$loop->index+1}}</h1> @endif</th>
+                    <th>@if($student->status === 0)
+                            <h1 class="bg-success border-1">{{$loop->index+1}} </h1>
+                        @else
+                            <h1>{{$loop->index+1}}</h1>
+                        @endif</th>
                     <th>{{$student->name}}</th>
                     <th>{{$student->email}}</th>
                     <th>{{$student->tel}}</th>
                     <th>{{$student->parents_tel}}</th>
                     <td>@php
-                            if ($student->day > 0){
-
+                            if ($student->day > 1){
                                 $date = Carbon::now()->addDays($student->day);
                                 echo $date;
                             }
+                            elseif ($student->day == 1){
+                                echo '<h2 class="text-success">'.'END DAY'.'</h2>' ;
+                            }
                            else echo '<h2 class="text-danger">'.'qarz'.'</h2>' ;
-
                         @endphp
                     </td>
                     <th class="d-flex">

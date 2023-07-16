@@ -70,7 +70,7 @@ class StudentController extends Controller
             'sum'=>$request->sum
         ]);
 
-        $student->day = round($request->sum / $daily)+1;
+        $student->day = round($request->sum / $daily)   ;
 
 //
 //        $pay->day = $pay->create_at->addDays(round($request->sum / $daily) +1);

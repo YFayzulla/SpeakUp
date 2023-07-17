@@ -70,7 +70,7 @@
                 <li class="menu-item @if(Route::is('dashboard.index')) active @endif">
                     <a href="{{route('dashboard.index')}}" class="menu-link">
                         <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                        <div data-i18n="Analytics">Partners</div>
+                        <div data-i18n="Analytics">Teachers</div>
                     </a>
                 </li>
                 <!-- Layouts -->

@@ -30,7 +30,7 @@
                 <tbody id="myTable" class="table-group-divider">
                 <tr>
                     <th>@if($student->status === 0)
-                            <h1 class="bg-success border-1">{{$loop->index+1}} </h1>
+                            <h1 class="bg-success float-center border-2">{{$loop->index+1}} </h1>
                         @else
                             <h1>{{$loop->index+1}}</h1>
                         @endif</th>

@@ -32,6 +32,7 @@ Route::middleware('auth' , 'role:admin|manager' )->group(function () {
     Route::resource('/group', GroupController::class)->middleware(['auth', 'verified']);
     Route::delete('attendance/delete/{id}',[IndexController::class,'delete_attendance'])->name('delete_attendance');
     Route::get('/admin/attendance',[IndexController::class,'attendance_for_admin'])->name('attendance_for_admin');
+    Route::get('/sadda/{status}' ,[IndexController::class,'extra'])->name('extra.gg');
 });
 
 //admin panel for attendance

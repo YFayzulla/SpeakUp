@@ -5,15 +5,26 @@
     use Carbon\Carbon;
 
     ?>
+
+
+
     <div class="p-4 m-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
         <h1 class="text-center">Students</h1>
-        <a href="{{route('student.create')}}" type="button" class="btn-outline-success btn m-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor"
-                 class="bi bi-plus-lg" viewBox="0 0 16 16">
-                <path fill-rule="evenodd"
-                      d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
-            </svg>
-        </a>
+        <div class="d-flex">
+            <a href="{{route('student.create')}}" type="button" class="btn-outline-success btn m-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor"
+                     class="bi bi-plus-lg" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                          d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+                </svg>
+            </a>
+            <label class="switch">
+                <input type="checkbox" id="myCheckbox" @if(auth()->user()->status == 2) checked @endif >
+                <span class="slider round"></span>
+            </label>
+
+
+        </div>
         <table class="table">
             <thead>
             <tr>
@@ -29,10 +40,10 @@
             @foreach($students as $student)
                 <tbody id="myTable" class="table-group-divider">
                 <tr>
-                    <th>@if($student->status === 0)
-                            <h1 class="bg-success float-center border-2">{{$loop->index+1}} </h1>
-                        @else
+                    <th>@if($student->status === null)
                             <h1>{{$loop->index+1}}</h1>
+                        @else
+                            <h1 class="bg-success float-center border-2">{{$loop->index+1}} </h1>
                         @endif</th>
                     <th>{{$student->name}}</th>
                     <th>{{$student->email}}</th>
@@ -128,7 +139,23 @@
     {{ $students->links() }}
 @endsection
 @section('scripts')
+    <script>
+        // Get the checkbox element
+        var checkbox = document.getElementById("myCheckbox");
 
+        // Add a click event listener to the checkbox
+        checkbox.addEventListener("click", function () {
+            // Check if the checkbox is checked
+            if (checkbox.checked) {
+                // Checkbox is checked, perform action with value 1
+                window.location.href = "{{route('extra.gg',1)}}";
+            } else {
+
+                // Checkbox is unchecked, perform action with value 0
+                window.location.href = "{{route('extra.gg',0)}}";
+            }
+        });
+    </script>
     <script>
         @if(session('success'))
         Swal.fire({
@@ -139,4 +166,5 @@
         })
         @endif
     </script>
+
 @endsection

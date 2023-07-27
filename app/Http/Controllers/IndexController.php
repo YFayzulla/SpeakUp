@@ -56,4 +56,37 @@ class IndexController extends Controller
         $id->delete();
         return redirect()->back()->with('success','deleted  ');
     }
+    public function extra(Request $request){
+        $students=User::where('status'.null)->role('user')->get();
+        $admin=\auth()->user();
+
+        if ($request->status == 1){
+
+            $admin['status'] = 2;
+            $admin->save();
+            foreach ($students as $student){
+                $student['status'] = 1;
+                $student->save();
+            }
+
+
+            return redirect()->back()->with('checked','checked');
+
+        }
+
+        else{
+            $students=User::where('status','=','1')->role('user')->get();
+            $admin['status'] = 3;
+            $admin->save();
+            foreach ($students as $student){
+
+                $student['status'] = null;
+                $student->save();
+            }
+
+            return redirect()->back()->with('unchecked','unchecked');
+
+        }
+
+    }
 }

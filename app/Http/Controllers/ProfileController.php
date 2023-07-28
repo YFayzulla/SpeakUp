@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\MonthlyPayment;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -94,5 +95,11 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+    public function money(Request $request){
+        $sum=MonthlyPayment::find(1);
+        $sum['sum']=$request->sum;
+        $sum->update();
+        return Redirect::route('profile.edit')->with('success', 'payment updated');
     }
 }

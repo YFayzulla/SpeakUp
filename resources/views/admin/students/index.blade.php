@@ -1,9 +1,7 @@
 @extends('layouts.admin')
 @section('content')
     <?php
-
     use Carbon\Carbon;
-
     ?>
 
 

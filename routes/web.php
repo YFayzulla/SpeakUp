@@ -49,7 +49,8 @@ Route::middleware('auth',)->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::put('/profile', [ProfileController::class, 'save'])->name('profile.save');
+    Route::put('/profile1', [ProfileController::class, 'save'])->name('profile.save');
+    Route::put('/profile2', [ProfileController::class, 'money'])->name('profile.money');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 

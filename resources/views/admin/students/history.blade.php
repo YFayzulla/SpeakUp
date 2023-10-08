@@ -49,7 +49,7 @@
             <tfoot class="footer">
             </tfoot>
         </table>
-        <input type="button" class="btn" value="{{round($student->day * $money->sum / 30)}} sum">
+{{--        <input type="button" class="btn" value="{{round($student->day * $money->sum / 30)}} sum">--}}
 
         <h1 class="text-center m-5">Attendance</h1>
         <table class="table">

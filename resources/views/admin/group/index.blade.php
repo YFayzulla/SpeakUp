@@ -16,8 +16,6 @@
             <thead>
             <tr>
 
-
-
                 <th>id</th>
                 <th>name</th>
                 <th>start</th>

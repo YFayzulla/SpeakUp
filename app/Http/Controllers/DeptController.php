@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attendance;
 use App\Models\Dept;
 use App\Models\MonthlyPayment;
 use App\Models\User;
@@ -43,8 +44,9 @@ class DeptController extends Controller
             $student = User::find($id);
             $dept = Dept::where('user_id', '=', $id)->get();
             $money=MonthlyPayment::find(1);
-            dd($money);
-            return view('admin.students.history', compact('student', 'dept','money'));
+            $attendances=Attendance::where('user_id','=',$id)->get();
+//            dd($attendances);
+            return view('admin.students.history', compact('student', 'dept','money','attendances'));
         } else abort(419);
     }
 

@@ -3,7 +3,7 @@
     @foreach($groups as $group)
         <div class="d-flex flex-column">
             <div class="container">
-                <div class="p-4 m-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg" style="width: 450px;">
+                <div class="p-4 m-4 sm:p-8 bg-white shadow sm:rounded-lg" style="width: 450px;">
                     <table class="table border-top">
                         <tr class="box-header display-block">
                             <th>

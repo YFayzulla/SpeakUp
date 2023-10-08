@@ -1,7 +1,7 @@
 @section('content')
     @extends('layouts.admin')
 
-    <div class="p-4 m-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg ">
+    <div class="p-4 m-4 sm:p-8 bg-white shadow sm:rounded-lg ">
         {{--@dd($user)--}}
 
         <div class="max-w-xl">
@@ -36,6 +36,7 @@
                 <select id="current_password" name="days" class="mt-1 block w-full bg-light text-dark text-dark">
                     <option value="odd_day">odd days</option>
                     <option value="even_day">even days</option>
+                    <option value="even_day">every day</option>
                 </select>
 
                 <x-input-label for="password text-dark" :value="__('teacher')" class="text-dark"/>

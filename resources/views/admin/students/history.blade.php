@@ -5,7 +5,7 @@
     use Carbon\Carbon;
 
     ?>
-    <div class="p-4 m-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+    <div class="p-4 m-4 sm:p-8 bg-white shadow sm:rounded-lg">
         <center>
             <img style="" class="card-img-right" src="{{asset('storage/'.$student->image)}}" width="150px" alt="null">
         </center>
@@ -26,7 +26,12 @@
                 <tr>
                     <td>{{$d->manager}}</td>
                     <th>{{$d->sum}}</th>
-                    <td>{{$d->created_at}}</td>
+                    @if($d->sum == null)
+                    <td></td>
+                    @else
+                        <td>{{$d->created_at}}</td>
+
+                    @endif
                     @endforeach
                   {{--  <th>
                         <?php
@@ -44,9 +49,9 @@
             <tfoot class="footer">
             </tfoot>
         </table>
-        <input class="btn" value="{{round($student->day * $money->sum / 30)}} sum">
+        <input type="button" class="btn" value="{{round($student->day * $money->sum / 30)}} sum">
 
-        <h1 class="text-center m-5">Davomat</h1>
+        <h1 class="text-center m-5">Attendance</h1>
         <table class="table">
             <tr>
                 <th>NO</th>

@@ -6,7 +6,7 @@
 
 
 
-    <div class="p-4 m-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+    <div class="p-4 m-4 sm:p-8 bg-white shadow sm:rounded-lg">
         <h1 class="text-center">Students</h1>
         <div class="d-flex">
             <a href="{{route('student.create')}}" type="button" class="btn-outline-success btn m-2">

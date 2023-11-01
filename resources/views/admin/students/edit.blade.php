@@ -63,9 +63,11 @@
 
             </form>
 
-                <a href="" class=" btn btn-danger m-2 "> Clear Dept </a>
+                <a href="{{route('clear.dept',$user->id)}}" class=" btn btn-danger m-2 " style="float: right"> Clear Dept </a>
 
         </div>
     </div>
+
+
 
 @endsection

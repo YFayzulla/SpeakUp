@@ -304,6 +304,17 @@
 <!-- / Layout wrapper -->
 @yield('scripts')
 <!-- Core JS -->
+<script>
+    @if(session('success'))
+    Swal.fire({
+        icon: 'success',
+        title: '{{@session('success')}}',
+        showConfirmButton: false,
+        timer: 1500
+    })
+    @endif
+</script>
+
 <!-- Main JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"

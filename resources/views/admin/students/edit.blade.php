@@ -49,22 +49,18 @@
                 <div class="d-flex">
 
                     <x-text-input id="n" name="image" type="file" class="mt-1 block bg-light text-dark"/>
-                    <select name="status" class="select2 " style="margin-left: 40px">
+                    <select name="status" class="select2" style="margin-left: 20px">
                         <option value="{{null}}">active</option>
                         <option value="{{0}}">passive</option>
                     </select>
-
-
                 </div>
 
 
                 <button class="btn btn-outline-primary m-2" type="submit">Save</button>
-                <a href="{{route('student.index')}}" class="btn-outline-danger btn m-2">close</a>
+                <a href="{{route('student.index')}}" class="btn-outline-danger btn m-2">bekor qilish</a>
+
 
             </form>
-
-                <a href="" class=" btn btn-danger m-2 "> Clear Dept </a>
-
         </div>
     </div>
 

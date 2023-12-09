@@ -5,9 +5,12 @@
     use Carbon\Carbon;
 
     ?>
+
+{{--    @dd($student->image)--}}
+
     <div class="p-4 m-4 sm:p-8 bg-white shadow sm:rounded-lg">
         <center>
-            <img style="" class="card-img-right" src="{{asset('storage/'.$student->image)}}" width="150px" alt="null">
+            <img  src="app/{{asset($student->image)}}" style="" class="card-img-right"  width="150px" alt="asd">
         </center>
         <center>
             <h1 style="margin:19px ">{{$student->name}}</h1>

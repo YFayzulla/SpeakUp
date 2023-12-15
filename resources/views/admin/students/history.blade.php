@@ -10,7 +10,7 @@
 
     <div class="p-4 m-4 sm:p-8 bg-white shadow sm:rounded-lg">
         <center>
-            <img  src="app/{{asset($student->image)}}" style="" class="card-img-right"  width="150px" alt="asd">
+            <img  src="{{ asset("storage/".$student->image) }}" style="" class="card-img-right"  width="150px" alt="asd">
         </center>
         <center>
             <h1 style="margin:19px ">{{$student->name}}</h1>

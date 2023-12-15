@@ -89,4 +89,18 @@ class IndexController extends Controller
         }
 
     }
+
+    public function clear_dept($id)
+    {
+
+        $user=User::find($id);
+
+        $user['day'] = 0;
+
+        $user->save();
+
+//        dd($user['day']);
+
+        return redirect()->back()->with('success','success');
+    }
 }

@@ -72,11 +72,11 @@ class StudentController extends Controller
 
         $student->day = round($request->sum / $daily)   ;
 
-//
-//        $pay->day = $pay->create_at->addDays(round($request->sum / $daily) +1);
+//may there is a bug !!!
+        $pay->day = $pay->create_at->addDays(round($request->sum / $daily) +1);
 
         $student->save();
-//        $pay->save();//
+        $pay->save();
 
         return redirect()->route('student.index')->with('success','User created');
 
@@ -130,6 +130,7 @@ class StudentController extends Controller
         $user->update([
             'name' => $request->name,
             'tel' => $request->tel,
+            'parents_tel' => $request->parents_tel,
             'password' => bcrypt($request->password) ??  $user->password,
             'email' => $request->email,
             'desc' => $request->desc,

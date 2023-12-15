@@ -35,6 +35,10 @@
                 <x-text-input id="text" name="tel" type="number" value="{{$user->tel}}"
                               class="mt-1 block w-full bg-light text-dark"/>
 
+                <x-input-label for="text" :value="__('Parents Phone Number')" class="text-dark"/>
+                <x-text-input id="text" name="parents_tel" type="number" value="{{$user->parents_tel}}"
+                              class="mt-1 block w-full bg-light text-dark"/>
+
                 <x-input-label for="dark" :value="__('Description')" class="text-dark"/>
                 <x-text-input id="dark" name="desc" type="text" value="{{$user->desc}}"
                               class="mt-1 block w-full bg-light text-dark"/>

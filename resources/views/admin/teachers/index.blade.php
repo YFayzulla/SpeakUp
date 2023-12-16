@@ -20,7 +20,6 @@
                 <th>id</th>
                 <th>name</th>
                 <th>tel</th>
-                <th>email</th>
                 <th>desc</th>
                 <th>image</th>
                 <th class="text-md-center">action</th>
@@ -31,8 +30,7 @@
                 <tr>
                     <th>{{$loop->index+1}}</th>
                     <th>{{$manager->name}}</th>
-                    <th>{{$manager->tel}}</th>
-                    <th>{{$manager->email}}</th>
+                    <th>{{$manager->Number}}</th>
                     <th>{{$manager->desc}}</th>
                     <th><img src="{{asset('storage/'.$manager->image)}}" alt="" width="70px"></th>
                     <th class="d-flex">
@@ -75,7 +73,6 @@
                 <th>id</th>
                 <th>name</th>
                 <th>tel</th>
-                <th>email</th>
                 <th>desc</th>
                 <th>image</th>
                 <th class="text-md-center">action</th>
@@ -86,8 +83,7 @@
                 <tr>
                     <th>{{$teacher->index+1}}</th>
                     <th>{{$teacher->name}}</th>
-                    <th>{{$teacher->tel}}</th>
-                    <th>{{$teacher->email}}</th>
+                    <th>{{$teacher->Number}}</th>
                     <th>{{$teacher->desc}}</th>
                     <th><img src="{{asset('storage/'.$teacher->image)}}" alt="" width="70px"></th>
                     <th>

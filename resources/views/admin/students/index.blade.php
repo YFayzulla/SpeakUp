@@ -28,7 +28,6 @@
             <tr>
                 <th>id</th>
                 <th>name</th>
-                <th>email</th>
                 <th>tel</th>
                 <th>Parents tel</th>
                 <th>End Day</th>
@@ -44,8 +43,7 @@
                             <h1 class="bg-success float-center border-2">{{$loop->index+1}} </h1>
                         @endif</th>
                     <th>{{$student->name}}</th>
-                    <th>{{$student->email}}</th>
-                    <th>{{$student->tel}}</th>
+                    <th>{{$student->Number}}</th>
                     <th>{{$student->parents_tel}}</th>
                     <td>@php
                             if ($student->day > 1){

@@ -254,6 +254,7 @@ return array(
     'App\\Http\\Controllers\\StudentController' => $baseDir . '/app/Http/Controllers/StudentController.php',
     'App\\Http\\Controllers\\TeacherAdminPanel' => $baseDir . '/app/Http/Controllers/TeacherAdminPanel.php',
     'App\\Http\\Controllers\\TeacherController' => $baseDir . '/app/Http/Controllers/TeacherController.php',
+    'App\\Http\\Controllers\\TestResultController' => $baseDir . '/app/Http/Controllers/TestResultController.php',
     'App\\Http\\Controllers\\WaitersController' => $baseDir . '/app/Http/Controllers/WaitersController.php',
     'App\\Http\\Kernel' => $baseDir . '/app/Http/Kernel.php',
     'App\\Http\\Middleware\\Authenticate' => $baseDir . '/app/Http/Middleware/Authenticate.php',

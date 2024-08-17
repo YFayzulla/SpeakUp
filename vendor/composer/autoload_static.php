@@ -960,6 +960,7 @@ class ComposerStaticInit1d26a3ec3b7eac468d796612e5ace66c
         'App\\Http\\Controllers\\StudentController' => __DIR__ . '/../..' . '/app/Http/Controllers/StudentController.php',
         'App\\Http\\Controllers\\TeacherAdminPanel' => __DIR__ . '/../..' . '/app/Http/Controllers/TeacherAdminPanel.php',
         'App\\Http\\Controllers\\TeacherController' => __DIR__ . '/../..' . '/app/Http/Controllers/TeacherController.php',
+        'App\\Http\\Controllers\\TestResultController' => __DIR__ . '/../..' . '/app/Http/Controllers/TestResultController.php',
         'App\\Http\\Controllers\\WaitersController' => __DIR__ . '/../..' . '/app/Http/Controllers/WaitersController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',

@@ -41,6 +41,31 @@ class User extends Authenticatable
         return $this->hasMany(Group::class);
     }
 
+    public function teacherHasStudents($id)
+    {
+
+
+
+        $groupIds = GroupTeacher::query()
+                ->where('teacher_id', $id)
+                ->pluck('group_id');
+
+
+        return User::role('student')
+            ->whereIn('group_id', $groupIds)
+            ->count();
+
+    }
+
+    public function teacherPayment(){
+
+        return User::where('role', 'student')
+            ->whereIn('group_id', $this->teacherGroups()->pluck('id'))
+            ->sum('should_pa');
+
+    }
+
+
     public function group()
     {
         return $this->belongsTo(Group::class);
@@ -89,4 +114,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    private function teacherGroups()
+    {
+        return $this->belongsTo(GroupTeacher::class);
+    }
 }

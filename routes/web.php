@@ -3,6 +3,7 @@
 use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\DeptStudentController;
 use App\Http\Controllers\ExtraTeacherController;
+use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\GroupExtraController;
 use App\Http\Controllers\PdfController;
@@ -22,6 +23,8 @@ Route::get('/1', function () {
 });
 
 //attendance list
+
+Route::get('/2', [ FinanceController::class,'index'] );
 
 
 Route::delete('attendance/delete/{id}', [ExtraTeacherController::class, 'attendanceDelete'])->name('attendance.delete');

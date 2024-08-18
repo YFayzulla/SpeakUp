@@ -46,7 +46,7 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::get('Test/{id}/show', [TestResultController::class, 'showResults'])->name('test.show');
 
 
-//    Route::get('payment', [Controller::class, 'index'])->name('dashboard');
+    Route::get('dashboard', [FinanceController::class, 'index'])->name('dashboard');
 
 //    PDF
 

@@ -45,10 +45,9 @@ class User extends Authenticatable
     {
 
 
-
         $groupIds = GroupTeacher::query()
-                ->where('teacher_id', $id)
-                ->pluck('group_id');
+            ->where('teacher_id', $id)
+            ->pluck('group_id');
 
 
         return User::role('student')
@@ -57,11 +56,11 @@ class User extends Authenticatable
 
     }
 
-    public function teacherPayment(){
-
-        return User::where('role', 'student')
-            ->whereIn('group_id', $this->teacherGroups()->pluck('id'))
-            ->sum('should_pa');
+    public function teacherPayment()
+    {
+        //        return User::where('role', 'student')
+//            ->whereIn('group_id', $this->teacherGroups()->pluck('id'))
+//            ->sum('should_pa');
 
     }
 

@@ -14,23 +14,24 @@ use App\Http\Controllers\TeacherAdminPanel;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\TestResultController;
 use App\Http\Controllers\WaitersController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 
 Route::get('/1', function () {
-    $student = \App\Models\User::find(3);
+    $student = User::find(3);
     return view('user.pdf.student_show', compact('student'));
 });
 
 //attendance list
 
-Route::get('/2', [ FinanceController::class,'index'] );
+//Route::get('/2', [ FinanceController::class,'index'] );
 
 
 Route::delete('attendance/delete/{id}', [ExtraTeacherController::class, 'attendanceDelete'])->name('attendance.delete');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', [Controller::class, 'auth'])->name('user');
+    Route::get('/', [FinanceController::class, 'index'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -41,12 +42,11 @@ Route::middleware('auth')->group(function () {
 Route::group(['middleware' => ['auth', 'role:admin']], function () {
 
 
-
     Route::get('Test', [TestResultController::class, 'index'])->name('test');
     Route::get('Test/{id}/show', [TestResultController::class, 'showResults'])->name('test.show');
 
 
-    Route::get('dashboard', [FinanceController::class, 'index'])->name('dashboard');
+//    Route::get('dashboard',
 
 //    PDF
 

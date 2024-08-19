@@ -17,16 +17,13 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-//    public function index()
-//    {
-//    }
 
-    public function auth()
-    {
-        $id = auth()->id();
-        $groups = GroupTeacher::where('teacher_id', $id)->get();
-        return view('dashboard', compact('groups'));
-    }
+//    public function auth()
+//    {
+//        $id = auth()->id();
+//        $groups = GroupTeacher::where('teacher_id', $id)->get();
+//        return view('dashboard', compact('groups'));
+//    }
 
     public function search(Request $request)
     {

@@ -1,7 +1,7 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
     <div class="app-brand demo">
 
-{{--        <img src="{{asset('storage/Photo/logo.jpg')}}" alt="" width="70px">--}}
+        {{--        <img src="{{asset('storage/Photo/logo.jpg')}}" alt="" width="70px">--}}
         {{--              <span class="app-brand-logo demo">--}}
         {{--                <svg--}}
         {{--                    width="25"--}}
@@ -60,29 +60,26 @@
 
 
 
-{{--        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">--}}
-{{--            <i class="bx bx-chevron-left bx-sm align-middle"></i>--}}
-{{--        </a>--}}
+        {{--        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">--}}
+        {{--            <i class="bx bx-chevron-left bx-sm align-middle"></i>--}}
+        {{--        </a>--}}
+
     </div>
 
     <div class="menu-inner-shadow"></div>
 
     <ul class="menu-inner py-1">
         <!-- Dashboard -->
-        {{--        <li class="menu-item @if(request()->routeIs('user')) active @endif">--}}
-        {{--            <a href="{{ route('user') }}" class="menu-link">--}}
-        {{--                <i class='bx bx-home-circle'></i>--}}
-        {{--                <div data-i18n="Analytics">Asosiy sahifa</div>--}}
-        {{--            </a>--}}
-        {{--        </li>--}}
-        @role('admin')
+
         <li class="menu-item @if(request()->routeIs('dashboard')) active @endif">
             <a href="{{ route('dashboard') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bxs-dashboard"></i>
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
         </li>
-<li class="menu-item @if(request()->routeIs('teacher.index' , 'teacher.create' , 'teacher.edit', 'teacher.show')) active @endif">
+
+        @role('admin')
+        <li class="menu-item @if(request()->routeIs('teacher.index' , 'teacher.create' , 'teacher.edit', 'teacher.show')) active @endif">
             <a href="{{ route('teacher.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-user"></i>
                 <div data-i18n="Analytics">Teachers</div>

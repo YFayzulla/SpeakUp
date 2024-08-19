@@ -23,6 +23,7 @@ class FinanceController extends Controller
                     'teachers' => $teachers,
                     'students' => User::query()->role('student')->count(),
                     'daily_profit' => HistoryPayments::query()->whereDate('created_at', today())->sum('payment'),
+                    'trent' => HistoryPayments::query()->whereDate('created_at', today())->get(['payment', 'name']),
                 ]
             );
         }

@@ -40,7 +40,7 @@
                                             <h6 class="mb-0"> {{number_format($daily_profit, 0, '.', ' ')}} sum</h6>
                                         </div>
                                     </div>
-                                    <div id="profileReportChart"></div>
+                                    <div id="profileReportChart" data-trent="{{ $trent->toJson() }}"></div>
                                 </div>
                             </div>
                         </div>
@@ -220,10 +220,12 @@
         <!--/ Expense Overview -->
     </div>
     @endrole
+    @role('user')
     <div class="p-4 m-4 sm:p-8 bg-white shadow sm:rounded-lg ">
 
 
         <p class="text-success">success</p>
 
     </div>
+    @endrole
 @endsection

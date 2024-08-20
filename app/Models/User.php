@@ -69,6 +69,7 @@ class User extends Authenticatable
             $summa += $payment->monthly_payment * $number;
         }
 
+        $summa = $summa*$this->percent/100;
         return  $summa;
 
     }

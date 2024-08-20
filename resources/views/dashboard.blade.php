@@ -71,7 +71,7 @@
                                                 <strong>{{ $teacher->name }}</strong>
                                             </td>
                                             <td>
-                                                {{ $teacher->precent }}
+                                                {{ $teacher->percent }}
                                             </td>
 
                                             <td>

@@ -6,7 +6,9 @@ use App\Models\Group;
 use App\Models\GroupTeacher;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class TeacherController extends Controller
 {
@@ -55,7 +57,7 @@ class TeacherController extends Controller
         }
 
 
-        $yser = User::create([
+        User::create([
             'name' => $request->name,
             'password' => bcrypt($request->name),
             'passport' => $request->passport,
@@ -66,9 +68,6 @@ class TeacherController extends Controller
             'percent' => $request->percent
         ])->assignRole('user');
 
-
-
-        dd($yser);
 
         return redirect()->route('teacher.index')->with('success', 'Information has been added');
     }
@@ -82,7 +81,13 @@ class TeacherController extends Controller
     public function show($id)
     {
 
-        $groups = Group::where('id', '!=', 1)->get();
+        $groups = DB::table('groups')
+            ->leftJoin('group_teachers', 'groups.id', '=', 'group_teachers.group_id')
+            ->whereNull('group_teachers.group_id')
+            ->select('groups.*')
+            ->where('group_id', '!=',$id)
+            ->get();
+
 
         $teachers = GroupTeacher::where('teacher_id', '=', $id)->get();
 
@@ -118,8 +123,12 @@ class TeacherController extends Controller
         $request->validate([
             'name' => 'required',
             'date_born' => 'required',
-            'phone' => ['required', 'string', 'regex:/^\+998\d{9}$/'],
-            'password' => 'required',
+            'phone' => [
+                'required',
+                'string',
+                Rule::unique('users', 'phone')->ignore($id),
+            ],
+//            'password' => 'required',
         ]);
 
 

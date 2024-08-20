@@ -24,13 +24,15 @@ class FakeForSeeder extends Seeder
         $teacher = User::query()->forceCreate([
             'name' => 'test',
             'password' => Hash::make('a'),
-            'phone' => '0123456789',
+            'phone' => '0123456789123',
+            'percent' => 50
         ])->assignRole('user');
 
         User::query()->forceCreate([
             'name' => 'test2',
             'password' => Hash::make('a'),
-            'phone' => '0123456780',
+            'phone' => '0123456780123',
+            'percent' => 45
         ])->assignRole('user');
 
         $group1 = Group::query()->firstOrCreate([

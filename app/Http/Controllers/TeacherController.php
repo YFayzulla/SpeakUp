@@ -41,11 +41,9 @@ class TeacherController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+
             'name' => 'required',
-            'phone' => ['required', 'string', 'regex:/^\+998\d{9}$/','unique:'.User::class],
-            'password' => 'required',
-            'location' => 'required',
-            'date_born' => 'required',
+            'phone' => ['required'],
 
         ]);
 
@@ -56,15 +54,21 @@ class TeacherController extends Controller
 
         }
 
-        User::create([
+
+        $yser = User::create([
             'name' => $request->name,
-            'password' => bcrypt($request->password),
+            'password' => bcrypt($request->name),
             'passport' => $request->passport,
             'date_born' => $request->date_born,
             'location' => $request->location,
-            'phone' => $request->phone,
+            'phone' => 998 . $request->phone,
             'photo' => $path ?? null,
+            'percent' => $request->percent
         ])->assignRole('user');
+
+
+
+        dd($yser);
 
         return redirect()->route('teacher.index')->with('success', 'Information has been added');
     }
@@ -78,11 +82,11 @@ class TeacherController extends Controller
     public function show($id)
     {
 
-        $groups=Group::where('id','!=',1)->get();
+        $groups = Group::where('id', '!=', 1)->get();
 
-        $teachers=GroupTeacher::where('teacher_id','=',$id)->get();
+        $teachers = GroupTeacher::where('teacher_id', '=', $id)->get();
 
-        return view('user.teacher.show',compact('teachers','groups','id'));
+        return view('user.teacher.show', compact('teachers', 'groups', 'id'));
 
     }
 
@@ -116,7 +120,6 @@ class TeacherController extends Controller
             'date_born' => 'required',
             'phone' => ['required', 'string', 'regex:/^\+998\d{9}$/'],
             'password' => 'required',
-            'location'=>'required',
         ]);
 
 
@@ -128,20 +131,20 @@ class TeacherController extends Controller
             }
             $fileName = time() . '.' . $request->file('photo')->getClientOriginalExtension();
             $path = $request->file('photo')->storeAs('Photo', $fileName);
-        }
-
-;        $teacher->update([
+        };
+        $teacher->update([
             'name' => $request->name,
             'phone' => $request->phone,
             'password' => bcrypt($request->password),
             'date_born' => $request->date_born,
             'location' => $request->location,
             'passport' => $request->passport,
+            'percent' => $request->percent,
             'photo' => $path ?? $teacher->photo ?? null,
         ]);
 
 
-        return redirect()->route('teacher.index')->with('success','Information has been updated');
+        return redirect()->route('teacher.index')->with('success', 'Information has been updated');
 
     }
 
@@ -153,8 +156,8 @@ class TeacherController extends Controller
      */
     public function destroy($id)
     {
-        $teacher=User::find($id);
+        $teacher = User::find($id);
         $teacher->delete();
-        return redirect()->back()->with('success','Information deleted');
+        return redirect()->back()->with('success', 'Information deleted');
     }
 }

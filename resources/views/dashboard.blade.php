@@ -57,6 +57,7 @@
                                         <th>Id</th>
                                         <th>name</th>
                                         <th><b>%</b></th>
+                                        <th>groups</th>
                                         <th>students</th>
                                         <th>salary</th>
                                     </tr>
@@ -72,11 +73,17 @@
                                             <td>
                                                 {{ $teacher->precent }}
                                             </td>
+
                                             <td>
-                                                {{ $teacher->teacherHasStudents($teacher->id) }}
+                                                {{ $teacher->teacherhasGroup() }}
                                             </td>
+
                                             <td>
-                                                {{--                                                {{ $teacher }}--}}
+                                                {{ $teacher->teacherHasStudents() }}
+                                            </td>
+
+                                            <td>
+                                                {{ number_format( $teacher->teacherPayment() , 0, '.', ' ')    }}
                                             </td>
                                             <td></td>
                                         </tr>

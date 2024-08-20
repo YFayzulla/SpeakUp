@@ -42,7 +42,7 @@
                         <th>{{$group->start_time}}</th>
                         <th>{{$group->finish_time}}</th>
                         <th>{{$group->level}}</th>
-                        <th>{{$group->monthly_payment}}</th>
+                        <th>{{number_format($group->monthly_payment ,0, '.', ' ')}}</th>
                         <th class="d-flex">
                             <a href="{{route('group.students',$group->id)}}" class="btn btn-outline-info m-1">
                                 <i

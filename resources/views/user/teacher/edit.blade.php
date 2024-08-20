@@ -11,43 +11,59 @@
 
                 @csrf
                 @method('PUT')
+
+                @error('name')
+                <div class="alert alert-danger" role="alert">This place should be written</div>
+                @enderror
+
                 <div class="mt-2">
                     <label for="name" class="text-dark">Name</label>
                     <input id="name" name="name" value="{{$teacher->name}}" type="text" class="form-control">
                 </div>
-                @error('name')
+
+                @error('password')
                 <div class="alert alert-danger" role="alert">This place should be written</div>
                 @enderror
                 <div class="mt-2">
                     <label for="password" class="text-dark">password</label>
                     <input id="password" name="password" type="password" class="form-control">
                 </div>
-                @error('password')
+
+                @error('phone')
                 <div class="alert alert-danger" role="alert">This place should be written</div>
                 @enderror
+
                 <div class="mt-2">
                     <label for="phone" class="text-dark">Phone</label>
                     <input id="phone" name="phone" value="{{$teacher->phone}}" type="text" class="form-control">
                 </div>
-                @error('phone')
+
+                @error('date_born')
                 <div class="alert alert-danger" role="alert">This place should be written</div>
                 @enderror
+
                 <div class="mt-2">
                     <label for="date_born" class="text-dark">Date born</label>
                     <input id="date_born" name="date_born" value="{{$teacher->date_born}}" type="date"
                            class="form-control">
                 </div>
-                @error('date_born')
-                <div class="alert alert-danger" role="alert">This place should be written</div>
-                @enderror
+
                 <div class="mt-2">
                     <label for="location" class="text-dark">Location</label>
                     <input id="location" name="location" value="{{$teacher->location}}" type="text"
                            class="form-control">
                 </div>
+
                 @error('location')
                 <div class="alert alert-danger" role="alert">This place should be written</div>
                 @enderror
+
+                <div class="mt-2">
+                    <label for="percent" class="text-dark">Percent</label>
+                    <input id="percent" name="percent" value="{{$teacher->percent}}" type="text"
+                           class="form-control">
+                </div>
+
                 <div class="mt-2">
                     <label for="passport" class="text-dark">Passport</label>
                     <input id="passport" name="passport" value="{{$teacher->passport}}" type="text"

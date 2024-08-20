@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->string('should_pay')->nullable();
             $table->string('status')->nullable();
+            $table->tinyInteger('percent')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

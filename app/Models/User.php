@@ -33,20 +33,20 @@ class User extends Authenticatable
         'should_pay',
         'description',
         'status',
+        'percent',
         'mark'
     ];
 
-    public function teacherhasGroup()
-    {
-        return $this->hasMany(Group::class);
-    }
+//    public function teacherhasGroup()
+//    {
+//        return $this->hasMany(Group::class);
+//    }
 
-    public function teacherHasStudents($id)
+    public function teacherHasStudents()
     {
-
 
         $groupIds = GroupTeacher::query()
-            ->where('teacher_id', $id)
+            ->where('teacher_id', $this->id)
             ->pluck('group_id');
 
 
@@ -58,9 +58,18 @@ class User extends Authenticatable
 
     public function teacherPayment()
     {
-        //        return User::where('role', 'student')
-//            ->whereIn('group_id', $this->teacherGroups()->pluck('id'))
-//            ->sum('should_pa');
+
+        $summa =  0;
+        $groups = GroupTeacher::query()->where('teacher_id', $this->id)->get();
+
+        foreach ($groups as $group) {
+            $payment = Group::query()->findOrFail( $group->group_id);
+            $number =  User::query()->where('group_id', $group->group_id)->count();
+//            dd($number,$payment->monthly_payment);
+            $summa += $payment->monthly_payment * $number;
+        }
+
+        return  $summa;
 
     }
 
@@ -93,6 +102,11 @@ class User extends Authenticatable
     public function attendances()
     {
         return $this->hasMany(Attendance::class);
+    }
+
+    public function teacherHasGroup()
+    {
+        return GroupTeacher::query()->where('teacher_id' , $this->id)->count()  ;
     }
 
     /**

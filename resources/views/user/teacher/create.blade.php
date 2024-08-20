@@ -13,22 +13,26 @@
                     <label for="name" class="text-dark">Name</label>
                     <input id="name" name="name" value="{{old('name')}}" type="text" class="form-control">
                 </div>
+
                 @error('name')
                 <div class="alert alert-danger" role="alert">This place should be written</div>
                 @enderror
-                <div class="mt-2">
-                    <label for="password" class="text-dark">Password</label>
-                    <input id="password" name="password" value="{{old('password')}}" type="password"
-                           class="form-control">
-                </div>
-                @error('password')
-                <div class="alert alert-danger" role="alert">This place should be written</div>
-                @enderror
 
-                <div class="mt-2">
-                    <label for="phone" class="text-dark">Number</label>
-                    <input id="phone" name="phone" value="{{old('phone')}}" type="text" class="form-control"
-                           placeholder="+998(__)_______">
+                <label for="name" class="text-dark">phone</label>
+
+                <div class="input-group input-group-merge">
+
+                    <span class="input-group-text">+99 8</span>
+                    <input
+                            type="tel"
+                            id="create_phone"
+                            name="phone"
+                            pattern="[0-9]{9}"
+                            maxlength="9"
+                            class="form-control"
+                            placeholder="912345678"
+                            value="{{ old('phone') }}"
+                    />
                 </div>
                 @error('phone')
                 <div class="alert alert-danger" role="alert">This place should be written and
@@ -54,9 +58,14 @@
                     <label for="passport" class="text-dark">Passport </label>
                     <input id="passport" name="passport" value="{{old('passport')}}" type="text" class="form-control">
                 </div>
-                {{--                @error('passport')--}}
-                {{--                <div class="alert alert-danger" role="alert">Ushbu maydon bo'sh bo'lishi mumkin emas!</div>--}}
-                {{--                @enderror--}}
+                @error('percent')
+                <div class="alert alert-danger" role="alert">This place should be written!</div>
+                @enderror
+
+                <div class="mt-2">
+                    <label for="percent" class="text-dark">Percent </label>
+                    <input id="percent" name="percent" value="{{old('percent')}}" type="number" class="form-control">
+                </div>
 
                 <div class="mt-2">
                     <label for="photo" class="text-dark"> Photo</label>

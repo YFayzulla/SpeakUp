@@ -18,12 +18,29 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
 
-//    public function auth()
-//    {
-//        $id = auth()->id();
-//        $groups = GroupTeacher::where('teacher_id', $id)->get();
-//        return view('dashboard', compact('groups'));
-//    }
+
+    public function index()
+    {
+
+        if (auth()->user()->hasRole('admin')) {
+            $teachers = User::query()->role('user')->get();
+
+
+            return view('dashboard', [
+                    'teachers' => $teachers,
+                    'number_of_students' => User::query()->role('student')->count(),
+                    'daily_profit' => HistoryPayments::query()->whereDate('created_at', today())->sum('payment'),
+                    'trent' => HistoryPayments::query()->whereDate('created_at', today())->get(['payment', 'name']),
+                    'students' => User::role('student')->where('status' ,'<',0 )->get(),
+                ]
+            );
+        }
+        else
+            return view('dashboard');
+
+    }
+
+
 
     public function search(Request $request)
     {

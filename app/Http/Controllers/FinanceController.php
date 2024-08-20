@@ -12,23 +12,5 @@ class FinanceController extends Controller
 {
 
 
-    public function index()
-    {
 
-        if (auth()->user()->hasRole('admin')) {
-            $teachers = User::query()->role('user')->get();
-
-
-            return view('dashboard', [
-                    'teachers' => $teachers,
-                    'students' => User::query()->role('student')->count(),
-                    'daily_profit' => HistoryPayments::query()->whereDate('created_at', today())->sum('payment'),
-                    'trent' => HistoryPayments::query()->whereDate('created_at', today())->get(['payment', 'name']),
-                ]
-            );
-        }
-        else
-            return view('dashboard');
-
-    }
 }

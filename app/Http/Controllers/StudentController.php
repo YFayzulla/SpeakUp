@@ -72,7 +72,6 @@ class StudentController extends Controller
             'parents_tel' => $request->parents_tel,
             'group_id' => $group->id,
             'location' => $request->location,
-            'status' => 0,
             'photo' => $path ?? null,
             'should_pay' => $request->should_pay ?? $group->monthly_payment,
             'description' => $request->description,

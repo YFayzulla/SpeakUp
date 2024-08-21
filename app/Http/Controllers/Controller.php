@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attendance;
 use App\Models\DeptStudent;
 use App\Models\GroupTeacher;
 use App\Models\HistoryPayments;
@@ -32,6 +33,7 @@ class Controller extends BaseController
                     'daily_profit' => HistoryPayments::query()->whereDate('created_at', today())->sum('payment'),
                     'trent' => HistoryPayments::query()->whereDate('created_at', today())->get(['payment', 'name']),
                     'students' => User::role('student')->where('status' ,'<',0 )->get(),
+                    'attendances'=>Attendance::query()->whereDate('created_at', today())->get(),
                 ]
             );
         }

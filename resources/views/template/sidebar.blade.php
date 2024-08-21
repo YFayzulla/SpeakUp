@@ -121,6 +121,7 @@
         </li>
 
         @endrole
+
         @role('user')
 
         <li class="menu-item @if(request()->routeIs('assessment.index','assessment.show')) active @endif">
@@ -137,9 +138,8 @@
             </a>
         </li>
 
-
-        <li class="menu-item @if(request()->routeIs('attendance.list')) active @endif">
-            <a href="{{ route('attendance.list') }}" class="menu-link"> <!-- Default group ID if needed -->
+        <li class="menu-item @if(request()->routeIs('attendance.index')) active @endif">
+            <a href="{{ route('attendance.index') }}" class="menu-link"> <!-- Default group ID if needed -->
                 <i class="menu-icon tf-icons bx bx-table"></i>
                 <div data-i18n="Analytics">List Attendance</div>
             </a>

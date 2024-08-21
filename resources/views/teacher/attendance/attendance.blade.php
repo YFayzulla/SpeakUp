@@ -7,7 +7,7 @@
                 <label for="lesson" class="mr-2 align-self-center">Lesson:</label>
                 <input type="text" name="lesson" id="lesson" class="form-control w-25">
             </div>
-            <table class="table table-bordered">
+            <table class="table table">
                 <thead>
                 <tr>
                     <th>no</th>

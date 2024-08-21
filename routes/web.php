@@ -87,7 +87,9 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
 
 Route::group(['middleware' => ['auth', 'role:user']], function () {
 //teacher panel
-    Route::get('attendance/lists', [TeacherAdminPanel::class, 'attendanceList'])->name('attendance.list');
+    Route::get('attendance/lists', [TeacherAdminPanel::class, 'attendanceIndex'])->name('attendance.index');
+    Route::get('attendance/lists/{id}', [TeacherAdminPanel::class, 'attendanceList'])->name('attendance.list');
+
     Route::get('groups', [TeacherAdminPanel::class, 'group'])->name('attendance');
     Route::get('attendance/{id}', [TeacherAdminPanel::class, 'attendance'])->name('attendance.check');
     Route::post('attendance/submit/{id}', [TeacherAdminPanel::class, 'attendance_submit'])->name('attendance.submit');

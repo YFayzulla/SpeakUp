@@ -6,7 +6,7 @@
             <h2 class="text-center mb-4">Attendance
                 for {{ Carbon\Carbon::createFromDate($year, $month)->format('F Y') }}</h2>
 
-            <form method="GET" action="{{ route('attendance.list') }}" class="mb-4">
+            <form method="GET" action="{{ route('attendance.list',$group->id) }}" class="mb-4">
                 <div class="row">
                     <div class="col-md-4">
                         <select id="month" name="date" class="form-control mr-2">

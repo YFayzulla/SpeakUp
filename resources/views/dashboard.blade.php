@@ -103,8 +103,8 @@
                 <div class="card mb-3">
                     <div class="card-header d-flex align-items-center justify-content-between pb-0">
                         <div class="card-title mb-0 text-center ">
-                            <h5 class="m-0 me-2 text-center ">Daily Attendance</h5>
-                            {{--                            <h2 class="mb-2">{{$new_clients}} ta</h2>--}}
+                            <h5 class="m-0 me-2 text-center ">---- minus</h5>
+                            {{--                            <h2 class="mb-2">{{}} ta</h2>--}}
 
                         </div>
                         <div class="dropdown">
@@ -143,67 +143,49 @@
                                         </div>
                                     </div>
                                 </li>
-
                             </ul>
                         @endforeach
 
                     </div>
                 </div>
-{{--                --}}
-{{--                <div class="card">--}}
-{{--                    <div class="card-header d-flex align-items-center justify-content-between pb-0">--}}
-{{--                        <div class="card-title mb-0">--}}
-{{--                            <h5 class="m-0 me-2">Bugungi xizmatlar</h5>--}}
-{{--                            <h2 class="mb-2">120 ta</h2>--}}
 
-{{--                        </div>--}}
-{{--                        <div class="dropdown">--}}
+                <div class="card">
+                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                        <div class="card-title mb-0">
+{{--                            @dd($attendances)--}}
 
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                    <div class="card-body">--}}
-{{--                        <div class="d-flex justify-content-between align-items-center mb-3">--}}
+                            <h5 class="m-0 me-2">{{count($attendances) == 0  ? 'Attendance is ok' : count($attendances) . " Students didn't come" }} </h5>
+                            <h2 class="mb-2"></h2>
+                        </div>
+                        <div class="dropdown">
 
-{{--                            <div class="d-flex flex-column align-items-center gap-1">--}}
-{{--                                <span>Ularga Ko'rsatilgan Xizmatlar</span>--}}
-{{--                            </div>--}}
-{{--                            <div id="orderStatisticsChart"></div>--}}
-{{--                        </div>--}}
-{{--                        <ul class="p-0 m-0">--}}
-{{--                            <li class="d-flex mb-4 pb-1">--}}
-{{--                                <div class="avatar flex-shrink-0 me-3">--}}
-{{--                                    <span class="avatar-initial rounded bg-label-primary">--}}
-{{--                                        <i class="bx bx-home-alt"></i>--}}
-{{--                                    </span>--}}
-{{--                                </div>--}}
-{{--                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">--}}
-{{--                                    <div class="me-2">--}}
-{{--                                        <h6 class="mb-0">Bajarilgan</h6>--}}
-{{--                                    </div>--}}
-{{--                                    <div class="user-progress">--}}
-{{--                                        <small class="fw-semibold">10</small>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                            </li>--}}
-{{--                            <li class="d-flex mb-4 pb-1">--}}
-{{--                                <div class="avatar flex-shrink-0 me-3">--}}
-{{--                                <span class="avatar-initial rounded bg-label-success"><i--}}
-{{--                                            class="bx bx-home-alt"></i></span>--}}
-{{--                                </div>--}}
-{{--                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">--}}
-{{--                                    <div class="me-2">--}}
-{{--                                        <h6 class="mb-0">Bajarilmagan</h6>--}}
-{{--                                    </div>--}}
-{{--                                    <div class="user-progress">--}}
-{{--                                        <small class="fw-semibold">20</small>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                            </li>--}}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="p-0 m-0">
 
-{{--                        </ul>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
+                            @foreach($attendances as $attendance)
+                                <li class="d-flex mb-4 pb-1">
+                                    <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                        <div class="me-2">
+                                            <h6 class="mb-0">{{$loop->index+1}}</h6>
+                                        </div>
+                                        <div class="me-2">
+                                            <h6 class="mb-0">{{$attendance->user->name}}</h6>
+                                        </div>
+                                        <div class="user-progress">
+                                            <small class="fw-semibold">{{$attendance->group->name}}</small>
+                                        </div>
+                                        <div class="user-progress">
+                                            <small class="fw-semibold">{{$attendance->created_at}}</small>
+                                        </div>
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
             <!-- Total Revenue -->
 
             <!--/ Total Revenue -->

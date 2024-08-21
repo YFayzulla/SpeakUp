@@ -6,8 +6,8 @@
             @foreach($groups as $group)
                 <tr>
                     <th>
-                        <a href="{{route('attendance.list', $group->id)}}" class="btn btn-outline-primary w-100 text-left">
-                            <b>{{ $group->name }}</b>
+                        <a href="{{route('attendance.check', $group->id)}}" class="btn btn-outline-primary w-100 text-left">
+                            <b>{{ $group->group->name }}</b>
                         </a>
                     </th>
                 </tr>

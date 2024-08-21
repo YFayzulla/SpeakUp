@@ -35,6 +35,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
+//attendance
+
+    Route::get('group/assessment/{id}', [GroupExtraController::class, 'attendance'])->name('group.attendance');
+
 });
 
 /*                          Admin                */
@@ -63,7 +69,6 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::delete('/delete-multiple', [GroupExtraController::class, 'deleteMultiple'])->name('deleteMultiple');
     Route::get('waiters', [WaitersController::class, 'index'])->name('waiters.index');
     Route::post('group/change/{id}', [GroupExtraController::class, 'change_group'])->name('student.change.group');
-    Route::get('group/assessment/{id}', [GroupExtraController::class, 'attendance'])->name('group.attendance');
 
     //    Route::get('group/attendance/filter/{id}', [GroupExtraController::class, 'filter'])->name('attendance.filter');
 
@@ -83,12 +88,12 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
 
 });
 
+
 //Teachers
 
 Route::group(['middleware' => ['auth', 'role:user']], function () {
 //teacher panel
     Route::get('attendance/lists', [TeacherAdminPanel::class, 'attendanceIndex'])->name('attendance.index');
-    Route::get('attendance/lists/{id}', [TeacherAdminPanel::class, 'attendanceList'])->name('attendance.list');
 
     Route::get('groups', [TeacherAdminPanel::class, 'group'])->name('attendance');
     Route::get('attendance/{id}', [TeacherAdminPanel::class, 'attendance'])->name('attendance.check');

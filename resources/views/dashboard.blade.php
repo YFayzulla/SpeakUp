@@ -149,60 +149,61 @@
 
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
-                        <div class="card-title mb-0">
-                            <h5 class="m-0 me-2">Bugungi xizmatlar</h5>
-                            <h2 class="mb-2">120 ta</h2>
+{{--                --}}
+{{--                <div class="card">--}}
+{{--                    <div class="card-header d-flex align-items-center justify-content-between pb-0">--}}
+{{--                        <div class="card-title mb-0">--}}
+{{--                            <h5 class="m-0 me-2">Bugungi xizmatlar</h5>--}}
+{{--                            <h2 class="mb-2">120 ta</h2>--}}
 
-                        </div>
-                        <div class="dropdown">
+{{--                        </div>--}}
+{{--                        <div class="dropdown">--}}
 
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div class="card-body">--}}
+{{--                        <div class="d-flex justify-content-between align-items-center mb-3">--}}
 
-                            <div class="d-flex flex-column align-items-center gap-1">
-                                <span>Ularga Ko'rsatilgan Xizmatlar</span>
-                            </div>
-                            <div id="orderStatisticsChart"></div>
-                        </div>
-                        <ul class="p-0 m-0">
-                            <li class="d-flex mb-4 pb-1">
-                                <div class="avatar flex-shrink-0 me-3">
-                                    <span class="avatar-initial rounded bg-label-primary">
-                                        <i class="bx bx-home-alt"></i>
-                                    </span>
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-2">
-                                        <h6 class="mb-0">Bajarilgan</h6>
-                                    </div>
-                                    <div class="user-progress">
-                                        <small class="fw-semibold">10</small>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="d-flex mb-4 pb-1">
-                                <div class="avatar flex-shrink-0 me-3">
-                                <span class="avatar-initial rounded bg-label-success"><i
-                                            class="bx bx-home-alt"></i></span>
-                                </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-2">
-                                        <h6 class="mb-0">Bajarilmagan</h6>
-                                    </div>
-                                    <div class="user-progress">
-                                        <small class="fw-semibold">20</small>
-                                    </div>
-                                </div>
-                            </li>
+{{--                            <div class="d-flex flex-column align-items-center gap-1">--}}
+{{--                                <span>Ularga Ko'rsatilgan Xizmatlar</span>--}}
+{{--                            </div>--}}
+{{--                            <div id="orderStatisticsChart"></div>--}}
+{{--                        </div>--}}
+{{--                        <ul class="p-0 m-0">--}}
+{{--                            <li class="d-flex mb-4 pb-1">--}}
+{{--                                <div class="avatar flex-shrink-0 me-3">--}}
+{{--                                    <span class="avatar-initial rounded bg-label-primary">--}}
+{{--                                        <i class="bx bx-home-alt"></i>--}}
+{{--                                    </span>--}}
+{{--                                </div>--}}
+{{--                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">--}}
+{{--                                    <div class="me-2">--}}
+{{--                                        <h6 class="mb-0">Bajarilgan</h6>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="user-progress">--}}
+{{--                                        <small class="fw-semibold">10</small>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </li>--}}
+{{--                            <li class="d-flex mb-4 pb-1">--}}
+{{--                                <div class="avatar flex-shrink-0 me-3">--}}
+{{--                                <span class="avatar-initial rounded bg-label-success"><i--}}
+{{--                                            class="bx bx-home-alt"></i></span>--}}
+{{--                                </div>--}}
+{{--                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">--}}
+{{--                                    <div class="me-2">--}}
+{{--                                        <h6 class="mb-0">Bajarilmagan</h6>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="user-progress">--}}
+{{--                                        <small class="fw-semibold">20</small>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </li>--}}
 
-                        </ul>
-                    </div>
-                </div>
-            </div>
+{{--                        </ul>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
             <!-- Total Revenue -->
 
             <!--/ Total Revenue -->

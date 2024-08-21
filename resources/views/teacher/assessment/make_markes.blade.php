@@ -33,7 +33,7 @@
                             <td><i class="fab fa-angular fa-lg text-danger"></i>{{ $loop->index+1 }}</td>
                             <td><i class="fab fa-angular fa-lg text-danger "></i>{{ $student->name }}</td>
                             <th>
-                                <input type="text" class="float input-group-merge    justify-content-center"
+                                <input type="number" class="float input-group-merge    justify-content-center"
                                        style="height: 30px;width: 50px"
                                        name="end_mark[]">
                             </th>

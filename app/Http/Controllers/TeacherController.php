@@ -82,10 +82,10 @@ class TeacherController extends Controller
     {
 
         $groups = DB::table('groups')
+            ->where('groups.id', '!=', 1)
             ->leftJoin('group_teachers', 'groups.id', '=', 'group_teachers.group_id')
             ->whereNull('group_teachers.group_id')
             ->select('groups.*')
-//            ->where('id', '!=',1)
             ->get();
 
 

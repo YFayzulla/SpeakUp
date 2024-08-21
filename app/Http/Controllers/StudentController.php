@@ -65,7 +65,7 @@ class StudentController extends Controller
 
         $user = User::create([
             'name' => $request->name,
-            'password' => bcrypt($request->password),
+            'password' => bcrypt($request->name),
             'passport' => $request->passport,
             'phone' => $request->phone,
             'parents_name' => $request->parents_name,
@@ -119,7 +119,7 @@ class StudentController extends Controller
     {
 
         $student = User::find($id);
-        $groups = Group::where('id', '!=', 1)->get();
+        $groups = Group::all();
 
 
         //        dd($id,$student);

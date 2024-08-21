@@ -25,13 +25,13 @@
                 <tr>
                     <th>{{$loop->index+1}}</th>
                     <th>{{$student->name}}</th>
-                    <th>{{$student->phone}}</th>
+                    <th>{{$student->phone}}</th>makemake
                     <th>{{$student->parents_tel}}</th>
                     <th>{{$student->group->name}}</th>
                     <th>
                         <button type="button" class="btn-outline-success btn m-2" data-bs-toggle="modal"
                                 data-bs-target="#exampleModal{{$student->id}}" data-bs-whatever="@mdo"
-                        > xulosa
+                        > group
                         </button>
                         {{--Modal--}}
                         <div class="modal fade" id="exampleModal{{$student->id}}" tabindex="-1"
@@ -45,13 +45,12 @@
                                         <form action="{{route('student.change.group',$student->id)}}" method="post">
                                             @csrf
                                             <label for="recipient-name"
-                                                   class="col-form-label"> boshqa guruhga o`tirish </label>
+                                                   class="col-form-label"> group  </label>
                                             <select name="group_id" class="form-control">
                                                 @foreach($groups as $g)
                                                     <option value="{{$g->id}}">{{$g->name}}</option>
                                                 @endforeach
                                             </select>
-
                                             <button type="submit" class="btn btn-outline-primary m-2">save
                                             </button>
                                         </form>

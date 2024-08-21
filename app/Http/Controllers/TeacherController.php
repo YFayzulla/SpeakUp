@@ -85,7 +85,7 @@ class TeacherController extends Controller
             ->leftJoin('group_teachers', 'groups.id', '=', 'group_teachers.group_id')
             ->whereNull('group_teachers.group_id')
             ->select('groups.*')
-            ->where('group_id', '!=',$id)
+//            ->where('id', '!=',1)
             ->get();
 
 

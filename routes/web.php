@@ -85,6 +85,22 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::delete('teacher/group/delete/{id}', [ExtraTeacherController::class, 'group_delete'])->name('teacher_group.delete');
     Route::put('teacher/group/{id}/store', [ExtraTeacherController::class, 'add_group'])->name('teacher_group.store');
 
+//     finance
+    Route::get('finance/teachers', [FinanceController::class, 'teachers'])->name('finance.teachers');
+    Route::post('finance/store/teacher', [FinanceController::class, 'store_teacher'])->name('finance.store_teacher');
+    Route::put('finance/update/{id}/teacher', [FinanceController::class, 'update_teacher'])->name('finance.update_teacher');
+    Route::delete('finance/delete/{id}/teacher', [FinanceController::class, 'destroy_teacher'])->name('finance.destroy_teacher');
+
+    Route::get('finance/other', [FinanceController::class, 'other'])->name('finance.other');
+    Route::post('finance/store/other', [FinanceController::class, 'store_other'])->name('finance.store_other');
+    Route::put('finance/update/{id}/other', [FinanceController::class, 'update_other'])->name('finance.update_other');
+    Route::delete('finance/delete/{id}/other', [FinanceController::class, 'destroy_other'])->name('finance.destroy_other');
+
+    Route::get('finance/income', [FinanceController::class, 'income'])->name('finance.income');
+    Route::post('finance/store/income', [FinanceController::class, 'store_income'])->name('finance.store_income');
+    Route::put('finance/update/{id}/income', [FinanceController::class, 'update_income'])->name('finance.update_income');
+    Route::delete('finance/delete/{id}/income', [FinanceController::class, 'destroy_income'])->name('finance.destroy_income');
+
 });
 
 

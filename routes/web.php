@@ -51,7 +51,6 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::get('Test', [TestResultController::class, 'index'])->name('test');
     Route::get('Test/{id}/show', [TestResultController::class, 'showResults'])->name('test.show');
 
-
 //    Route::get('dashboard',
 
 //    PDF
@@ -98,7 +97,6 @@ Route::group(['middleware' => ['auth', 'role:user']], function () {
     Route::get('attendance/{id}', [TeacherAdminPanel::class, 'attendance'])->name('attendance.check');
     Route::post('attendance/submit/{id}', [TeacherAdminPanel::class, 'attendance_submit'])->name('attendance.submit');
     Route::resource('assessment', AssessmentController::class);
-
 
 });
 

@@ -55,4 +55,14 @@ class TeacherAdminPanel extends Controller
 
     }
 
+//    second
+    public function attendanceIndex()
+    {
+//        dd('s');
+        return view('teacher.attendance.index',[
+            'groups'=>GroupTeacher::query()->where('teacher_id', auth()->id())->get(),
+        ]);
+    }
+
+
 }

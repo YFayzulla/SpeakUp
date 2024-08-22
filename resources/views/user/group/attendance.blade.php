@@ -1,10 +1,6 @@
 @extends('template.master')
 @section('content')
     {{--    new code about whole table --}}
-
-
-
-
     <div class="container mt-4">
         <div class="p-4 bg-white shadow-sm rounded-lg">
             <h2 class="text-center mb-4">Attendance

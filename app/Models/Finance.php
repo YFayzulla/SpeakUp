@@ -16,12 +16,20 @@ class Finance extends Model
     public const CASH = 1;
     public const CARD = 2;
 
-    public const STATUS_TEACHER = 1;
-    public const STATUS_OTHER = 2;
-    public const STATUS_INCOME = 3;
+//    public const STATUS_TEACHER = 1;
+//    public const STATUS_OTHER = 2;
+//    public const STATUS_INCOME = 3;
 
     public function getTypeNameAttribute()
     {
         return $this->type == self::CASH ? 'Cash' : 'Card';
     }
+
+        public function monthlyPayments()
+    {
+        return $this->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->sum('payment');
+    }
+
 }

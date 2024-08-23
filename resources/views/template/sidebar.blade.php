@@ -120,29 +120,21 @@
             </a>
         </li>
 
-        <li class="menu-item">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
+        {{--        <li class="menu-item">--}}
+        {{--            <a href="javascript:void(0);" class="menu-link menu-toggle">--}}
+        {{--                <i class="menu-icon tf-icons bx bx-coin-stack"></i>--}}
+        {{--                <div data-i18n="Account Settings">Finance</div>--}}
+        {{--            </a>--}}
+        {{--            <ul class="menu-sub">--}}
+
+        <li class="menu-item @if(request()->routeIs('finance.other')) active @endif">
+            <a href="{{ route('finance.other') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-coin-stack"></i>
-                <div data-i18n="Account Settings">Finance</div>
+                <div data-i18n="Notifications"> Other</div>
             </a>
-            <ul class="menu-sub">
-                <li class="menu-item @if(request()->routeIs('finance.teachers')) active @endif">
-                    <a href="{{ route('finance.teachers') }}" class="menu-link">
-                        <div data-i18n="Account"> Teachers</div>
-                    </a>
-                </li>
-                <li class="menu-item @if(request()->routeIs('finance.other')) active @endif">
-                    <a href="{{ route('finance.other') }}" class="menu-link">
-                        <div data-i18n="Notifications"> Other</div>
-                    </a>
-                </li>
-                <li class="menu-item @if(request()->routeIs('finance.income')) active @endif">
-                    <a href="{{ route('finance.income') }}" class="menu-link">
-                        <div data-i18n="Connections"> Income</div>
-                    </a>
-                </li>
-            </ul>
         </li>
+        {{--            </ul>--}}
+        {{--        </li>--}}
 
         @endrole
 

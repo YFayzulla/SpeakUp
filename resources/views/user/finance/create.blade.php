@@ -13,7 +13,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form method="POST" action="{{ route('finance.store_teacher') }}">
+                            <form method="POST" action="{{ route('finance.store_other') }}">
                                 @csrf
                                 <div class="row g-2">
                                     <div class="col mb-3">
@@ -36,7 +36,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <input type="hidden" name="status" value="{{ \App\Models\Finance::STATUS_TEACHER }}">
+{{--                                <input type="hidden" name="status" value="{{ \App\Models\Finance::STATUS_INCOME }}">--}}
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
                                     <button type="submit" class="btn btn-primary">Save</button>

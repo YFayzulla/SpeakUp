@@ -18,7 +18,7 @@
                                         <small class="text-success text-nowrap fw-semibold"
                                         ><i class="bx bx-chevron-up"></i> 68.2%</small
                                         >
-                                        <h3 class="mb-0">$84,686k</h3>
+{{--                                        <h3 class="mb-0">{{$finances->monthlyPayments}}</h3>--}}
                                     </div>
                                 </div>
                                 <div id="profileReportChart"></div>
@@ -54,7 +54,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center flex-column flex-sm-row">
                     <div class="ms-auto">
-                        @include('user.finance.teacher.create')
+                        @include('user.finance.create')
                     </div>
                 </div>
                 <div class="table-responsive text-nowrap">
@@ -76,9 +76,9 @@
                                 <td>
                                     <div class="d-flex">
 
-                                        @include('user.finance.teacher.edit')
+                                        @include('user.finance.edit')
 
-                                        @include('user.finance.teacher.delete')
+                                        @include('user.finance.delete')
 
                                     </div>
                                 </td>

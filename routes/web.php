@@ -87,10 +87,10 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
 
 
 //     finance
-    Route::get('finance/other', [FinanceController::class, 'other'])->name('finance.other');
-    Route::post('finance/store/other', [FinanceController::class, 'store_other'])->name('finance.store_other');
-    Route::put('finance/update/{id}/other', [FinanceController::class, 'update_other'])->name('finance.update_other');
-    Route::delete('finance/delete/{id}/other', [FinanceController::class, 'destroy_other'])->name('finance.destroy_other');
+    Route::get('finance', [FinanceController::class, 'index'])->name('finance.other');
+    Route::post('finance/store', [FinanceController::class, 'store'])->name('finance.store');
+    Route::put('finance/update/{id}', [FinanceController::class, 'update'])->name('finance.update');
+    Route::delete('finance/delete/{id}', [FinanceController::class, 'destroy'])->name('finance.destroy');
 
 });
 

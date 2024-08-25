@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Attendance;
 use App\Models\DeptStudent;
+use App\Models\Finance;
 use App\Models\GroupTeacher;
 use App\Models\HistoryPayments;
 use App\Models\User;
@@ -24,16 +25,26 @@ class Controller extends BaseController
     {
 
         if (auth()->user()->hasRole('admin')) {
+
             $teachers = User::query()->role('user')->get();
 
+            $summa = HistoryPayments::query()->sum('payment');
+
+            $consumption = Finance::query()->sum('payment');
+
+            $profit = $summa - $consumption;
+
+            $pie_chart = [ $summa, $consumption ];
 
             return view('dashboard', [
                     'teachers' => $teachers,
                     'number_of_students' => User::query()->role('student')->count(),
-                    'daily_profit' => HistoryPayments::query()->whereDate('created_at', today())->sum('payment'),
+                    'daily_income' => HistoryPayments::query()->whereDate('created_at', today())->sum('payment'),
                     'trent' => HistoryPayments::query()->whereDate('created_at', today())->get(['payment', 'name']),
                     'students' => User::role('student')->where('status' ,'<',0 )->get(),
                     'attendances'=>Attendance::query()->whereDate('created_at', today())->get(),
+                    'profit' => $profit,
+                    'pie_chart'=> $pie_chart
                 ]
             );
         }

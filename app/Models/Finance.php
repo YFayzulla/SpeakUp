@@ -25,11 +25,4 @@ class Finance extends Model
         return $this->type == self::CASH ? 'Cash' : 'Card';
     }
 
-        public function monthlyPayments()
-    {
-        return $this->whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->sum('payment');
-    }
-
 }

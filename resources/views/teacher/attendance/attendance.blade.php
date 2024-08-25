@@ -27,9 +27,9 @@
                 @endforeach
                 </tbody>
             </table>
-{{--            <div class="d-flex justify-content-end mt-2">--}}
-                <button type="submit" class="btn btn-primary">topshirish</button>
-{{--            </div>--}}
+            <div class="d-flex justify-content-end mt-2">
+                <button type="submit" class="btn btn-primary">submit</button>
+            </div>
         </form>
     </div>
 @endsection

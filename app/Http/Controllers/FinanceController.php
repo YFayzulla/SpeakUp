@@ -10,26 +10,29 @@ class FinanceController extends Controller
 {
 
 
-    public function other()
+    public function index()
     {
         return view('user.finance.index', [
             'finances' => Finance::all(),
-//            'monthly' => Finance::monthlyPayments()
+            'consumption' => Finance::sum('payment')
         ]);
     }
 
-    public function store_other(StoreRequest $request)
+    public function store(StoreRequest $request)
     {
+
         $validatedData = $request->validated();
 
 //        $validatedData['status'] = Finance::STATUS_OTHER;
 
-        Finance::query()->create($validatedData);
+        $data = Finance::query()->create($validatedData);
+
+//        dd($data);
 
         return redirect()->back()->with('success', 'Finance created successfully!');
     }
 
-    public function update_other(UpdateRequest $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         $validatedData = $request->validated();
 //        $validatedData['status'] = Finance::STATUS_OTHER;
@@ -40,7 +43,7 @@ class FinanceController extends Controller
         return redirect()->back()->with('success', 'Finance updated successfully!');
     }
 
-    public function destroy_other($id)
+    public function destroy($id)
     {
         $finance = Finance::query()->where('id', $id)->firstOrFail();
         $finance->delete();

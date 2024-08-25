@@ -27,7 +27,7 @@ class StoreRequest extends FormRequest
             'reason' => 'required|string|max:255',
             'payment' => 'required|numeric',
             'type' => 'required|integer',
-            'status' => 'required'
+//            'status' => 'required'
         ];
     }
 }

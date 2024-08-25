@@ -130,7 +130,7 @@
         <li class="menu-item @if(request()->routeIs('finance.other')) active @endif">
             <a href="{{ route('finance.other') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-coin-stack"></i>
-                <div data-i18n="Notifications"> Other</div>
+                <div data-i18n="Notifications"> Finance </div>
             </a>
         </li>
         {{--            </ul>--}}

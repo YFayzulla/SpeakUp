@@ -428,80 +428,76 @@
         }
     };
 
+    // const pieChartData = @json($pie_chart);
+
     if (typeof profileReportChartEl !== undefined && profileReportChartEl !== null) {
         const profileReportChart = new ApexCharts(profileReportChartEl, profileReportChartConfig);
         profileReportChart.render();
     }
-
-    // Order Statistics Chart
-    // --------------------------------------------------------------------
-    const chartOrderStatistics = document.querySelector('#orderStatisticsChart'),
-        orderChartConfig = {
-            chart: {
-                height: 165,
-                width: 130,
-                type: 'donut'
-            },
-            labels: ['Electronic', 'Sports', 'Decor', 'Fashion'],
-            series: [85, 15, 50, 50],
-            colors: [config.colors.primary, config.colors.secondary, config.colors.info, config.colors.success],
-            stroke: {
-                width: 5,
-                colors: cardColor
-            },
-            dataLabels: {
-                enabled: false,
-                formatter: function (val, opt) {
-                    return parseInt(val) + '%';
-                }
-            },
-            legend: {
-                show: false
-            },
-            grid: {
-                padding: {
-                    top: 0,
-                    bottom: 0,
-                    right: 15
-                }
-            },
-            plotOptions: {
-                pie: {
-                    donut: {
-                        size: '75%',
-                        labels: {
-                            show: true,
-                            value: {
-                                fontSize: '1.5rem',
-                                fontFamily: 'Public Sans',
-                                color: headingColor,
-                                offsetY: -15,
-                                formatter: function (val) {
-                                    return parseInt(val) + '%';
-                                }
-                            },
-                            name: {
-                                offsetY: 20,
-                                fontFamily: 'Public Sans'
-                            },
-                            total: {
+    document.addEventListener('DOMContentLoaded', function () {
+        const chartOrderStatistics = document.querySelector('#orderStatisticsChart'),
+            orderChartConfig = {
+                chart: {
+                    height: 165,
+                    width: 130,
+                    type: 'donut'
+                },
+                labels: ['summa' , 'consumption'], // Use the labels from the Blade file
+                series: pieChartData,   // Use the data from the Blade file
+                colors: [config.colors.primary, config.colors.secondary],
+                stroke: {
+                    width: 5,
+                    colors: config.colors.white
+                },
+                dataLabels: {
+                    enabled: false,
+                    formatter: function (val, opt) {
+                        return parseInt(val) + '%';
+                    }
+                },
+                legend: {
+                    show: false
+                },
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '75%',
+                            labels: {
                                 show: true,
-                                fontSize: '0.8125rem',
-                                color: axisColor,
-                                label: 'Weekly',
-                                formatter: function (w) {
-                                    return '38%';
+                                value: {
+                                    fontSize: '1.5rem',
+                                    fontFamily: 'Public Sans',
+                                    color: config.colors.headingColor,
+                                    offsetY: -15,
+                                    formatter: function (val) {
+                                        return parseInt(val) + '%';
+                                    }
+                                },
+                                name: {
+                                    offsetY: 20,
+                                    fontFamily: 'Public Sans'
+                                },
+                                total: {
+                                    show: true,
+                                    fontSize: '0.8125rem',
+                                    color: config.colors.axisColor,
+                                    label: 'Total',
+                                    formatter: function (w) {
+                                        return '100%';
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
-        };
-    if (typeof chartOrderStatistics !== undefined && chartOrderStatistics !== null) {
-        const statisticsChart = new ApexCharts(chartOrderStatistics, orderChartConfig);
-        statisticsChart.render();
-    }
+            };
+
+        if (chartOrderStatistics !== null) {
+            const statisticsChart = new ApexCharts(chartOrderStatistics, orderChartConfig);
+            statisticsChart.render();
+        }
+    });
+
 
     // Income Chart - Area chart
     // --------------------------------------------------------------------

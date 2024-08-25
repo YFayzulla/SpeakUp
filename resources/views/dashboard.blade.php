@@ -39,7 +39,7 @@
                                         </div>
                                         <div class="mt-sm-auto">
 
-                                            <h6 class="mb-0"> {{number_format($daily_profit, 0, '.', ' ')}} sum</h6>
+                                            <h6 class="mb-0"> {{number_format($daily_income, 0, '.', ' ')}} sum</h6>
                                         </div>
                                     </div>
                                     <div id="profileReportChart" data-trent="{{ $trent->toJson() }}"></div>
@@ -103,8 +103,9 @@
                 <div class="card mb-3">
                     <div class="card-header d-flex align-items-center justify-content-between pb-0">
                         <div class="card-title mb-0 text-center ">
-                            <h5 class="m-0 me-2 text-center ">---- minus</h5>
-                            {{--                            <h2 class="mb-2">{{}} ta</h2>--}}
+                            <h5 class="m-0 me-2 text-center mb-2"> Profit </h5>
+
+                            {{--                            <h6 class="mb-2">{{number_format($profit, 0, '.', ' ')}} sum</h6>--}}
 
                         </div>
                         <div class="dropdown">
@@ -112,13 +113,14 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
+{{--                        <div class="d-flex justify-content-between align-items-center mb-3">--}}
 
-                            <div class="d-flex flex-column align-items-center gap-1 m-2">
-                                {{--                                <span>{{today()->format('d-m-y')}}</span>--}}
-                            </div>
-                            {{--                            <div id="orderStatisticsChart"></div>--}}
-                        </div>
+                            <span class="badge bg-label-info rounded-pill mb-2">{{today()->format('d-m-y')}}</span>
+                            <h6 class="mb-2">{{number_format($profit, 0, '.', ' ')}} sum</h6>
+
+                            {{--                                                        @dd($pie_chart)--}}
+{{--                                                                                    <div id="orderStatisticsChart" data-pie-chart="{{ json_encode($pie_chart) }}"></div>--}}
+{{--                        </div>--}}
 
                         @foreach($students as $student)
                             <ul class="p-0 m-0">
@@ -152,7 +154,7 @@
                 <div class="card">
                     <div class="card-header d-flex align-items-center justify-content-between pb-0">
                         <div class="card-title mb-0">
-{{--                            @dd($attendances)--}}
+                            {{--                            @dd($attendances)--}}
                             <h5 class="m-0 me-2">{{count($attendances) == 0  ? 'Attendance is ok' : count($attendances) . " Students didn't come" }} </h5>
                             <h2 class="mb-2"></h2>
                         </div>

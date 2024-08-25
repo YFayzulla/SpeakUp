@@ -9,12 +9,13 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel1">Create finance for the teacher</h5>
+                            <h5 class="modal-title" id="exampleModalLabel1"></h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form method="POST" action="{{ route('finance.store_other') }}">
+                            <form method="POST" action="{{ route('finance.store') }}">
                                 @csrf
+
                                 <div class="row g-2">
                                     <div class="col mb-3">
                                         <label for="reason" class="form-label">Reason</label>

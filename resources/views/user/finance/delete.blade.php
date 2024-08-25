@@ -13,7 +13,7 @@
                 Do you want to delete the {{ $finance->reason }}?
             </div>
             <div class="modal-footer">
-                <form action="{{ route('finance.destroy_other', $finance->id) }}" method="POST">
+                <form action="{{ route('finance.destroy', $finance->id) }}" method="POST">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger">Delete</button>

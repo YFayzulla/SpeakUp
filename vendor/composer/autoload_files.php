@@ -36,6 +36,7 @@ return array(
     'c20d640a0b06382af5bbe7e0c7475adf' => $vendorDir . '/amphp/parallel/src/Context/Internal/functions.php',
     '42a785d14bae29c606457755ffd1653b' => $vendorDir . '/amphp/parallel/src/Ipc/functions.php',
     '805558626a43dc52f2afc82368f8d62e' => $vendorDir . '/amphp/parallel/src/Worker/functions.php',
+    '2cffec82183ee1cea088009cef9a6fc3' => $vendorDir . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
     '09f6b20656683369174dd6fa83b7e5fb' => $vendorDir . '/symfony/polyfill-uuid/bootstrap.php',
     'a1105708a18b76903365ca1c4aa61b02' => $vendorDir . '/symfony/translation/Resources/functions.php',
     '37a3dc5111fe8f707ab4c132ef1dbc62' => $vendorDir . '/guzzlehttp/guzzle/src/functions_include.php',

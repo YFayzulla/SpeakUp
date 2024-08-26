@@ -1,0 +1,111 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: src/Attributes/Validation/Dimensions.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: src/Attributes/Validation/Enum.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: src/Attributes/Validation/Exclude.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: src/Attributes/Validation/Exists.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: src/Attributes/Validation/In.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: src/Attributes/Validation/NotIn.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: src/Attributes/Validation/Prohibited.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: src/Attributes/Validation/Required.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: src/Attributes/Validation/StringValidationAttribute.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: src/Attributes/Validation/Unique.php
+
+		-
+			message: "#^Parameter \\#1 \\$time of static method Carbon\\\\Carbon\\:\\:parse\\(\\) expects DateTimeInterface\\|string\\|null, int given\\.$#"
+			count: 1
+			path: src/Attributes/Validation/ValidationAttribute.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of function implode expects array\\<string\\>, array\\<object\\|string\\> given\\.$#"
+			count: 1
+			path: src/Attributes/Validation/ValidationAttribute.php
+
+		-
+			message: "#^Call to an undefined method DateTimeInterface\\:\\:setTimezone\\(\\)\\.$#"
+			count: 1
+			path: src/Casts/DateTimeInterfaceCast.php
+
+		-
+			message: "#^Method Spatie\\\\LaravelData\\\\Data\\:\\:from\\(\\) should return static\\(Spatie\\\\LaravelData\\\\Data\\) but returns Spatie\\\\LaravelData\\\\Contracts\\\\BaseData\\.$#"
+			count: 1
+			path: src/Data.php
+
+		-
+			message: "#^Method Spatie\\\\LaravelData\\\\Data\\:\\:withoutMagicalCreationFrom\\(\\) should return static\\(Spatie\\\\LaravelData\\\\Data\\) but returns Spatie\\\\LaravelData\\\\Contracts\\\\BaseData\\.$#"
+			count: 1
+			path: src/Data.php
+
+		-
+			message: "#^PHPDoc tag @return with type Spatie\\\\LaravelData\\\\DataCollection\\<int, TValue\\> is not subtype of native type static\\(Spatie\\\\LaravelData\\\\DataCollection\\<TKey of \\(int\\|string\\), TValue\\>\\)\\.$#"
+			count: 1
+			path: src/DataCollection.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Pagination\\\\Paginator\\:\\:count\\(\\)\\.$#"
+			count: 1
+			path: src/PaginatedDataCollection.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Pagination\\\\Paginator\\:\\:through\\(\\)\\.$#"
+			count: 2
+			path: src/PaginatedDataCollection.php
+
+		-
+			message: "#^Dead catch \\- ArgumentCountError is never thrown in the try block\\.$#"
+			count: 1
+			path: src/Resolvers/DataFromArrayResolver.php
+
+		-
+			message: "#^Call to an undefined method ReflectionType\\:\\:getName\\(\\)\\.$#"
+			count: 1
+			path: src/Support/DataType.php
+
+		-
+			message: "#^Parameter \\#1 \\$reflection of method Spatie\\\\LaravelData\\\\Support\\\\DataType\\:\\:resolveDataCollectableType\\(\\) expects ReflectionNamedType, ReflectionType given\\.$#"
+			count: 1
+			path: src/Support/DataType.php
+
+		-
+			message: "#^Call to an undefined method DateTimeInterface\\:\\:setTimezone\\(\\)\\.$#"
+			count: 1
+			path: src/Transformers/DateTimeInterfaceTransformer.php

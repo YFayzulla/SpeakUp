@@ -15,7 +15,7 @@ class GroupController extends Controller
     public function index()
     {
         return view('user.group.room', [
-            'rooms' => Room::all(),
+//            'rooms' => Room::all(),
         ]);
     }
 

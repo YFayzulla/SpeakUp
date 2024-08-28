@@ -38,6 +38,7 @@
                     <th>Phone</th>
                     <th>Location</th>
                     <th>Date born</th>
+                    <th>room</th>
                     <th>photo</th>
                     <th>action</th>
                 </tr>
@@ -50,6 +51,7 @@
                         <td>+{{$teacher->phone}}</td>
                         <td>{{$teacher->location}}</td>
                         <td>{{$teacher->date_born}}</td>
+                        <td>{{$teacher->room->room}}</td>
                         <td>
                             <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
                                 <li

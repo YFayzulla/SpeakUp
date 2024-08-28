@@ -25,12 +25,14 @@ class FakeForSeeder extends Seeder
             'name' => 'test',
             'password' => Hash::make('a'),
             'phone' => '0123456789',
+            'room_id' => 1
         ])->assignRole('user');
 
         User::query()->forceCreate([
             'name' => 'test2',
             'password' => Hash::make('a'),
             'phone' => '0123456780',
+            'room_id' => 2
         ])->assignRole('user');
 
         $group1 = Group::query()->firstOrCreate([

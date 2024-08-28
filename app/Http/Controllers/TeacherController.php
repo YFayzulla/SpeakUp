@@ -35,13 +35,6 @@ class TeacherController extends Controller
 
     public function create()
     {
-//
-//        $groups = DB::table('groups')
-//            ->where('groups.id', '!=', 1)
-//            ->leftJoin('group_teachers', 'groups.id', '=', 'group_teachers.group_id')
-//            ->whereNull('group_teachers.group_id')
-//            ->select('groups.*')
-//            ->get();
 
         return view('user.teacher.create',[
             'rooms' => Room::all()
@@ -72,8 +65,7 @@ class TeacherController extends Controller
 
         }
 
-
-        User::create([
+        $teacher = User::create([
             'name' => $request->name,
             'password' => bcrypt($request->name),
             'passport' => $request->passport,
@@ -86,14 +78,15 @@ class TeacherController extends Controller
         ])->assignRole('user');
 
         $index = GroupTeacher::insert(
-            Group::where('level', $request->room_id)
+            Group::where('room_id', $request->room_id)
                 ->get()
                 ->map(fn($group) => [
                     'group_id' => $group->id,
-                    'teacher_id' => $request->teacher_id,
+                    'teacher_id' => $teacher->id,
                 ])
                 ->toArray()
         );
+
 
         return redirect()->route('teacher.index')->with('success', 'Information has been added');
     }
@@ -179,6 +172,9 @@ class TeacherController extends Controller
      */
     public function destroy($id)
     {
+
+        GroupTeacher::where('teacher_id', $id)->get()->each->delete();
+
         $teacher = User::find($id);
         $teacher->delete();
         return redirect()->back()->with('success', 'Information deleted');

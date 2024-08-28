@@ -93,6 +93,7 @@ class GroupController extends Controller
             'monthly_payment' => 'required',
         ]);
 
+
         $group->update([
             'name' => $request->name,
             'start_time' => $request->start_time,

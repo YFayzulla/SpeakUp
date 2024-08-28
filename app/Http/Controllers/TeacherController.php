@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Group;
 use App\Models\GroupTeacher;
+use App\Models\Level;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,8 +20,10 @@ class TeacherController extends Controller
      */
     public function index()
     {
+
         $teachers = User::role('user')->orderBy('name')->get();
         return view('user.teacher.index', compact('teachers'));
+
     }
 
     /**
@@ -31,7 +34,18 @@ class TeacherController extends Controller
 
     public function create()
     {
-        return view('user.teacher.create');
+//
+//        $groups = DB::table('groups')
+//            ->where('groups.id', '!=', 1)
+//            ->leftJoin('group_teachers', 'groups.id', '=', 'group_teachers.group_id')
+//            ->whereNull('group_teachers.group_id')
+//            ->select('groups.*')
+//            ->get();
+
+        return view('user.teacher.create',[
+            'rooms' => Level::all()
+        ]);
+
     }
 
     /**
@@ -42,6 +56,7 @@ class TeacherController extends Controller
      */
     public function store(Request $request)
     {
+
         $request->validate([
 
             'name' => 'required',
@@ -65,7 +80,8 @@ class TeacherController extends Controller
             'location' => $request->location,
             'phone' => 998 . $request->phone,
             'photo' => $path ?? null,
-            'percent' => $request->percent
+            'percent' => $request->percent,
+            'room_id' => $request->room_id
         ])->assignRole('user');
 
 
@@ -80,18 +96,11 @@ class TeacherController extends Controller
      */
     public function show($id)
     {
-
-        $groups = DB::table('groups')
-            ->where('groups.id', '!=', 1)
-            ->leftJoin('group_teachers', 'groups.id', '=', 'group_teachers.group_id')
-            ->whereNull('group_teachers.group_id')
-            ->select('groups.*')
-            ->get();
-
-
-        $teachers = GroupTeacher::where('teacher_id', '=', $id)->get();
-
-        return view('user.teacher.show', compact('teachers', 'groups', 'id'));
+//
+//
+//        $teachers = GroupTeacher::where('teacher_id', '=', $id)->get();
+//
+//        return view('user.teacher.show', compact('teachers', 'groups', 'id'));
 
     }
 

@@ -65,6 +65,18 @@
                     <input id="passport" name="passport" value="{{old('passport')}}" type="text" class="form-control">
                 </div>
 
+                @error('room')
+                <div class="alert alert-danger" role="alert">This place should be written!</div>
+                @enderror
+
+                <div class="mt-2">
+                    <label for="room" class="text-dark"> Room </label>
+                    <select name="room_id" id="room" class="form-control">
+                        @foreach($rooms as $room)
+                            <option value="{{$room->id}}"> {{$room->name}} </option>
+                        @endforeach
+                    </select
+                </div>
 
                 <div class="mt-2">
                     <label for="percent" class="text-dark">Percent </label>

@@ -20,14 +20,14 @@
 
 
                 <label for="start_time" class="text-dark">start time</label>
-                <input id="start_time" name="start_time" value="{{$group->start_time}}" type="text" class="form-control">
+                <input id="start_time" name="start_time" value="{{$group->start_time}}" type="time" class="form-control">
 
                 @error('start_time')
                 <div class="alert alert-danger" role="alert">This place should be written</div>
                 @enderror
 
                 <label for="finish_time" class="text-dark">finish time</label>
-                <input id="finish_time" name="finish_time" value="{{$group->finish_time}}" type="text" class="form-control">
+                <input id="finish_time" name="finish_time" value="{{$group->finish_time}}" type="time" class="form-control">
 
                 @error('finish_time')
                 <div class="alert alert-danger" role="alert">This place should be written</div>

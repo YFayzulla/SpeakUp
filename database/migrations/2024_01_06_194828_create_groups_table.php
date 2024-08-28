@@ -17,10 +17,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('room_id')->nullable()->constrained();
             $table->string('name');
-            $table->string('start_time')->nullable();
-            $table->string('finish_time')->nullable();
+            $table->dateTime('start_time')->nullable();
+            $table->dateTime('finish_time')->nullable();
             $table->string('level')->nullable();
-            $table->string('monthly_payment')->nullable();
+            $table->integer('monthly_payment')->nullable();
             $table->timestamps();
         });
     }

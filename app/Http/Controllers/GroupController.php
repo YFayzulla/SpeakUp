@@ -18,7 +18,7 @@ class GroupController extends Controller
      */
     public function index()
     {
-        $groups=Group::where('id','!=',1)->orderby('name') ->get();
+        $groups=Group::where('id','!=',1)->orderby('start_time') ->get();
         return view('user.group.index',compact('groups'));
     }
 
@@ -63,14 +63,11 @@ class GroupController extends Controller
      * @param  \App\Models\Group  $group
      * @return \Illuminate\Http\Response
      */
-    public function show(Group $group)
+    public function show(Level $level)
     {
 
-//        $id=$group->name;
-//        $groups=Group::orderby('name')->get();
-//        $assessments=Assessment::where('Group',$group->name)->orderby('created_at')->get();
-//        return view('user.group.show',compact('assessments','groups','id'));
-
+        $groups=Group::where('id','!=',1)->where('level', $level->id)->orderby('start_time')->get();
+        return view('user.group.index',compact('groups'));
 
     }
 

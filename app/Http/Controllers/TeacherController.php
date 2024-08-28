@@ -111,9 +111,9 @@ class TeacherController extends Controller
     public function edit($id)
     {
         $teacher = User::find($id);
-//        dd($id,$teacher);
+        $rooms = Room::all();
         if ($teacher !== null)
-            return view('user.teacher.edit', compact('teacher'));
+            return view('user.teacher.edit', compact('teacher' , 'rooms'));
         else
             return abort('403');
     }
@@ -141,6 +141,8 @@ class TeacherController extends Controller
 
         $teacher = User::find($id);
 
+        GroupTeacher::where('teacher_id', $teacher->id)->get()->each->delete();
+
         if ($request->hasFile('photo')) {
             if (isset($teacher->photo)) {
                 Storage::delete($teacher->photo);
@@ -148,6 +150,7 @@ class TeacherController extends Controller
             $fileName = time() . '.' . $request->file('photo')->getClientOriginalExtension();
             $path = $request->file('photo')->storeAs('Photo', $fileName);
         };
+
         $teacher->update([
             'name' => $request->name,
             'phone' => $request->phone,
@@ -157,7 +160,18 @@ class TeacherController extends Controller
             'passport' => $request->passport,
             'percent' => $request->percent,
             'photo' => $path ?? $teacher->photo ?? null,
+            'room_id' => $request->room_id
         ]);
+
+        $index = GroupTeacher::insert(
+            Group::where('room_id', $request->room_id)
+                ->get()
+                ->map(fn($group) => [
+                    'group_id' => $group->id,
+                    'teacher_id' => $teacher->id,
+                ])
+                ->toArray()
+        );
 
 
         return redirect()->route('teacher.index')->with('success', 'Information has been updated');

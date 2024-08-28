@@ -70,10 +70,6 @@
                             <a href="{{route('teacher.edit',$teacher->id)}}" class="btn-outline-warning btn m-1">
                                 <i class='bx bx-edit-alt'></i>
                             </a>
-                            <a href="{{route('teacher.show',$teacher->id)}}" class="btn-outline-primary btn m-1">
-                                <i class='bx bx-show'></i>
-                            </a>
-
                             <form action="{{route('teacher.destroy',$teacher->id)}}" method="post"
                                   onsubmit="return confirm('are you sure for deleting ');">
                                 @csrf

@@ -85,6 +85,16 @@
                 {{--                <div class="alert alert-danger" role="alert">Ushbu maydon bo'sh bo'lishi mumkin emas!</div>--}}
                 {{--                @enderror--}}
 
+
+                <div class="mt-2">
+                    <label for="room" class="text-dark"> Room </label>
+                    <select name="room_id" id="room" class="form-control">
+                        @foreach($rooms as $room)
+                            <option value="{{$room->id}}"> {{$room->room}}  </option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <div class="mt-2">
                     <label for="photo" class="text-dark"> Photo</label>
                     <input id="photo" name="photo" value="{{old('photo')}}" type="file" class="form-control">

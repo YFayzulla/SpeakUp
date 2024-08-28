@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('should_pay')->nullable();
             $table->string('status')->nullable();
             $table->string('percent')->nullable();
+            $table->foreignId('room_id')->nullable()->constrained();
             $table->rememberToken();
             $table->timestamps();
         });

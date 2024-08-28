@@ -5,21 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Assessment;
 use App\Models\Group;
 use App\Models\Level;
+use App\Models\Room;
 use App\Models\StudentInformation;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class GroupController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        $groups=Group::where('id','!=',1)->orderby('name') ->get();
-        return view('user.group.index',compact('groups'));
+        return view('user.group.room', [
+            'rooms' => Room::all(),
+        ]);
     }
 
     /**

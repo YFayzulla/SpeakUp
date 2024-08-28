@@ -13,14 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('groups', function (Blueprint $table) {
+        Schema::create('rooms', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('room_id')->nullable()->constrained();
-            $table->string('name');
-            $table->string('start_time')->nullable();
-            $table->string('finish_time')->nullable();
-            $table->string('level')->nullable();
-            $table->string('monthly_payment')->nullable();
+            $table->integer('number');
             $table->timestamps();
         });
     }
@@ -32,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('groups');
+        Schema::dropIfExists('rooms');
     }
 };

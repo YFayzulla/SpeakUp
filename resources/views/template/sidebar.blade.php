@@ -93,7 +93,7 @@
             </a>
         </li>
 
-        <li class="menu-item @if(request()->routeIs('group.index','group.create','group.edit','group.show','group.attendance')) active @endif">
+        <li class="menu-item @if(request()->routeIs('group.index','group.create','group.edit','group.show','group.attendance','group.create.room')) active @endif">
             <a href="{{ route('group.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-group"></i>
                 <div data-i18n="Analytics">Rooms</div>

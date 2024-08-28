@@ -24,75 +24,72 @@ class GroupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        $level=Level::all();
-
-        return view('user.group.create',compact('level'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
+
+//        dd($request);
         $request->validate([
             'name' => 'required',
             'monthly_payment' => 'required',
         ]);
 
-        Group::create([
+        $group = Group::create([
             'name' => $request->name,
             'start_time' => $request->start_time,
             'finish_time' => $request->finish_time,
             'monthly_payment' => $request->monthly_payment,
-            'level' => $request->level,
+            'room_id' => $request->room,
         ]);
-        return redirect()->route('group.index')->with('success', 'Information has been added');
+        return redirect()->route('group.show', $group->room_id)->with('success', 'Information has been added');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Group  $group
+     * @param \App\Models\Group $group
      * @return \Illuminate\Http\Response
      */
-    public function show(Level $level)
+    public function show($id)
     {
 
-        $groups=Group::where('id','!=',1)->where('level', $level->id)->orderby('start_time')->get();
-        return view('user.group.index',compact('groups'));
+        $groups = Group::where('id', '!=', 1)->where('room_id', $id)->orderby('start_time')->get();
+        return view('user.group.index', compact('groups', 'id'));
 
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Group  $group
+     * @param \App\Models\Group $group
      * @return \Illuminate\Http\Response
      */
     public function edit(Group $group)
     {
-        $level=Level::all();
-        return view('user.group.edit',compact('group','level'));
+        $rooms = Room::all();
+        return view('user.group.edit', compact('group', 'rooms'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Group  $group
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Group $group
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Group $group)
     {
         $request->validate([
             'name' => 'required',
-//            'start_time' => 'required',
-//            'finish_time' => 'required',
             'monthly_payment' => 'required',
         ]);
 
@@ -101,10 +98,12 @@ class GroupController extends Controller
             'start_time' => $request->start_time,
             'finish_time' => $request->finish_time,
             'monthly_payment' => $request->monthly_payment,
-            'level' => $request->level,
+            'room_id' => $request->room,
         ]);
 
-        return redirect()->route('group.index')->with('success', 'Information has been updated');
+//        dd($group);
+
+        return redirect()->back()->with('success', 'Information has been updated');
 
 
     }
@@ -112,13 +111,20 @@ class GroupController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Group  $group
+     * @param \App\Models\Group $group
      * @return \Illuminate\Http\Response
      */
     public function destroy(Group $group)
     {
         $group->delete();
         User::where('group_id', $group->id)->update(['group_id' => 1]);// Assuming 1 is the default group ID
-        return redirect()->back()->with('success','Information deleted');
+        return redirect()->back()->with('success', 'Information deleted');
     }
+
+    public function makeGroup($id)
+    {
+        return view('user.group.create', compact('id'));
+
+    }
+
 }

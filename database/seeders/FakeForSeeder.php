@@ -34,9 +34,11 @@ class FakeForSeeder extends Seeder
         ])->assignRole('user');
 
         $group1 = Group::query()->firstOrCreate([
+            'room_id' => 2,
             'name' => 'group_test1',
         ]);
         $group2 = Group::query()->firstOrCreate([
+            'room_id' => 1,
             'name' => 'group_test2',
         ]);
 
@@ -55,10 +57,10 @@ class FakeForSeeder extends Seeder
 
 
             $student = User::query()->forceCreate([
-                'name'=> 'student'.$i,
-                'password' => Hash::make('student'.$i),
-                'phone' => '012345678'.$i,
-                'should_pay'=>10000,
+                'name' => 'student' . $i,
+                'password' => Hash::make('student' . $i),
+                'phone' => '012345678' . $i,
+                'should_pay' => 10000,
                 'group_id' => rand($group1->id, $group2->id)
             ])->assignRole('student');
 

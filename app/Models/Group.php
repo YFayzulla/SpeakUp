@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Group extends Model
 {
     use HasFactory;
-    protected $fillable=['name','beginning','start_time','finish_time','level','monthly_payment'];
+    protected $fillable=['name','beginning','start_time','finish_time','room_id','monthly_payment'];
 
     public function teacherhasGroup(){
         return $this->hasMany(User::class);

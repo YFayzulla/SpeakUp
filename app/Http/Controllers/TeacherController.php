@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Group;
 use App\Models\GroupTeacher;
 use App\Models\Level;
+use App\Models\Room;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -43,7 +44,7 @@ class TeacherController extends Controller
 //            ->get();
 
         return view('user.teacher.create',[
-            'rooms' => Level::all()
+            'rooms' => Room::all()
         ]);
 
     }
@@ -84,6 +85,15 @@ class TeacherController extends Controller
             'room_id' => $request->room_id
         ])->assignRole('user');
 
+        $index = GroupTeacher::insert(
+            Group::where('level', $request->room_id)
+                ->get()
+                ->map(fn($group) => [
+                    'group_id' => $group->id,
+                    'teacher_id' => $request->teacher_id,
+                ])
+                ->toArray()
+        );
 
         return redirect()->route('teacher.index')->with('success', 'Information has been added');
     }
@@ -96,11 +106,6 @@ class TeacherController extends Controller
      */
     public function show($id)
     {
-//
-//
-//        $teachers = GroupTeacher::where('teacher_id', '=', $id)->get();
-//
-//        return view('user.teacher.show', compact('teachers', 'groups', 'id'));
 
     }
 

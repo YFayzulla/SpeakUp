@@ -73,9 +73,9 @@
                     <label for="room" class="text-dark"> Room </label>
                     <select name="room_id" id="room" class="form-control">
                         @foreach($rooms as $room)
-                            <option value="{{$room->id}}"> {{$room->name}} </option>
+                            <option value="{{$room->id}}"> {{$room->number}} room </option>
                         @endforeach
-                    </select
+                    </select>
                 </div>
 
                 <div class="mt-2">

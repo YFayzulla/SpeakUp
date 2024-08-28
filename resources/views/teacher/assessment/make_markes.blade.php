@@ -2,20 +2,16 @@
 @section('content')
 
     <div class="card">
-        <div class="text-nowrap">
-            <form action="{{route('assessment.update',$id)}}" method='post'>
-                @csrf
-                @method('PUT')
+        <form action="{{ route('assessment.update', $id) }}" method="post">
+            @csrf
+            @method('PUT')
+            <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                <label for="lesson" class="mr-2"></label>
+                <input type="text" name="lesson" id="lesson" class="form-control w-50 m-3" placeholder="Test Name" required>
+            </div>
 
-                <div class="row mb-4">
-                    <!-- Left-aligned label and input -->
-                    <div class="col-md-6 d-flex align-items-center">
-                        <label for="lesson" class="mr-2"></label>
-                        <input type="text" name="lesson" id="lesson" class="form-control w-50 m-3" placeholder="Test Name">
-                    </div>
-                </div>
-
-                <table class="table table-responsive">
+            <div class="table-responsive text-nowrap">
+                <table class="table">
                     <thead>
                     <tr>
                         <th>T/R</th>
@@ -25,42 +21,34 @@
                         <th>Recommendation</th>
                     </tr>
                     </thead>
-                    @php($i=0)
-                    @foreach($students as $student)
-                        <input type="hidden" name="student[]" value="{{($student->id)}}">
-                        <tbody class="table-border-bottom-0">
+                    <tbody class="table-border-bottom-0">
+                    @foreach($students as $index => $student)
                         <tr>
-                            <td>{{ $loop->index+1 }}</td>
+                            <td>{{ $index + 1 }}</td>
                             <td>{{ $student->name }}</td>
                             <td>
-                                <input type="number" class="float input-group-merge justify-content-center"
-                                       style="height: 30px;width: 50px"
-                                       name="end_mark[]">
+                                <input type="number" class="form-control" style="width: 70px;" name="end_mark[]" required>
                             </td>
                             <td>
-                                <input type="text" class="float input-group-merge form-control"
-                                       name="reason[]">
+                                <input type="text" class="form-control" name="reason[]" required>
                             </td>
                             <td>
-                                <select class="form-select form-control" name="recommended[]">
+                                <select class="form-select form-control" name="recommended[]" required>
                                     @foreach($groups as $group)
                                         <option value="{{ $group->name }}">{{ $group->name }}</option>
                                     @endforeach
                                 </select>
                             </td>
                         </tr>
-                        </tbody>
-                        @php($i++)
+                        <input type="hidden" name="student[]" value="{{ $student->id }}">
                     @endforeach
+                    </tbody>
                 </table>
-
-                <!-- Right-aligned submit button at the bottom -->
-                <div class="d-flex justify-content-end mb-4">
-                    <button type="submit" class="btn btn-primary m-3">Submit</button>
-                </div>
-
-            </form>
-        </div>
+            </div>
+            <div class="modal-footer mt-4">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
     </div>
 
 @endsection

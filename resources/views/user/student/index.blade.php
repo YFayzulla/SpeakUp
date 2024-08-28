@@ -1,25 +1,37 @@
 @extends('template.master')
 @section('content')
-    <div class="p-4 m-4 sm:p-8 bg-white shadow sm:rounded-lg ">
+
+    <div class="card">
 
         @php
             use Illuminate\Support\Carbon;
         @endphp
 
-        <h1 class="text-center">Students</h1>
+        <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+            <h5 class="mb-0">Students</h5>
+            <div class="dt-action-buttons text-end pt-3 pt-md-0">
+                <div class="dt-buttons btn-group flex-wrap">
+                    <div class="btn-group">
+                        <a class="btn buttons-collection dropdown-toggle btn-label-primary me-2" tabindex="0"
+                           aria-controls="DataTables_Table_0" type="button" id="dropdownMenuButton"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <span><i class="bx bx-export me-sm-1"></i> <span
+                                        class="d-none d-sm-inline-block">Export</span></span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" href="{{ URL::to('/student/pdf') }}"><i
+                                            class="bx bxs-file-pdf me-1"></i> Pdf</a></li>
+                        </ul>
+                    </div>
+                    <a href="{{route('student.create')}}" class="btn btn-secondary create-new btn-primary" tabindex="0"
+                       aria-controls="DataTables_Table_0">
+                        <span><i class="bx bx-plus me-sm-1"></i> <span
+                                    class="d-none d-sm-inline-block">Add New Student</span></span>
+                    </a>
+                </div>
+            </div>
+        </div>
 
-        <ul class="nav nav-pills flex-column flex-md-row mb-3">
-            <li class="nav-item me-2 mt-2">
-                <a class="btn btn-outline-success" href="{{route('student.create')}}">
-                    <i class="bx bx-plus"></i>
-                </a>
-            </li>
-            <li class="nav-item me-2 mt-2">
-                <a class="btn btn-danger" href="{{ URL::to('/student/pdf') }}">
-                    Report
-                </a>
-            </li>
-        </ul>
         <div class="table-responsive text-nowrap">
             <table class="table">
                 <thead>
@@ -30,11 +42,11 @@
                     <th>Parents tel</th>
                     {{--                <th>oylik to`lov</th>--}}
                     <th>group</th>
-                    <th class="">action</th>
+                    <th>action</th>
                 </tr>
                 </thead>
                 @foreach($students as $student)
-                    <tbody id="myTable" class="table-group-divider">
+                    <tbody id="myTable" class="table-border-bottom-0">
                     <tr>
                         <th>{{$loop->index+1}}</th>
                         {{--                    @dd($student->name)--}}
@@ -48,7 +60,7 @@
                                 <i class='bx bx-edit-alt'></i>
                             </a>
                             <a class="btn btn-outline-primary m-1" href="{{ route('student.show',$student->id) }}"><i
-                                    class="bx bx-show-alt"></i></a>
+                                        class="bx bx-show-alt"></i></a>
 
                             <form action="{{route('student.destroy',$student->id)}}" method="post"
                                   onsubmit="return confirm('are you sure for deleting ');">
@@ -66,4 +78,5 @@
             </table>
         </div>
     </div>
+
 @endsection

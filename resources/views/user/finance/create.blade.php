@@ -1,8 +1,10 @@
 <div class="d-flex justify-content-between">
-    <div class="col-lg-4 col-md-6">
+
         <div class="mt-3">
-            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#basicModal">
-                <i class="bx bx-plus"></i>
+            <button class="btn btn-secondary create-new btn-primary" tabindex="0" data-bs-toggle="modal" data-bs-target="#basicModal"
+                    aria-controls="DataTables_Table_0" type="button">
+                        <span><i class="bx bx-plus me-sm-1"></i> <span
+                                    class="d-none d-sm-inline-block">Add New Record</span></span>
             </button>
 
             <div class="modal fade" id="basicModal" tabindex="-1" aria-hidden="true">
@@ -49,4 +51,4 @@
             </div>
         </div>
     </div>
-</div>
+

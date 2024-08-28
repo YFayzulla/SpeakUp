@@ -49,9 +49,12 @@
             </div>
 
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center flex-column flex-sm-row">
+
+                <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                    <h5 class="mb-0">Finance</h5>
                     @include('user.finance.create')
                 </div>
+
                 <div class="table-responsive text-nowrap">
                     <table class="table">
                         <thead>
@@ -63,8 +66,8 @@
                             <th>Actions</th>
                         </tr>
                         </thead>
-                        <tbody class="table-border-bottom-0">
                         @foreach($finances as $finance)
+                            <tbody id="myTable" class="table-border-bottom-0">
                             <tr>
                                 <td>{{ $finance->reason }}</td>
                                 <td>{{ $finance->payment }}</td>
@@ -80,11 +83,12 @@
                                     </div>
                                 </td>
                             </tr>
+                            </tbody>
                         @endforeach
-                        </tbody>
                     </table>
                 </div>
             </div>
+
         </div>
     </div>
 

@@ -1,21 +1,33 @@
 @extends('template.master')
 @section('content')
-    <div class="p-4 m-4 sm:p-8 bg-white shadow sm:rounded-lg ">
 
-        <h1 class="text-center">Teachers</h1>
+    <div class="card">
 
-        <ul class="nav nav-pills flex-column flex-md-row mb-3">
-            <li class="nav-item me-2 mt-2">
-                <a class="btn btn-outline-success" href="{{ route('teacher.create') }}">
-                    <i class="bx bx-plus"></i>
-                </a>
-            </li>
-            <li class="nav-item me-2 mt-2">
-                <a class="btn btn-danger" href="{{ URL::to('/teacher/pdf') }}">
-                    Report
-                </a>
-            </li>
-        </ul>
+        <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+            <h5 class="mb-0">Teachers</h5>
+            <div class="dt-action-buttons text-end pt-3 pt-md-0">
+                <div class="dt-buttons btn-group flex-wrap">
+                    <div class="btn-group">
+                        <a class="btn buttons-collection dropdown-toggle btn-label-primary me-2" tabindex="0"
+                           aria-controls="DataTables_Table_0" type="button" id="dropdownMenuButton"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <span><i class="bx bx-export me-sm-1"></i> <span
+                                        class="d-none d-sm-inline-block">Export</span></span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" href="{{ URL::to('/teacher/pdf') }}"><i
+                                            class="bx bxs-file-pdf me-1"></i> Pdf</a></li>
+                        </ul>
+                    </div>
+                    <a href="{{ route('teacher.create') }}" class="btn btn-secondary create-new btn-primary"
+                       tabindex="0"
+                       aria-controls="DataTables_Table_0">
+                        <span><i class="bx bx-plus me-sm-1"></i> <span
+                                    class="d-none d-sm-inline-block">Add New Teacher</span></span>
+                    </a>
+                </div>
+            </div>
+        </div>
 
         <div class="table-responsive text-nowrap">
             <table class="table">
@@ -27,24 +39,24 @@
                     <th>Location</th>
                     <th>Date born</th>
                     <th>photo</th>
-                    <th class="">action</th>
+                    <th>action</th>
                 </tr>
                 </thead>
                 @foreach($teachers as $teacher)
-                    <tbody id="myTable" class="table-group-divider">
+                    <tbody id="myTable" class="table-border-bottom-0">
                     <tr>
-                        <th>{{$loop->index+1}}</th>
-                        <th>{{$teacher->name}}</th>
-                        <th>+{{$teacher->phone}}</th>
-                        <th>{{$teacher->location}}</th>
-                        <th>{{$teacher->date_born}}</th>
+                        <td>{{$loop->index+1}}</td>
+                        <td>{{$teacher->name}}</td>
+                        <td>+{{$teacher->phone}}</td>
+                        <td>{{$teacher->location}}</td>
+                        <td>{{$teacher->date_born}}</td>
                         <td>
                             <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
                                 <li
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#imageModal{{$teacher->id}}"
-                                    data-bs-placement="top"
-                                    class="avatar avatar-md pull-up"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#imageModal{{$teacher->id}}"
+                                        data-bs-placement="top"
+                                        class="avatar avatar-md pull-up"
                                 >
                                     <img src="{{ asset('storage/'.$teacher->photo) }}" class="rounded-circle" alt="??"/>
                                 </li>
@@ -89,4 +101,6 @@
                 @endforeach
             </table>
         </div>
+    </div>
+
 @endsection

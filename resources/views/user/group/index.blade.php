@@ -10,11 +10,11 @@
                     <i class="bx bx-plus"></i>
                 </a>
             </li>
-            <li class="nav-item me-2 mt-2">
-                <a class="btn btn-danger" href="{{ URL::to('/group/pdf') }}">
-                    Report
-                </a>
-            </li>
+{{--            <li class="nav-item me-2 mt-2">--}}
+{{--                <a class="btn btn-danger" href="{{ URL::to('/group/pdf') }}">--}}
+{{--                    Report--}}
+{{--                </a>--}}
+{{--            </li>--}}
         </ul>
 
         <div class="table-responsive text-nowrap">

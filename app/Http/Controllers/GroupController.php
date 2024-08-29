@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Assessment;
 use App\Models\Group;
+use App\Models\GroupTeacher;
 use App\Models\Level;
 use App\Models\Room;
 use App\Models\StudentInformation;
@@ -24,8 +25,9 @@ class GroupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($id)
+    public function create()
     {
+
     }
 
     /**
@@ -50,6 +52,15 @@ class GroupController extends Controller
             'monthly_payment' => $request->monthly_payment,
             'room_id' => $request->room,
         ]);
+
+
+        if ($group->hasTeacher()) {
+            GroupTeacher::create([
+                'group_id' => $group->id,
+                'teacher_id' => $group->hasTeacher(),
+            ]);
+        }
+
         return redirect()->route('group.show', $group->room_id)->with('success', 'Information has been added');
     }
 
@@ -117,9 +128,12 @@ class GroupController extends Controller
      */
     public function destroy(Group $group)
     {
+
+        GroupTeacher::where('group_id', $group->id)->get()->each->delete();
         $group->delete();
         User::where('group_id', $group->id)->update(['group_id' => 1]);// Assuming 1 is the default group ID
         return redirect()->back()->with('success', 'Information deleted');
+
     }
 
     public function makeGroup($id)

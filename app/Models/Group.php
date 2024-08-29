@@ -28,4 +28,10 @@ class Group extends Model
     {
         return $this->belongsTo(Room::class, 'room_id');
     }
+
+    public function hasTeacher(){
+
+        return User::where('room_id',$this->room_id)->value('id');
+
+    }
 }

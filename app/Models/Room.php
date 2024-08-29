@@ -28,4 +28,13 @@ class Room extends Model
     {
         return $this->hasMany(Group::class, 'room_id');
     }
+
+
+    public function roomTeacher($id){
+        if (User::where('room_id', $id)->exists()){
+            return false;
+        }
+        return true;
+    }
+
 }

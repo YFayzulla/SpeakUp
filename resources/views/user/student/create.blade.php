@@ -61,7 +61,6 @@
                     <option value="{{$group->id}}">{{$group->room->room}}  -> {{$group->name}}</option>
                     @endforeach
                 </select>
-
                 @error('group_id')
                 <div class="alert alert-danger" role="alert">This place should be written</div>
                 @enderror

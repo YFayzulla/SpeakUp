@@ -40,16 +40,12 @@
                 <div class="alert alert-danger" role="alert">This place should be written</div>
                 @enderror
 
-                <label for="level" class="text-dark">Level</label>
+                <label for="room" class="text-dark">rooms</label>
                 <select  name="room"  class="form-control" id="">
                     @foreach($rooms as $l)
                         <option value="{{$l->name}}">{{$l->room}}</option>
                     @endforeach
                 </select>
-
-                @error('level')
-                <div class="alert alert-danger" role="alert">This place should be written</div>
-                @enderror
 
                 <button class="btn btn-warning m-4 "> submit </button>
 

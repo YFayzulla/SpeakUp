@@ -19,11 +19,6 @@ class Group extends Model
     {
         return $this->hasMany(User::class);
     }
-
-    public function level(){
-        return Level::where('id','level');
-    }
-
     public function room(): BelongsTo
     {
         return $this->belongsTo(Room::class);

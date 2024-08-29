@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Group extends Model
 {
     use HasFactory;
-    protected $fillable=['name','beginning','start_time','finish_time','room_id','monthly_payment'];
+    protected $fillable=['name','start_time','finish_time','room_id','monthly_payment'];
 
     public function teacherhasGroup(){
         return $this->hasMany(User::class);
@@ -26,7 +26,7 @@ class Group extends Model
 
     public function room(): BelongsTo
     {
-        return $this->belongsTo(Room::class, 'room_id');
+        return $this->belongsTo(Room::class);
     }
 
     public function hasTeacher(){

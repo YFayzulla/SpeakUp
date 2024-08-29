@@ -58,7 +58,7 @@
                 <label for="group_id" class="text-dark">Group</label>
                 <select class="form-control" name="group_id" >
                     @foreach($groups as $group)
-                    <option value="{{$group->id}}">{{$group->name}}</option>
+                    <option value="{{$group->id}}">{{$group->room->room}}  -> {{$group->name}}</option>
                     @endforeach
                 </select>
 

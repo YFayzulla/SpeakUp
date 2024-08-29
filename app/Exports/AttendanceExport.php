@@ -2,79 +2,74 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\FromArray;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithStyles;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use App\Models\Group;
+use App\Models\User;
 use App\Models\Attendance;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
-class AttendanceExport implements FromArray, WithHeadings, WithStyles
+class AttendanceExport implements FromCollection, WithHeadings, WithMapping
 {
     protected $groupId;
     protected $year;
     protected $month;
 
-    public function __construct($group, $year, $month)
+    public function __construct($groupId, $year, $month)
     {
-        $this->groupId = $group;
+        $this->groupId = $groupId;
         $this->year = $year;
         $this->month = $month;
     }
 
-    public function array(): array
+    public function collection()
     {
-        // Get the number of days in the month
-        $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $this->month, $this->year);
-
-        // Fetch attendance data
-        $data = Attendance::where('group_id', $this->groupId)
+        $group = Group::find($this->groupId);
+        $students = User::role('student')->where('group_id', $group->id)->get();
+        $attendances = Attendance::where('group_id', $this->groupId)
             ->whereYear('created_at', $this->year)
             ->whereMonth('created_at', $this->month)
-            ->with('user')
-            ->get()
-            ->groupBy('user_id');
+            ->get();
 
-        $rows = [];
-        foreach ($data as $userId => $attendances) {
-            $userName = $attendances->first()->user->name;
-            $days = array_fill(1, $daysInMonth, ''); // Initialize days for the month
+        $data = [];
 
-            foreach ($attendances as $attendance) {
-                $day = $attendance->created_at->format('d');
-                $days[intval($day)] = $attendance->status;
+        foreach ($students as $student) {
+            $data[$student->name] = [];
+
+            for ($i = 1; $i <= 31; $i++) {
+                $data[$student->name][str_pad($i, 2, '0', STR_PAD_LEFT)] = ''; // Initialize all days as empty
             }
-
-            $rows[] = array_merge([$userName], array_values($days));
         }
 
-        // Create the header row
-        $header = array_merge(['Name'], array_map(fn($i) => str_pad($i, 2, '0', STR_PAD_LEFT), range(1, $daysInMonth)));
+        foreach ($attendances as $attendance) {
+            $day = $attendance->created_at->format('d');
+            $data[$attendance->user->name][$day] = $attendance->status;
+        }
 
-        return array_merge([$header], $rows);
+        // Convert array data to collection format expected by Laravel Excel
+        $collection = collect();
+
+        foreach ($data as $studentName => $attendanceDays) {
+            $collection->push(array_merge(['Student Name' => $studentName], $attendanceDays));
+        }
+
+        return $collection;
+    }
+
+    public function map($row): array
+    {
+        // Array conversion for each row, because $row is now an array not a model instance
+        return array_values($row);
     }
 
     public function headings(): array
     {
-        $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $this->month, $this->year);
-        return ['Name'] + array_map(fn($i) => str_pad($i, 2, '0', STR_PAD_LEFT), range(1, $daysInMonth));
-    }
+        // Generating headings based on days of the month
+        $days = range(1, 31);
+        $daysFormatted = array_map(function($day) {
+            return str_pad($day, 2, '0', STR_PAD_LEFT);
+        }, $days);
 
-    public function styles(Worksheet $sheet)
-    {
-        $highestColumn = $sheet->getHighestColumn();
-        $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
-
-        $sheet->getStyle('A1:' . $sheet->getCellByColumnAndRow($highestColumnIndex, 1)->getColumn() . '1')->applyFromArray([
-            'font' => ['bold' => true],
-            'alignment' => ['horizontal' => 'center'],
-            'fill' => [
-                'fillType' => 'solid',
-                'startColor' => ['rgb' => 'B7B7B7'],
-            ],
-        ]);
-
-        return [
-            // Apply styles to columns dynamically if needed
-        ];
+        return array_merge(['Student Name'], $daysFormatted);
     }
 }

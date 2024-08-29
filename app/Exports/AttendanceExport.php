@@ -37,7 +37,7 @@ class AttendanceExport implements FromCollection, WithHeadings, WithMapping
             $data[$student->name] = [];
 
             for ($i = 1; $i <= 31; $i++) {
-                $data[$student->name][str_pad($i, 2, '0', STR_PAD_LEFT)] = ''; // Initialize all days as empty
+                $data[$student->name][str_pad($i, 2, '0', STR_PAD_LEFT)] = '';
             }
         }
 
@@ -46,11 +46,14 @@ class AttendanceExport implements FromCollection, WithHeadings, WithMapping
             $data[$attendance->user->name][$day] = $attendance->status;
         }
 
-        // Convert array data to collection format expected by Laravel Excel
         $collection = collect();
 
         foreach ($data as $studentName => $attendanceDays) {
-            $collection->push(array_merge(['Student Name' => $studentName], $attendanceDays));
+            $total = array_reduce($attendanceDays, function ($sum, $status) {
+                return $sum + ($status ? 1 : 0);
+            }, 0);
+
+            $collection->push(array_merge(['Student Name' => $studentName], $attendanceDays, ['Total' => $total]));
         }
 
         return $collection;
@@ -58,18 +61,16 @@ class AttendanceExport implements FromCollection, WithHeadings, WithMapping
 
     public function map($row): array
     {
-        // Array conversion for each row, because $row is now an array not a model instance
         return array_values($row);
     }
 
     public function headings(): array
     {
-        // Generating headings based on days of the month
         $days = range(1, 31);
-        $daysFormatted = array_map(function($day) {
+        $daysFormatted = array_map(function ($day) {
             return str_pad($day, 2, '0', STR_PAD_LEFT);
         }, $days);
 
-        return array_merge(['Student Name'], $daysFormatted);
+        return array_merge(['Student Name'], $daysFormatted, ['Total']);
     }
 }

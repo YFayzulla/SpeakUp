@@ -1,32 +1,47 @@
 @extends('template.master')
 @section('content')
 
-    <div class="d-flex align-items-center justify-content-between">
-        <h4 class="py-3 mb-4">Student`s data</h4>
-        <ul class="nav nav-pills flex-column flex-md-row mb-3">
-            <li class="nav-item">
-                <a class="btn btn-danger" href="{{ URL::to('/student/pdf',$student->id) }}">Report</a>
-            </li>
-        </ul>
-    </div>
+    <div class="card">
 
-    <div class="p-4 m-4 sm:p-8 bg-white shadow sm:rounded-lg table-responsive">
-        <div class="max-w-xl mx-auto">
-            <div class="container" style="display: flex; justify-content: space-between;">
-                <div class="container__left">
-                    <h3><b>Full Name: </b>{{$student->name}}</h3>
-                    <h3><b>Location:</b> {{$student->location}}</h3>
-                    <h3><b>Tel </b>{{$student->phone}}</h3>
-                    <h4><b>Parents name: </b>{{$student->parents_name}} </h4>
-                    <h4><b>Parents Tel </b> {{$student->parents_tel}}</h4>
-                    <h4><b>Description:</b> {{($student->description)}}</h4>
-                    <h5><b>Last Test Result:</b>{{$student->mark}}</h5>
+        <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+            <h5 class="mb-0">Student`s data</h5>
+            <div class="dt-action-buttons text-end pt-3 pt-md-0">
+                <div class="dt-buttons btn-group flex-wrap">
+                    <div class="btn-group">
+                        <a class="btn buttons-collection dropdown-toggle btn-label-primary me-2" tabindex="0"
+                           aria-controls="DataTables_Table_0" type="button" id="dropdownMenuButton"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <span><i class="bx bx-export me-sm-1"></i> <span
+                                        class="d-none d-sm-inline-block">Export</span></span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" href="{{ URL::to('/student/pdf',$student->id) }}"><i
+                                            class="bx bxs-file-pdf me-1"></i> Pdf</a></li>
+                        </ul>
+                    </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="container__right" style="max-width: 300px; margin-top: 20px;">
-                    <img src="{{asset( 'storage/'.$student->photo) }}"
-                         style="width: 200px; display: block; margin-left: auto;"
-                         alt="">
+        <div class="row mb-5">
+            <div class="col-md">
+                <div class="card mb-3">
+                    <div class="row g-0">
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h4><b>Full Name: </b>{{$student->name}}</h4>
+                                <h4><b>Location:</b> {{$student->location}}</h4>
+                                <h4><b>Tel: </b>{{$student->phone}}</h4>
+                                <h4><b>Parents name: </b>{{$student->parents_name}} </h4>
+                                <h4><b>Parents tel: </b> {{$student->parents_tel}}</h4>
+                                <h4><b>Description: </b> {{($student->description)}}</h4>
+                                <h4><b>Last Test Result: </b>{{$student->mark}}</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <img class="card-img card-img-right" src="{{asset( 'storage/'.$student->photo) }}" alt="No Photo" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -38,7 +53,7 @@
             <div class="card">
                 <h5 class="card-header">Payment history</h5>
                 <div class="table-responsive text-nowrap">
-                    <table class="table table-dark">
+                    <table class="table">
                         <thead>
                         <tr>
                             <th>No</th>
@@ -70,7 +85,7 @@
             <div class="card">
                 <h5 class="card-header">Travel of group</h5>
                 <div class="table-responsive text-nowrap">
-                    <table class="table table-dark">
+                    <table class="table">
                         <thead>
                         <tr>
                             <th>No</th>

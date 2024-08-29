@@ -1,11 +1,8 @@
 `@extends('template.master')
 @section('content')
 
-    <div class="p-4 m-4 sm:p-8 bg-white shadow sm:rounded-lg ">
-
-
+    <div class="card">
         <div class="table-responsive text-nowrap">
-
             <table class="table">
                 <thead>
                 <tr>
@@ -17,7 +14,6 @@
                 </thead>
                 @foreach($students as $student)
                     <tbody id="myTable" class="table-group-divider">
-
                     <tr>
                         <th>{{$loop->index+1}}</th>
                         <th>{{$student->name}}</th>

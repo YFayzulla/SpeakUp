@@ -1,6 +1,7 @@
 `@extends('template.master')
 @section('content')
 
+    <div class="card">
     <div class="p-4 m-4 sm:p-8 bg-white shadow sm:rounded-lg ">
         {{--select delete--}}
         <a href="{{ URL::to('/assessment/pdf',$id)}}" class="btn btn-danger mb-3 float-end"> Report </a>
@@ -88,6 +89,7 @@
             </div>
         </div>
     @endforeach
+    </div>
 
     <script>
         $(document).ready(function () {

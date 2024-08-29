@@ -1,91 +1,96 @@
-@extends('template.master')
+`@extends('template.master')
 @section('content')
 
-    <div class="card ">
+    <div class="p-4 m-4 sm:p-8 bg-white shadow sm:rounded-lg ">
         {{--select delete--}}
 
-        <div class="p-4 m-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
-            <h4 class="mb-0">{{$id}}</h4>
-            <div class="d-flex flex-wrap mt-2 mt-md-0">
-                <a href="{{ URL::to('/assessment/pdf', $id) }}" class="btn btn-danger me-1 mb-1">Report</a>
+        <h1>{{$id}}</h1>
 
-                <form action="{{route('deleteMultiple')}}" method="post" class="d-inline">
-                    @csrf
-                    @method('DELETE')
+        <a href="{{ URL::to('/assessment/pdf',$id)}}" class="btn btn-danger mb-3 float-end"> Report </a>
 
-                    <button type="button" id="selectAllBtn" class="btn btn-primary me-1 mb-1">Select All</button>
-                    <button class="btn btn-danger text-white mb-1">Delete specified data</button>
-                </form>
+        <form action="{{route('deleteMultiple')}}" method="post">
+            @csrf
+            @method('DELETE')
+
+            <button type="button" id="selectAllBtn" class="btn btn-primary mb-3 me-1">Select All</button>
+            <button class="btn btn-danger mb-3 text-white">Delete specified data</button>
+
+            <div class="table-responsive text-nowrap">
+                <table class="table table-hover">
+                    <thead class="table-active">
+
+                    <TR>
+
+                        <td>+</td>
+                        <th>id</th>
+                        <th>name</th>
+                        <th>GOT MARK</th>
+                        <th>information</th>
+                        <th>rec group</th>
+                        <th>change group</th>
+
+                    </TR>
+
+                    </thead>
+
+                    {{--                    @dd($groups)--}}
+
+                    @foreach($assessments as $assessment)
+                        <tbody id="myTable" class="table-group-divider">
+                        <tr>
+                            <td>
+                                <input type="checkbox" class="checkbox" name="selectedItems[]"
+                                       value="{{ $assessment->id }}">
+                            </td>
+                            <th>{{$loop->index+1}}</th>
+                            <th>{{$assessment->student->name}}</th>
+                            <th>{{$assessment->get_mark}}</th>
+                            <th>{{$assessment->for_what}}</th>
+                            <th>{{$assessment->rec_group}}</th>
+                            <th>
+                                <button type="button" class="btn-outline-success btn m-2" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal{{$assessment->user_id}}" data-bs-whatever="@mdo"
+                                > submit
+                                </button>
+                            </th>
+                        </tr>
+                        </tbody>
+                    @endforeach
+                </table>
             </div>
-        </div>
+        </form>
+    </div>
 
-        <div class="table-responsive text-nowrap">
-            <table class="table">
-                <thead>
-                <tr>
-                    <td>+</td>
-                    <th>id</th>
-                    <th>name</th>
-                    <th>GOT MARK</th>
-                    <th>information</th>
-                    <th>rec group</th>
-                    <th>change group</th>
-                </tr>
-                </thead>
-
-                @foreach($assessments as $assessment)
-                    <tbody id="myTable" class="table-group-divider">
-                    <tr>
-                        <td>
-                            <input type="checkbox" class="checkbox" name="selectedItems[]"
-                                   value="{{ $assessment->id }}">
-                        </td>
-                        <th>{{$loop->index+1}}</th>
-                        <th>{{$assessment->student->name}}</th>
-                        <th>{{$assessment->get_mark}}</th>
-                        <th>{{$assessment->for_what}}</th>
-                        <th>{{$assessment->rec_group}}</th>
-                        <th>
-                            <button type="button" class="btn-outline-success btn m-2" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal{{$assessment->user_id}}" data-bs-whatever="@mdo">
-                                submit
-                            </button>
-                        </th>
-                    </tr>
-                    </tbody>
-                @endforeach
-            </table>
-        </div>
-
-        <!-- Modal -->
-        @foreach($assessments as $assessment)
-            <div class="modal fade" id="exampleModal{{$assessment->user_id}}" tabindex="-1"
-                 aria-labelledby="exampleModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            {{$assessment->student->name}}
-                        </div>
-                        <div class="modal-body">
-                            <form action="{{route('student.change.group', $assessment->user_id)}}" method="post">
-                                @csrf
-                                <label for="recipient-name" class="form-label">change group</label>
-                                <select name="group_id" class="form-select">
-                                    @foreach($groups as $group)
-                                        <option value="{{$group->id}}">{{$group->name}}</option>
-                                    @endforeach
-                                </select>
-                                <div class="mt-3">
-                                    <button type="submit" class="btn btn-outline-success m-2">save</button>
-                                </div>
-                            </form>
-                        </div>
+    <!-- Modal -->
+    @foreach($assessments as $assessment)
+        <div class="modal fade" id="exampleModal{{$assessment->user_id}}" tabindex="-1"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        {{$assessment->student->name}}
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{route('student.change.group',$assessment->user_id)}}" method="post">
+                            @csrf
+                            <label for="recipient-name"
+                                   class="form-label"> change group </label>
+                            <select name="group_id" class="form-select">
+                                @foreach($groups as $group)
+                                    <option value="{{$group->id}}">{{$group->name}}</option>
+                                @endforeach
+                            </select>
+                            <div class="mt-3">
+                                <button type="submit" class="btn btn-outline-success m-2">save
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-        @endforeach
-    </div>
+        </div>
+    @endforeach
 
     <script>
         $(document).ready(function () {
@@ -97,3 +102,4 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 @endsection
+`

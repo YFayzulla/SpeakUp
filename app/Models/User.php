@@ -138,6 +138,8 @@ class User extends Authenticatable
 
     public function room(): BelongsTo
     {
-        return $this->belongsTo(Room::class, 'room_id');
+
+        return $this->belongsTo(Room::class,'room_id','id');
+
     }
 }

@@ -2,12 +2,11 @@
 @section('content')
     <div class="p-4 m-4 sm:p-8 bg-white shadow sm:rounded-lg ">
 
-
-        <h1 class="text-center">Groups</h1>
+        <h5 class="mb-0">{{$id}} Room</h5>
 
         <ul class="nav nav-pills flex-column flex-md-row mb-3">
             <li class="nav-item me-2 mt-2">
-                <a class="btn btn-outline-success" href="{{route('group.create')}}">
+                <a class="btn btn-outline-success" href="{{route('group.create.room',$id)}}">
                     <i class="bx bx-plus"></i>
                 </a>
             </li>
@@ -25,10 +24,10 @@
                 <tr>
                     <th>id</th>
                     <th>Name</th>
-                    <th>opened date</th>
+{{--                    <th>opened date</th>--}}
                     <th>start time</th>
                     <th>finish time</th>
-                    <th>level</th>
+{{--                    <th>level</th>--}}
                     <th>cost</th>
                     <th class="text-center">action</th>
                 </tr>
@@ -38,10 +37,10 @@
                     <tr>
                         <th>{{$loop->index+1}}</th>
                         <th>{{$group->name}}</th>
-                        <th>{{$group->created_at}}</th>
+{{--                        <th>{{$group->created_at}}</th>--}}
                         <th>{{$group->start_time}}</th>
                         <th>{{$group->finish_time}}</th>
-                        <th>{{$group->level}}</th>
+{{--                        <th>{{$group->room}}</th>--}}
                         <th>{{number_format($group->monthly_payment ,0, '.', ' ')}}</th>
                         <th class="d-flex">
                             <a href="{{route('group.students',$group->id)}}" class="btn btn-outline-info m-1">

@@ -41,9 +41,9 @@
                 @enderror
 
                 <label for="level" class="text-dark">Level</label>
-                <select  name="level"  class="form-control" id="">
-                    @foreach($level as $l)
-                        <option value="{{$l->name}}">{{$l->name}}</option>
+                <select  name="room"  class="form-control" id="">
+                    @foreach($rooms as $l)
+                        <option value="{{$l->name}}">{{$l->room}}</option>
                     @endforeach
                 </select>
 

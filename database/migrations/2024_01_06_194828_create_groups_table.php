@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('name');
             $table->dateTime('start_time')->nullable();
             $table->dateTime('finish_time')->nullable();
-            $table->string('level')->nullable();
             $table->integer('monthly_payment')->nullable();
             $table->timestamps();
         });

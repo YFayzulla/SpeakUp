@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Group;
 use App\Models\GroupTeacher;
 use App\Models\Level;
+use App\Models\Room;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -34,16 +35,9 @@ class TeacherController extends Controller
 
     public function create()
     {
-//
-//        $groups = DB::table('groups')
-//            ->where('groups.id', '!=', 1)
-//            ->leftJoin('group_teachers', 'groups.id', '=', 'group_teachers.group_id')
-//            ->whereNull('group_teachers.group_id')
-//            ->select('groups.*')
-//            ->get();
 
         return view('user.teacher.create',[
-            'rooms' => Level::all()
+            'rooms' => Room::all()
         ]);
 
     }
@@ -71,8 +65,7 @@ class TeacherController extends Controller
 
         }
 
-
-        User::create([
+        $teacher = User::create([
             'name' => $request->name,
             'password' => bcrypt($request->name),
             'passport' => $request->passport,
@@ -83,6 +76,16 @@ class TeacherController extends Controller
             'percent' => $request->percent,
             'room_id' => $request->room_id
         ])->assignRole('user');
+
+        $index = GroupTeacher::insert(
+            Group::where('room_id', $request->room_id)
+                ->get()
+                ->map(fn($group) => [
+                    'group_id' => $group->id,
+                    'teacher_id' => $teacher->id,
+                ])
+                ->toArray()
+        );
 
 
         return redirect()->route('teacher.index')->with('success', 'Information has been added');
@@ -96,11 +99,6 @@ class TeacherController extends Controller
      */
     public function show($id)
     {
-//
-//
-//        $teachers = GroupTeacher::where('teacher_id', '=', $id)->get();
-//
-//        return view('user.teacher.show', compact('teachers', 'groups', 'id'));
 
     }
 
@@ -113,9 +111,9 @@ class TeacherController extends Controller
     public function edit($id)
     {
         $teacher = User::find($id);
-//        dd($id,$teacher);
+        $rooms = Room::all();
         if ($teacher !== null)
-            return view('user.teacher.edit', compact('teacher'));
+            return view('user.teacher.edit', compact('teacher' , 'rooms'));
         else
             return abort('403');
     }
@@ -143,6 +141,8 @@ class TeacherController extends Controller
 
         $teacher = User::find($id);
 
+        GroupTeacher::where('teacher_id', $teacher->id)->get()->each->delete();
+
         if ($request->hasFile('photo')) {
             if (isset($teacher->photo)) {
                 Storage::delete($teacher->photo);
@@ -150,6 +150,7 @@ class TeacherController extends Controller
             $fileName = time() . '.' . $request->file('photo')->getClientOriginalExtension();
             $path = $request->file('photo')->storeAs('Photo', $fileName);
         };
+
         $teacher->update([
             'name' => $request->name,
             'phone' => $request->phone,
@@ -159,7 +160,18 @@ class TeacherController extends Controller
             'passport' => $request->passport,
             'percent' => $request->percent,
             'photo' => $path ?? $teacher->photo ?? null,
+            'room_id' => $request->room_id
         ]);
+
+        $index = GroupTeacher::insert(
+            Group::where('room_id', $request->room_id)
+                ->get()
+                ->map(fn($group) => [
+                    'group_id' => $group->id,
+                    'teacher_id' => $teacher->id,
+                ])
+                ->toArray()
+        );
 
 
         return redirect()->route('teacher.index')->with('success', 'Information has been updated');
@@ -174,6 +186,9 @@ class TeacherController extends Controller
      */
     public function destroy($id)
     {
+
+        GroupTeacher::where('teacher_id', $id)->get()->each->delete();
+
         $teacher = User::find($id);
         $teacher->delete();
         return redirect()->back()->with('success', 'Information deleted');

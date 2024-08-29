@@ -71,6 +71,7 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::delete('/delete-multiple', [GroupExtraController::class, 'deleteMultiple'])->name('deleteMultiple');
     Route::get('waiters', [WaitersController::class, 'index'])->name('waiters.index');
     Route::post('group/change/{id}', [GroupExtraController::class, 'change_group'])->name('student.change.group');
+    Route::get('group/{id}/room',[GroupController::class, 'makeGroup'])->name('group.create.room');
 
     //    Route::get('group/attendance/filter/{id}', [GroupExtraController::class, 'filter'])->name('attendance.filter');
 

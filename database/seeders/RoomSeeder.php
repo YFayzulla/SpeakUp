@@ -15,9 +15,9 @@ class RoomSeeder extends Seeder
      */
     public function run()
     {
-        Room::query()->create(['number'=> 1]);
-        Room::query()->create(['number'=> 2]);
-        Room::query()->create(['number'=> 3]);
-        Room::query()->create(['number'=> 4]);
+        Room::query()->create(['room'=> 'room 1']);
+        Room::query()->create(['room'=> 'room 2']);
+        Room::query()->create(['room'=> 'room 3']);
+        Room::query()->create(['room'=> 'room 4']);
     }
 }

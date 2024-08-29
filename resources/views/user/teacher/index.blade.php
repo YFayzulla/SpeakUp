@@ -38,6 +38,7 @@
                     <th>Phone</th>
                     <th>Location</th>
                     <th>Date born</th>
+                    <th>room</th>
                     <th>photo</th>
                     <th>action</th>
                 </tr>
@@ -50,6 +51,7 @@
                         <td>+{{$teacher->phone}}</td>
                         <td>{{$teacher->location}}</td>
                         <td>{{$teacher->date_born}}</td>
+                        <td>{{$teacher->room->room}}</td>
                         <td>
                             <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
                                 <li
@@ -68,10 +70,6 @@
                             <a href="{{route('teacher.edit',$teacher->id)}}" class="btn-outline-warning btn m-1">
                                 <i class='bx bx-edit-alt'></i>
                             </a>
-                            <a href="{{route('teacher.show',$teacher->id)}}" class="btn-outline-primary btn m-1">
-                                <i class='bx bx-show'></i>
-                            </a>
-
                             <form action="{{route('teacher.destroy',$teacher->id)}}" method="post"
                                   onsubmit="return confirm('are you sure for deleting ');">
                                 @csrf

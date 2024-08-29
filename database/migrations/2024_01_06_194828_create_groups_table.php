@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('room_id')->nullable()->constrained();
+            $table->foreignId('room_id')->nullable();
             $table->string('name');
             $table->dateTime('start_time')->nullable();
             $table->dateTime('finish_time')->nullable();

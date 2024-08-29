@@ -1,12 +1,10 @@
 @extends('template.master')
 @section('content')
+
     <div class="card">
-
-        <h2 class="text-center mb-4">Attendance
-            for {{ \Carbon\Carbon::createFromDate($year, $month)->format('F Y') }}</h2>
-
-        <div class="table-responsive">
-            <div class="d-flex mb-4">
+        <div class="p-4 mt-4 d-flex justify-content-between align-items-center mb-4">
+            <h4 class="mb-0">Attendance for {{ \Carbon\Carbon::createFromDate($year, $month)->format('F Y') }}</h4>
+            <div class="d-flex">
                 <div class="d-flex justify-content-center me-3">
                     <form method="GET" action="{{ route('group.attendance', $group->id) }}" class="d-flex">
                         <select id="month" name="date" class="form-select me-1">
@@ -34,6 +32,9 @@
                 </div>
                 @endrole
             </div>
+        </div>
+
+        <div class="table-responsive">
             <table class="table table-bordered text-center">
                 <thead>
                 <tr>
@@ -41,10 +42,9 @@
                     @for ($i = 1; $i <= 31; $i++)
                         @php
                             $day = str_pad($i, 2, '0', STR_PAD_LEFT);
-                            $isToday = ($i == $today); // Check if the loop index is today's date
+                            $isToday = ($i == $today);
                         @endphp
                         <th class="{{ $isToday ? 'bg-success' : '' }}">{{ $day }}</th>
-                        <!-- Add a class to highlight today's column -->
                     @endfor
                 </tr>
                 </thead>
@@ -56,8 +56,8 @@
                             @php
                                 $day = str_pad($i, 2, '0', STR_PAD_LEFT);
                                 $status = $days[$day] ?? '1';
-                                $isDanger = $status === '0' || $status === 0; // Ensuring status is checked as both string and integer
-                                $isPresent = $status === '1' || $status === 1; // Ensuring status is checked as both string and integer
+                                $isDanger = $status === '0' || $status === 0;
+                                $isPresent = $status === '1' || $status === 1;
                             @endphp
                             <td class="{{ $isDanger ? 'bg-danger text-white' : '' }}">
                                 @if ($isPresent)
@@ -84,7 +84,6 @@
                     <td>lesson</td>
                     <td>date</td>
                     <td>delete</td>
-
                 </tr>
                 @foreach($students as $attendance)
                     <tr>
@@ -93,14 +92,8 @@
                         <td>{{ $attendance->teacher->name }}</td>
                         <td>{{ $attendance->lesson->name }}</td>
                         <td>{{ $attendance->created_at }}</td>
-                        <td>{{$loop->index+1}}</td>
-                        <td>{{$attendance->user->name}}</td>
-                        <td>{{$attendance->teacher->name}}</td>
-                        <td>{{$attendance->lesson->name}}</td>
-                        <td>{{$attendance->created_at}}</td>
-
                         <td>
-                            <form action="{{route('attendance.delete',$attendance->id)}}" method="POST">
+                            <form action="{{route('attendance.delete', $attendance->id)}}" method="POST">
                                 @csrf
                                 @method("DELETE")
                                 <button class="btn btn-danger"><i class="bx bx-trash-alt"></i></button>

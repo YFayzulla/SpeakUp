@@ -2,38 +2,33 @@
 @section('content')
 
     <div class="card">
-        <form action="{{route('attendance.submit', $id)}}" method='post'>
+        <form action="{{ route('attendance.submit', $id) }}" method="post">
             @csrf
-            @method('PUT')
             <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-
                 <label for="lesson" class="mr-2 align-self-center"></label>
                 <input type="text" name="lesson" id="lesson" class="form-control w-25" placeholder="Lesson">
-
             </div>
 
             <div class="table-responsive text-nowrap">
                 <table class="table">
                     <thead>
                     <tr>
-                        <th>no</th>
-                        <th>name</th>
-                        <th>status</th>
+                        <th>No</th>
+                        <th>Name</th>
+                        <th>Status</th>
                     </tr>
                     </thead>
-                    @php($i=0)
-                    @foreach($students as $student)
-                        <tbody class="table-border-bottom-0">
+                    <tbody class="table-border-bottom-0">
+                    @foreach($students as $index => $student)
                         <tr>
-                            <td>{{$loop->index + 1}}</td>
-                            <td><b>{{$student->name}}</b></td>
+                            <td>{{ $index + 1 }}</td>
+                            <td><b>{{ $student->name }}</b></td>
                             <td class="text-center">
-                                <input type="checkbox" name="status[{{$student->id}}]" value="on">
+                                <input type="checkbox" name="status[{{ $student->id }}]" value="on">
                             </td>
                         </tr>
-                        </tbody>
-                        @php($i++)
                     @endforeach
+                    </tbody>
                 </table>
             </div>
             <div class="modal-footer mt-4">

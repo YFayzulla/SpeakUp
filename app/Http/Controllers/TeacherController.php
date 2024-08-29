@@ -87,7 +87,6 @@ class TeacherController extends Controller
                 ->toArray()
         );
 
-
         return redirect()->route('teacher.index')->with('success', 'Information has been added');
     }
 

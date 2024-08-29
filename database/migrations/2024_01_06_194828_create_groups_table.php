@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('room_id')->nullable();
             $table->string('name');
-            $table->dateTime('start_time')->nullable();
-            $table->dateTime('finish_time')->nullable();
+            $table->time('start_time')->nullable();
+            $table->time('finish_time')->nullable();
             $table->integer('monthly_payment')->nullable();
             $table->timestamps();
         });

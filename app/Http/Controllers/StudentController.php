@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Student\StoreRequest;
+use App\Http\Requests\Student\UpdateRequest;
 use App\Models\Attendance;
 use App\Models\DeptStudent;
 use App\Models\Group;
@@ -47,14 +49,8 @@ class StudentController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'phone' => ['required'],
-            'group_id' => 'required'
-        ]);
-
         if ($request->hasFile('photo')) {
             $fileName = time() . '.' . $request->file('photo')->getClientOriginalExtension();
             $path = $request->file('photo')->storeAs('Photo', $fileName);
@@ -136,7 +132,7 @@ class StudentController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
         $request->validate([
             'name' => 'required',

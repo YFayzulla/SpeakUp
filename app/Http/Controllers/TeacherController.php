@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Teacher\StoreRequest;
+use App\Http\Requests\Teacher\UpdateRequest;
 use App\Models\Group;
 use App\Models\GroupTeacher;
 use App\Models\Level;
 use App\Models\Room;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
@@ -48,16 +49,8 @@ class TeacherController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-
-        $request->validate([
-
-            'name' => 'required',
-            'phone' => ['required'],
-
-        ]);
-
         if ($request->hasFile('photo')) {
 
             $fileName = time() . '.' . $request->file('photo')->getClientOriginalExtension();
@@ -124,20 +117,8 @@ class TeacherController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
-        $request->validate([
-            'name' => 'required',
-            'date_born' => 'required',
-            'phone' => [
-                'required',
-                'string',
-                Rule::unique('users', 'phone')->ignore($id),
-            ],
-//            'password' => 'required',
-        ]);
-
-
         $teacher = User::find($id);
 
         GroupTeacher::where('teacher_id', $teacher->id)->get()->each->delete();

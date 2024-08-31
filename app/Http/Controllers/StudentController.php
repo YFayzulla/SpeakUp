@@ -39,7 +39,7 @@ class StudentController extends Controller
 
     public function create()
     {
-        $groups = Group::where('id','!=',1)->orderby('room_id')->get();
+        $groups = Group::with('room')->where('id','!=',1)->orderby('room_id')->get();
         return view('user.student.create', compact('groups'));
     }
 

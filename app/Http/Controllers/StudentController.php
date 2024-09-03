@@ -51,6 +51,8 @@ class StudentController extends Controller
      */
     public function store(StoreRequest $request)
     {
+
+
         if ($request->hasFile('photo')) {
             $fileName = time() . '.' . $request->file('photo')->getClientOriginalExtension();
             $path = $request->file('photo')->storeAs('Photo', $fileName);

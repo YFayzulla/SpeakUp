@@ -63,6 +63,26 @@
                 </div>
 
                 <div class="mb-3">
+                    <label for="group_id" class="form-label text-dark">Group</label>
+                    <select id="group_id" name="group_id" class="form-control">
+                        @foreach($groups as $group)
+                            <option value="{{ $group->id }}" data-payment="{{ $group->monthly_payment }}" {{ old('group_id') == $group->id ? 'selected' : '' }}>
+                                {{ optional($group->room)->room }} -> {{ $group->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('group_id')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label> Gummax </label>
+                    <input class="form-checkbox" name="status" type="checkbox">
+
+                </div>
+
+                <div class="mb-3">
                     <label for="should_pay" class="form-label text-dark">Should Pay</label>
                     <input id="should_pay" name="should_pay" type="number" value="{{ old('should_pay') }}" class="form-control">
                     @error('should_pay')
@@ -73,20 +93,6 @@
                 <div class="mb-3">
                     <label for="description" class="form-label text-dark">Description "not necessary"</label>
                     <textarea id="description" name="description" class="form-control">{{ old('description') }}</textarea>
-                </div>
-
-                <div class="mb-3">
-                    <label for="group_id" class="form-label text-dark">Group</label>
-                    <select id="group_id" name="group_id" class="form-control">
-                        @foreach($groups as $group)
-                            <option value="{{ $group->id }}" {{ old('group_id') == $group->id ? 'selected' : '' }}>
-                                {{ optional($group->room)->room }} -> {{ $group->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('group_id')
-                    <div class="text-danger">{{ $message }}</div>
-                    @enderror
                 </div>
 
                 <div class="mb-3">
@@ -103,5 +109,16 @@
             </form>
         </div>
     </div>
+
+    <script>
+        document.getElementById('group_id').addEventListener('change', function () {
+            var selectedOption = this.options[this.selectedIndex];
+            var payment = selectedOption.getAttribute('data-payment');
+            document.getElementById('should_pay').value = payment;
+        });
+
+        // Trigger the change event on page load to fill in the should_pay if a group is already selected
+        document.getElementById('group_id').dispatchEvent(new Event('change'));
+    </script>
 
 @endsection

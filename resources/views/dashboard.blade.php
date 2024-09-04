@@ -138,7 +138,7 @@
                                             <small class="fw-semibold">{{$student->group->name}}</small>
                                         </div>
                                         <div class="user-progress">
-                                            <small class="fw-semibold">{{$student->status == - 1  ? "Qarzdor" : 'To`lagan'}}</small>
+                                            <small class="fw-semibold">{{$student->status ==  1  ? "Qarzdor" : 'To`lagan'}}</small>
                                         </div>
                                         <div class="user-progress">
                                             <small class="fw-semibold">+{{$student->phone}}</small>
@@ -177,9 +177,9 @@
                                         <div class="user-progress">
                                             <small class="fw-semibold">{{$attendance->group->name}}</small>
                                         </div>
-                                        <div class="user-progress">
-                                            <small class="fw-semibold">{{$attendance->created_at}}</small>
-                                        </div>
+{{--                                        <div class="user-progress">--}}
+{{--                                            <small class="fw-semibold">{{$attendance->created_at}}</small>--}}
+{{--                                        </div>--}}
                                     </div>
                                 </li>
                             @endforeach

@@ -18,7 +18,7 @@
 
                 <label for="phone" class="text-dark">Phone</label>
                 <div class="input-group input-group-merge">
-                    <span class="input-group-text">+99 8</span>
+{{--                    <span class="input-group-text">+99 8</span>--}}
                     <input type="tel" id="phone" name="phone" pattern="[0-9]{9}" maxlength="9" class="form-control" placeholder="912345678" value="{{ old('phone', $student->phone) }}"
                     />
                 </div>

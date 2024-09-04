@@ -27,12 +27,12 @@ class StoreRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'password' => 'nullable|string|min:8|max:16',
-            'phone' => ['required', 'string', 'digits:9', Rule::unique('users', 'phone')],
-            'passport' => ['nullable', 'string', 'regex:/^[A-Z]{2}\d{7}$/', Rule::unique('users', 'passport')],
+//            'phone' => ['required', 'string', 'digits:9', Rule::unique('users', 'phone')],
+//            'passport' => ['nullable', 'string', 'regex:/^[A-Z]{2}\d{7}$/', Rule::unique('users', 'passport')],
             'date_born' => 'nullable|date',
             'location' => 'nullable|string|max:255',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'percent' => 'nullable|integer|min:0|max:100',
+//            'percent' => 'nullable|integer|min:0|max:100',
             'room_id' => 'nullable|exists:rooms,id',
             'group_id' => 'required|exists:groups,id',
         ];

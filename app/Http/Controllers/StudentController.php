@@ -117,9 +117,7 @@ class StudentController extends Controller
     {
 
         $student = User::find($id);
-        $groups = Group::all();
-
-
+        $groups = Group::where('id', '!=', 1)->get();
         //        dd($id,$student);
         if ($student !== null)
             return view('user.student.edit', compact('student', 'groups'));

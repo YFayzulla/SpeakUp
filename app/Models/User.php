@@ -142,4 +142,11 @@ class User extends Authenticatable
         return $this->belongsTo(Room::class,'room_id','id');
 
     }
+
+    public function studentsGroup()
+    {
+        $group = Group::find($this->group_id);
+        $room = Room::find($group->room_id);
+        return $room->room;
+    }
 }

@@ -172,6 +172,7 @@ class StudentController extends Controller
             'should_pay' => $request->should_pay,
             'photo' => $path ?? $student->photo ?? null,
             'description' => $request->description,
+            'room_id'=>$request->room_id
 
         ]);
 

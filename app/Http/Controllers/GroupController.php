@@ -105,6 +105,8 @@ class GroupController extends Controller
         ]);
 
 
+
+        dd($request->all());
         $group->update([
             'name' => $request->name,
             'start_time' => $request->start_time,

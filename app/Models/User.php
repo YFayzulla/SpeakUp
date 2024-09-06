@@ -146,10 +146,10 @@ class User extends Authenticatable
     public function studentsGroup($id)
     {
 
-        $group = Group::find($this->group_id);
+        $group = Group::findorfail($this->group_id);
 
-        $room = Room::find($group->room_id);
-        dd($room);
+        $room = Room::findorfail($group->room_id);
+
         return $room->room;
 
     }

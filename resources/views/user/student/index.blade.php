@@ -53,8 +53,8 @@
                         <th>{{$student->name}}</th>
                         <th>+998 {{$student->phone}}</th>
                         <th>{{$student->parents_tel}}</th>
-                        {{--                    <th>@if(Carbon::parse( $student->studentdept->date)->greaterThan(Carbon::parse(now()->format('Y-m-d')) )) <p style="color: #a52834" >{{ 'qarz' }}</p> @else <p style="color: #0f5132">{{ 't`olangan' }}</p> @endif </th>--}}
-{{--                        <th> {{$student->studentsGroup()}} -> {{$student->group->name}}</th>--}}
+{{--                                            <th>@if(Carbon::parse( $student->studentdept->date)->greaterThan(Carbon::parse(now()->format('Y-m-d')) )) <p style="color: #a52834" >{{ 'qarz' }}</p> @else <p style="color: #0f5132">{{ 't`olangan' }}</p> @endif </th>--}}
+                        <th> {{$student->studentsGroup()}} -> {{$student->group->name}}</th>
                         <th></th>
                         <th class="d-flex">
                             <a href="{{route('student.edit',$student->id)}}" class="btn-outline-warning btn m-1">

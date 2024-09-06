@@ -143,10 +143,10 @@ class User extends Authenticatable
 
     }
 
-//    public function studentsGroup()
-//    {
-//        $group = Group::find($this->group_id);
-//        $room = Room::find($group->room_id);
-//        return $room->room;
-//    }
+    public function studentsGroup()
+    {
+        $group = Group::find($this->group_id);
+        $room = Room::find($group->room_id);
+        return $room->room;
+    }
 }

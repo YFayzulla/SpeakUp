@@ -59,7 +59,7 @@
 
                 <label for="group_id" class="text-dark">Group</label>
                 <select id="group_id" class="form-control" name="group_id">
-                    <option value="{{ $student->group_id }}" selected>{{ $student->group->name }}</option>
+{{--                    <option value="{{ $student->group_id }}" selected>{{ $student->group->name }}</option>--}}
                     @foreach($groups as $group)
                         <option value="{{ $group->id }}" data-payment="{{ $group->monthly_payment }}" {{ old('group_id') == $group->id ? 'selected' : '' }}>
                             {{ optional($group->room)->room }} -> {{ $group->name }}

@@ -57,7 +57,7 @@
 {{--                        <th> {{$student->studentsGroup($student->id)}} -> </th>--}}
 
 
-                        <th>{{$student->group->name}}</th>
+{{--                        <th>{{$student->group->name}}</th>--}}
                         <th class="d-flex">
                             <a href="{{route('student.edit',$student->id)}}" class="btn-outline-warning btn m-1">
                                 <i class='bx bx-edit-alt'></i>

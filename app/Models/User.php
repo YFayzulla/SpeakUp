@@ -143,14 +143,15 @@ class User extends Authenticatable
 
     }
 
-    public function studentsGroup($id)
-    {
-
+//    public function studentsGroup()
+//    {
+//
 //        $group = Group::findorfail($this->group_id);
-
-//        $room = Room::findorfail($group->room_id);
-
-//        return $room->room;/
-
-    }
+//
+//        $room = Room::where('id',$group->room_id)->first();
+////        dd($room->room);
+//        $room = $room->room;
+//        return  ;
+//
+//    }
 }

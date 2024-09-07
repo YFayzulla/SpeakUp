@@ -58,7 +58,6 @@ class StudentController extends Controller
             $path = $request->file('photo')->storeAs('Photo', $fileName);
         }
 
-
         $group = Group::where('id', $request->group_id)->first();
 
         $user = User::create([
@@ -73,6 +72,7 @@ class StudentController extends Controller
             'photo' => $path ?? null,
             'should_pay' => $request->should_pay ?? $group->monthly_payment,
             'description' => $request->description,
+            'room_id' => $group -> id
         ])->assignRole('student');
 
 
@@ -172,7 +172,7 @@ class StudentController extends Controller
             'should_pay' => $request->should_pay,
             'photo' => $path ?? $student->photo ?? null,
             'description' => $request->description,
-            'room_id'=>$request->room_id
+            'room_id'=>$group->room_id,
 
         ]);
 

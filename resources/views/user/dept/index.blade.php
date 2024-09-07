@@ -23,7 +23,7 @@
                     <tr>
                         <th>{{$loop->index+1}}</th>
                         <th>{{$student->name}}</th>
-                        <th>{{$student->group->name}}</th>
+                        <th>{{$student->group->name ?? null}}</th>
                         <th>@if( $student->status <= 0 )
                                 <p class="text-danger"> debtor </p>
                             @else

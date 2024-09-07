@@ -136,10 +136,10 @@ class User extends Authenticatable
         return $this->belongsTo(GroupTeacher::class);
     }
 
-    public function room(): BelongsTo
+    public function room()
     {
 
-        return $this->belongsTo(Room::class,'room_id','id');
+        return $this->hasOne(Room::class, 'id', 'room_id' );
 
     }
 

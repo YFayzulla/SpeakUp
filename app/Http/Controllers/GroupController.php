@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Assessment;
 use App\Models\Group;
 use App\Models\GroupTeacher;
-use App\Models\Level;
 use App\Models\Room;
-use App\Models\StudentInformation;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -104,21 +101,16 @@ class GroupController extends Controller
             'monthly_payment' => 'required',
         ]);
 
-
-
         $group->update([
-            'name' => $request->name,
+
             'start_time' => $request->start_time,
             'finish_time' => $request->finish_time,
             'monthly_payment' => $request->monthly_payment,
             'room_id' => $request->room,
+
         ]);
 
-//        dd($group);
-
         return redirect()->back()->with('success', 'Information has been updated');
-
-
     }
 
     /**

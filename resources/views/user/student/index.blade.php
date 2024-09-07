@@ -42,7 +42,7 @@
                     <th>Parents tel</th>
                     {{--                <th>oylik to`lov</th>--}}
                     <th>group</th>
-                    <th>action</th>
+                    <th class="text-center">action</th>
                 </tr>
                 </thead>
                 @foreach($students as $student)

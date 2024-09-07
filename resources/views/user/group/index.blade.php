@@ -35,12 +35,10 @@
                     <tr>
                         <th>id</th>
                         <th>Name</th>
-                        {{--                    <th>opened date</th>--}}
                         <th>start time</th>
                         <th>finish time</th>
-                        {{--                    <th>level</th>--}}
                         <th>cost</th>
-                        <th>action</th>
+                        <th class="text-center" >action</th>
                     </tr>
                     </thead>
                     @foreach($groups as $group)
@@ -53,7 +51,7 @@
                             <th>{{$group->finish_time}}</th>
                             {{--                        <th>{{$group->room}}</th>--}}
                             <th>{{number_format($group->monthly_payment ,0, '.', ' ')}}</th>
-                            <th class="d-flex">
+                            <th class="d-flex justify-content-center text-center">
                                 <a href="{{route('group.students',$group->id)}}" class="btn btn-outline-info m-1">
                                     <i
                                             class="bx bx-show-alt"></i>

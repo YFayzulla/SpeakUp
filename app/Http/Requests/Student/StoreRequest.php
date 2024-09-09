@@ -27,7 +27,7 @@ class StoreRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'password' => 'nullable|string|min:8|max:16',
-//            'phone' => ['required', 'string', 'digits:9', Rule::unique('users', 'phone')],
+            'phone' => ['required', 'string', 'digits:9'],
 //            'passport' => ['nullable', 'string', 'regex:/^[A-Z]{2}\d{7}$/', Rule::unique('users', 'passport')],
             'date_born' => 'nullable|date',
             'location' => 'nullable|string|max:255',
@@ -49,7 +49,7 @@ class StoreRequest extends FormRequest
             'name.required' => 'The name field is required.',
             'phone.required' => 'The phone number is required.',
             'phone.digits' => 'The phone number must be exactly 9 digits.',
-            'phone.unique' => 'The phone number has already been taken.',
+//            'phone.unique' => 'The phone number has already been taken.',
             'passport.regex' => 'The passport must consist of 2 uppercase English letters followed by 7 digits.',
             'passport.unique' => 'This passport number already exists.',
             'photo.image' => 'The uploaded file must be an image.',

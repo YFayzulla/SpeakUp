@@ -8,7 +8,6 @@ use App\Models\User;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use function PHPUnit\Framework\lessThanOrEqual;
 
 class DeptStudentController extends Controller
 {

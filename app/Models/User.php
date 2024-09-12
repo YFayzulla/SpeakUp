@@ -61,18 +61,18 @@ class User extends Authenticatable
     public function teacherPayment()
     {
 
-        $summa =  0;
+        $summa = 0;
         $groups = GroupTeacher::query()->where('teacher_id', $this->id)->get();
 
         foreach ($groups as $group) {
-            $payment = Group::query()->findOrFail( $group->group_id);
-            $number =  User::query()->where('group_id', $group->group_id)->count();
+            $payment = Group::query()->findOrFail($group->group_id);
+            $number = User::query()->where('group_id', $group->group_id)->count();
 //            dd($number,$payment->monthly_payment);
             $summa += $payment->monthly_payment * $number;
         }
 
-        $summa = $summa*$this->percent/100;
-        return  $summa;
+        $summa = $summa * $this->percent / 100;
+        return $summa;
 
     }
 
@@ -109,7 +109,7 @@ class User extends Authenticatable
 
     public function teacherHasGroup()
     {
-        return GroupTeacher::query()->where('teacher_id' , $this->id)->count()  ;
+        return GroupTeacher::query()->where('teacher_id', $this->id)->count();
     }
 
     /**
@@ -139,19 +139,21 @@ class User extends Authenticatable
     public function room()
     {
 
-        return $this->hasOne(Room::class, 'id', 'room_id' );
+        return $this->hasOne(Room::class, 'id', 'room_id');
 
     }
 
-//    public function studentsGroup()
-//    {
-//
-//        $group = Group::findorfail($this->group_id);
-//
-//        $room = Room::where('id',$group->room_id)->first();
-////        dd($room->room);
-//        $room = $room->room;
-//        return  ;
-//
-//    }
+    public function studentsGroup()
+    {
+        $group = Group::find($this->group_id);
+
+        if (!$group) {
+            return 'non of group';
+        }
+
+        $room = Room::where('id', $group->room_id)->first();
+
+        return $room ? $room->room .'->' .$group->name : 'students without a group';
+    }
+
 }

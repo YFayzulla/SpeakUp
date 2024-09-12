@@ -60,7 +60,7 @@
 {{--                                <p style="color: #0f5132">{{ 't`olangan' }}</p>--}}
 {{--                            @endif </th>--}}
 
-                        <th>{{$student->group->name ?? null }}</th>
+                        <th>{{$student->studentsGroup()}}</th>
                         <th class="d-flex">
                             <a href="{{route('student.edit',$student->id)}}" class="btn-outline-warning btn m-1">
                                 <i class='bx bx-edit-alt'></i>

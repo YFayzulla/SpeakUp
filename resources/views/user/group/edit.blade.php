@@ -34,7 +34,7 @@
                 @enderror
 
                 <label for="room" class="text-dark">rooms</label>
-                <select  name="room"  class="form-control" id="">
+                <select  name="room"  class="form-control">
                     <option value="{{$group->room_id}}">{{$group->room->room}}</option>
                     @foreach($rooms as $l)
                         <option value="{{$l->id}}">{{$l->room}}</option>

@@ -39,7 +39,7 @@
                     <th>Location</th>
                     <th>Date born</th>
                     <th>room</th>
-                    <th>photo</th>
+{{--                    <th>photo</th>--}}
                     <th>action</th>
                 </tr>
                 </thead>
@@ -52,19 +52,19 @@
                         <td>{{$teacher->location}}</td>
                         <td>{{$teacher->date_born}}</td>
                         <td>{{ $teacher->room ? $teacher->room->room : 'Room not assigned' }}</td>
-                        <td>
-                            <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-                                <li
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#imageModal{{$teacher->id}}"
-                                        data-bs-placement="top"
-                                        class="avatar avatar-md pull-up"
-                                >
-                                    <img src="{{ asset('storage/'.$teacher->photo) }}" class="rounded-circle" alt="??"/>
-                                </li>
-                            </ul>
+{{--                        <td>--}}
+{{--                            <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">--}}
+{{--                                <li--}}
+{{--                                        data-bs-toggle="modal"--}}
+{{--                                        data-bs-target="#imageModal{{$teacher->id}}"--}}
+{{--                                        data-bs-placement="top"--}}
+{{--                                        class="avatar avatar-md pull-up"--}}
+{{--                                >--}}
+{{--                                    <img src="{{ asset('storage/'.$teacher->photo) }}" class="rounded-circle" alt="??"/>--}}
+{{--                                </li>--}}
+{{--                            </ul>--}}
 
-                        </td>
+{{--                        </td>--}}
                         <th class="d-flex">
 
                             <a href="{{route('teacher.edit',$teacher->id)}}" class="btn-outline-warning btn m-1">

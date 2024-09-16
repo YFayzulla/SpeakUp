@@ -26,7 +26,6 @@ class UpdateRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'password' => 'required|string|min:8|max:16',
             'passport' => [
                 'nullable', 'string', 'regex:/^[A-Z]{2}\d{7}$/', Rule::unique('users', 'passport')->ignore($this->route('teacher'))
             ],
@@ -50,8 +49,6 @@ class UpdateRequest extends FormRequest
     {
         return [
             'name.required' => 'The name field is required.',
-            'password.required' => 'The password field is required.',
-            'password.min' => 'The password must be at least 8 characters.',
             'passport.regex' => 'The passport must consist of 2 uppercase English letters followed by 7 digits.',
             'passport.unique' => 'This passport number already exists.',
             'phone.required' => 'The phone number is required.',

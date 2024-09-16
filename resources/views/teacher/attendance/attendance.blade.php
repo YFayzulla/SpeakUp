@@ -8,7 +8,6 @@
                 <label for="lesson" class="mr-2 align-self-center"></label>
                 <input type="text" name="lesson" id="lesson" class="form-control w-25" placeholder="Lesson">
             </div>
-
             <div class="table-responsive text-nowrap">
                 <table class="table">
                     <thead>
@@ -19,7 +18,7 @@
                     </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
-                    @foreach($students as $index => $student)
+                    @foreach($users as $index => $student)
                         <tr>
                             <td>{{ $index + 1 }}</td>
                             <td><b>{{ $student->name }}</b></td>
@@ -31,9 +30,16 @@
                     </tbody>
                 </table>
             </div>
+
             <div class="modal-footer mt-4">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>
+
         </form>
+
     </div>
+
+
+    @include('user.group.attendance')
+
 @endsection

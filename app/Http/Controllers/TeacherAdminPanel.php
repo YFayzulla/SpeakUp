@@ -3,15 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
-use App\Models\Group;
 use App\Models\GroupTeacher;
 use App\Models\LessonAndHistory;
-use App\Models\StudentInformation;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Services\AttendanceService;
 
 class TeacherAdminPanel extends Controller
 {
+
+    public function __construct(
+        protected AttendanceService $serviceAttendance,
+    )
+    {
+
+    }
 
     public function group()
     {
@@ -19,12 +25,28 @@ class TeacherAdminPanel extends Controller
         $groups = GroupTeacher::where('teacher_id', $id)->get();
         return view('teacher.group', compact('groups'));
     }
+
 //one
     public function attendance($id)
     {
 
-        $students = User:: where('group_id', $id)->orderBy('name')->get();
-        return view('teacher.attendance.attendance', compact('students', 'id'));
+        $service = $this->serviceAttendance->attendance($id);
+
+//        dd($service);
+
+        return view('teacher.attendance.attendance', [
+//            for checking
+            'users' => User:: where('group_id', $id)->orderBy('name')->get(),
+            'id' => $id,
+//            for list
+            'today' => $service['today'],
+            'data' => $service['data'],
+            'year' => $service['year'],
+            'month' => $service['month'],
+            'attendances' => $service['attendances'],
+            'group' => $service['group'],
+            'students'=>$service['students'],
+        ]);
 
     }
 
@@ -60,10 +82,11 @@ class TeacherAdminPanel extends Controller
     public function attendanceIndex()
     {
 //        dd('s');
-        return view('teacher.attendance.index',[
-            'groups'=>GroupTeacher::query()->where('teacher_id', auth()->id())->get(),
+        return view('teacher.attendance.index', [
+            'groups' => GroupTeacher::query()->where('teacher_id', auth()->id())->get(),
         ]);
     }
 
 
 }
+

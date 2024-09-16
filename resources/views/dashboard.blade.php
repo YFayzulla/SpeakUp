@@ -155,7 +155,7 @@
                     <div class="card-header d-flex align-items-center justify-content-between pb-0">
                         <div class="card-title mb-0">
                             {{--                            @dd($attendances)--}}
-                            <h5 class="m-0 me-2">{{count($attendances) == 0  ? 'Attendance is ok' : count($attendances) . " Students didn't come" }} </h5>
+                            <h5 class="m-0 me-2">{{count($attendances) == 0  ? 'AttendanceService is ok' : count($attendances) . " Students didn't come" }} </h5>
                             <h2 class="mb-2"></h2>
                         </div>
                         <div class="dropdown">

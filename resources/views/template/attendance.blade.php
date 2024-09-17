@@ -46,6 +46,7 @@
                 $daysInMonth = Carbon::now()->daysInMonth;
             @endphp
 
+
             <thead>
             <tr>
                 <th>Name</th>

@@ -98,12 +98,6 @@
             </a>
         </li>
 
-        <li class="menu-item @if(request()->routeIs('attendance.index')) active @endif">
-            <a href="{{ route('attendance.index') }}" class="menu-link"> <!-- Default group ID if needed -->
-                <i class="menu-icon tf-icons bx bx-table"></i>
-                <div data-i18n="Analytics">List Attendance</div>
-            </a>
-        </li>
         @endrole
 
     </ul>

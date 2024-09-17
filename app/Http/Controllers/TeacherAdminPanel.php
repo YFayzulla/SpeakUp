@@ -70,7 +70,7 @@ class TeacherAdminPanel extends Controller
                     'lesson_id' => $lesson->id,
                 ]);
             }
-            return redirect()->route('attendance')->with('success', 'Saved');
+            return redirect()->back()->with('success', 'Saved');
 
         } else {
             return redirect()->back()->with('error', 'Something went wrong');

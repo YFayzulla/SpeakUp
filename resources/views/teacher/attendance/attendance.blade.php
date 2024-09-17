@@ -1,4 +1,4 @@
-@extends('template.master')
+`@extends('template.master')
 @section('content')
 
     <div class="card">
@@ -40,6 +40,7 @@
     </div>
 
 
-    @include('user.group.attendance')
+    @include('.template.attendance')
 
 @endsection
+`

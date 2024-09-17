@@ -40,7 +40,7 @@
     </div>
 
 
-    @include('.template.attendance')
+    @include('template.attendance')
 
 @endsection
 `

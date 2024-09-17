@@ -36,30 +36,53 @@
 
     <div class="table-responsive">
         <table class="table table-bordered text-center">
+            @php
+                use Carbon\Carbon;
+
+                // Get the current year, month, day, and number of days in the month
+                $currentYear = Carbon::now()->year;
+                $currentMonth = Carbon::now()->month;
+                $today = Carbon::now()->day;
+                $daysInMonth = Carbon::now()->daysInMonth;
+            @endphp
+
             <thead>
             <tr>
                 <th>Name</th>
-                @for ($i = 1; $i <= 31; $i++)
+                @for ($i = 1; $i <= $daysInMonth; $i++)
                     @php
-                        $day = str_pad($i, 2, '0', STR_PAD_LEFT);
-                        $isToday = ($i == $today);
+                        // Create a date object for each day of the current month
+                        $currentDate = Carbon::createFromDate($currentYear, $currentMonth, $i);
+                        $isWeekend = $currentDate->isWeekend();
+                        $isToday = ($i == $today); // Check if the day is today
                     @endphp
-                    <th class="{{ $isToday ? 'bg-success' : '' }}">{{ $day }}</th>
+                            <!-- Add the class for weekends and highlight today in green -->
+                    <th class="{{ $isToday ? 'bg-success text-white' : ($isWeekend ? 'bg-danger text-white' : '') }}">
+                        {{ $i }}
+                    </th>
                 @endfor
             </tr>
             </thead>
+
             <tbody>
+
             @foreach ($data as $userName => $days)
                 <tr>
                     <td>{{ $userName }}</td>
-                    @for ($i = 1; $i <= 31; $i++)
+                    @for ($i = 1; $i <= $daysInMonth; $i++)
                         @php
+                            // Pad the day with leading zeros if necessary
                             $day = str_pad($i, 2, '0', STR_PAD_LEFT);
+                            // Get the status for the current day
                             $status = $days[$day] ?? '1';
                             $isDanger = $status === '0' || $status === 0;
                             $isPresent = $status === '1' || $status === 1;
+
+                            // Create a date object for the current year, month, and day
+                            $currentDate = Carbon::createFromDate($currentYear, $currentMonth, $i);
+                            $isWeekend = $currentDate->isWeekend();
                         @endphp
-                        <td class="{{ $isDanger ? 'bg-danger text-white' : '' }}">
+                        <td class="{{ $isDanger ? 'bg-danger text-white' : ($isWeekend ? 'bg-danger' : '') }}">
                             @if ($isPresent)
                                 <span class="text-danger font-weight-bold">X</span>
                             @else
@@ -69,6 +92,7 @@
                     @endfor
                 </tr>
             @endforeach
+
             </tbody>
         </table>
     </div>
@@ -102,11 +126,9 @@
                 </tr>
             @endforeach
         </table>
-
         <div class="card-body">
             {{ $students->links('pagination::bootstrap-5') }}
         </div>
     </div>
 </div>
-{{ $students->links() }}
 

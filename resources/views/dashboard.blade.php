@@ -5,8 +5,6 @@
         <div class="row">
             <div class="col-8">
                 <div class="row">
-
-
                     <div class="col-lg-6 col-12 mb-4">
                         <div class="card">
                             <div class="card-body">
@@ -26,19 +24,19 @@
                     </div>
 
 
+
                     <div class="col-lg-6 mb-6 order-0">
                         <div class="card">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between flex-sm-row flex-column gap-3">
                                     <div
-                                        class="d-flex flex-sm-column flex-row align-items-start justify-content-between">
+                                            class="d-flex flex-sm-column flex-row align-items-start justify-content-between">
                                         <div class="card-title">
                                             <h5 class="text-nowrap mb-2">Today's income</h5>
                                             <span
-                                                class="badge bg-label-warning rounded-pill">{{now()->format('d-m-y')}}</span>
+                                                    class="badge bg-label-warning rounded-pill">{{now()->format('d-m-y')}}</span>
                                         </div>
                                         <div class="mt-sm-auto">
-
                                             <h6 class="mb-0"> {{number_format($daily_income, 0, '.', ' ')}} sum</h6>
                                         </div>
                                     </div>
@@ -177,9 +175,9 @@
                                         <div class="user-progress">
                                             <small class="fw-semibold">{{$attendance->group->name}}</small>
                                         </div>
-{{--                                        <div class="user-progress">--}}
-{{--                                            <small class="fw-semibold">{{$attendance->created_at}}</small>--}}
-{{--                                        </div>--}}
+                                        {{--                                        <div class="user-progress">--}}
+                                        {{--                                            <small class="fw-semibold">{{$attendance->created_at}}</small>--}}
+                                        {{--                                        </div>--}}
                                     </div>
                                 </li>
                             @endforeach
@@ -196,11 +194,66 @@
     </div>
     @endrole
     @role('user')
-    <div class="p-4 m-4 sm:p-8 bg-white shadow sm:rounded-lg ">
+    <div class="row">
 
+        <div class="col-lg-6 col-12 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between flex-wrap align-items-center gap-3">
+                        <div class="d-flex flex-column align-items-start justify-content-between w-100"><p
+                                    class="text-success">Test Results</p>
+                            <canvas id="myChart"></canvas>
+                            <div>
+                            </div>
 
-        <p class="text-success">success</p>
+                        </div>
 
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-6 order-0">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between flex-sm-row flex-column gap-3">
+                        <div
+                                class="d-flex flex-sm-column flex-row align-items-start justify-content-between">
+                            <div class="card-title">Salary</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     @endrole
+
+    <script>
+
+        const ctx = document.getElementById('myChart');
+
+        new Chart(ctx, {
+
+            type: 'bar',
+
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3, 5, 2, 3],
+                    borderWidth: 1
+                }]
+            },
+
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+    </script>
+
 @endsection

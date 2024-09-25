@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use App\Models\DeptStudent;
 use App\Models\Finance;
+use App\Models\Group;
 use App\Models\GroupTeacher;
 use App\Models\HistoryPayments;
 use App\Models\User;
@@ -46,7 +47,13 @@ class Controller extends BaseController
                     'pie_chart' => $pie_chart
                 ]
             );
+
         } else
+
+            $id = auth()->id();
+
+//            $groups = Group::
+
             return view('dashboard');
 
     }

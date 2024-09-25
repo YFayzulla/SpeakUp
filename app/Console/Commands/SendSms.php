@@ -11,7 +11,7 @@ class SendSms extends Command
 
     public function __construct(MessageService $messageService)
     {
-        parent::__construct(); // Don't forget to call the parent constructor
+        parent::__construct();
         $this->service = $messageService;
     }
 

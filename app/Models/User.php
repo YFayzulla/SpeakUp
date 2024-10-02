@@ -51,7 +51,6 @@ class User extends Authenticatable
             ->where('teacher_id', $this->id)
             ->pluck('group_id');
 
-
         return User::role('student')
             ->whereIn('group_id', $groupIds)
             ->count();
@@ -117,6 +116,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
     protected $hidden = [
         'password',
         'remember_token',

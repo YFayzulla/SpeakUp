@@ -50,7 +50,6 @@ class GroupController extends Controller
             'room_id' => $request->room,
         ]);
 
-
         if ($group->hasTeacher()) {
             GroupTeacher::create([
                 'group_id' => $group->id,
@@ -96,13 +95,13 @@ class GroupController extends Controller
      */
     public function update(Request $request, Group $group)
     {
+
         $request->validate([
+
 //            'name' => 'required',
             'monthly_payment' => 'required',
+
         ]);
-
-
-//        dd($request);
 
         $group->update([
 
@@ -113,7 +112,15 @@ class GroupController extends Controller
 
         ]);
 
+        $teacher = User::query()->where('room_id',$request->room)->first();
+
+
+
+        GroupTeacher::query()->where('group_id',$group->id)->update(['teacher_id' =>$teacher->id]);
+
+
         return redirect()->back()->with('success', 'Information has been updated');
+
     }
 
     /**

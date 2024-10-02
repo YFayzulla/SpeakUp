@@ -24,14 +24,14 @@ class FakeForSeeder extends Seeder
         $teacher = User::query()->forceCreate([
             'name' => 'test',
             'password' => Hash::make('a'),
-            'phone' => '0123456789',
+            'phone' => '987456327',
             'room_id' => 1
         ])->assignRole('user');
 
         User::query()->forceCreate([
             'name' => 'test2',
             'password' => Hash::make('a'),
-            'phone' => '0123456780',
+            'phone' => '987456321',
             'room_id' => 2
         ])->assignRole('user');
 
@@ -61,7 +61,7 @@ class FakeForSeeder extends Seeder
             $student = User::query()->forceCreate([
                 'name' => 'student' . $i,
                 'password' => Hash::make('student' . $i),
-                'phone' => '012345678' . $i,
+                'phone' => '93043096' . $i,
                 'should_pay' => 10000,
                 'group_id' => rand($group1->id, $group2->id)
             ])->assignRole('student');

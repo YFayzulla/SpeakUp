@@ -17,7 +17,7 @@ class Group extends Model
 
     public function users()
     {
-        return $this->hasMany(User::class);
+        return User::query()->where('group_id',$this->id)->get();
     }
     public function room(): BelongsTo
     {

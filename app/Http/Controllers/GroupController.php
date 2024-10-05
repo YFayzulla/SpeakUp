@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Group;
 use App\Models\GroupTeacher;
 use App\Models\Room;
+use App\Models\StudentInformation;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -98,13 +99,13 @@ class GroupController extends Controller
 
         $request->validate([
 
-//            'name' => 'required',
             'monthly_payment' => 'required',
 
         ]);
 
         $group->update([
 
+            'name'=>$request->name,
             'start_time' => $request->start_time,
             'finish_time' => $request->finish_time,
             'monthly_payment' => $request->monthly_payment,
@@ -112,12 +113,15 @@ class GroupController extends Controller
 
         ]);
 
-        $teacher = User::query()->where('room_id',$request->room)->first();
+        foreach ($group->users() as $student) {
 
+            StudentInformation::create([
+                'user_id' => $student->id,
+                'group_id' =>$group->id,
+                'group'=>$group->name
+            ]);
 
-
-        GroupTeacher::query()->where('group_id',$group->id)->update(['teacher_id' =>$teacher->id]);
-
+        }
 
         return redirect()->back()->with('success', 'Information has been updated');
 

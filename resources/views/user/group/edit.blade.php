@@ -1,8 +1,6 @@
 @extends('template.master')
 @section('content')
-
     <div class="p-4 m-4 sm:p-8 bg-white shadow sm:rounded-lg ">
-
 
         <div class="max-w-xl">
             <h1 class="text-center"> Edit group`s date  </h1>
@@ -11,6 +9,13 @@
 
                 @csrf
                 @method('PUT')
+
+                <label for="name" class="text-dark">name</label>
+                <input id="name" name="name" value="{{old('name')??$group->name}}" type="text" class="form-control">
+
+                @error('name')
+                <div class="alert alert-danger" role="alert">This place should be written</div>
+                @enderror
 
                 <label for="start_time" class="text-dark">start time</label>
                 <input id="start_time" name="start_time" value="{{$group->start_time}}" type="time" class="form-control">

@@ -76,7 +76,7 @@ class FakeForSeeder extends Seeder
             DeptStudent::create([
                 'user_id' => $student->id,
                 'payed' => 0,
-                'dept' => 1000000,
+                'dept' => 10000,
                 'status_month' => 0
             ]);
         }

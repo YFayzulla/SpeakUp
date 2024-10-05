@@ -67,7 +67,7 @@
                     <select id="group_id" name="group_id" class="form-control">
                         @foreach($groups as $group)
                             <option value="{{ $group->id }}" data-payment="{{ $group->monthly_payment }}" {{ old('group_id') == $group->id ? 'selected' : '' }}>
-                                {{ optional($group->room)->room }} -> {{ $group->name }}
+                                {{ optional($group->room)->room ?? 'room '.  0 }} -> {{ $group->name }}
                             </option>
                         @endforeach
                     </select>
@@ -76,11 +76,11 @@
                     @enderror
                 </div>
 
-                <div class="mb-3">
-                    <label> Gummax </label>
-                    <input class="form-checkbox" name="status" type="checkbox">
+{{--                <div class="mb-3">--}}
+{{--                    <label> Gummax </label>--}}
+{{--                    <input class="form-checkbox" name="status" type="checkbox">--}}
 
-                </div>
+{{--                </div>--}}
 
                 <div class="mb-3">
                     <label for="should_pay" class="form-label text-dark">Should Pay</label>

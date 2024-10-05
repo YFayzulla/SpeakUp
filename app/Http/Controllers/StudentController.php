@@ -39,7 +39,7 @@ class StudentController extends Controller
 
     public function create()
     {
-        $groups = Group::with('room')->where('id','!=',1)->orderby('room_id')->get();
+        $groups = Group::with('room')->orderby('room_id')->get();
         return view('user.student.create', compact('groups'));
     }
 
@@ -70,7 +70,7 @@ class StudentController extends Controller
             'group_id' => $group->id,
             'location' => $request->location,
             'photo' => $path ?? null,
-            'should_pay' => $request->should_pay ?? $group->monthly_payment,
+            'should_pay' => ($group->id == 1  )? null : $request->should_pay ,
             'description' => $request->description,
             'room_id' => $group -> id
         ])->assignRole('student');
@@ -117,8 +117,7 @@ class StudentController extends Controller
     {
 
         $student = User::find($id);
-        $groups = Group::where('id', '!=', 1)->get();
-        //        dd($id,$student);
+        $groups = Group::query()->orderBy('name')->get();
         if ($student !== null)
             return view('user.student.edit', compact('student', 'groups'));
         else

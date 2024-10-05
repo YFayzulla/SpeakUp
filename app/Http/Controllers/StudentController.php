@@ -70,9 +70,9 @@ class StudentController extends Controller
             'group_id' => $group->id,
             'location' => $request->location,
             'photo' => $path ?? null,
-            'should_pay' => ($group->id == 1  )? null : $request->should_pay ,
+            'should_pay' => ($group->id == 1) ? null : $request->should_pay,
             'description' => $request->description,
-            'room_id' => $group -> id
+            'room_id' => $group->id
         ])->assignRole('student');
 
 
@@ -149,12 +149,12 @@ class StudentController extends Controller
             $path = $request->file('photo')->storeAs('Photo', $fileName);
         }
 
-        $group= Group::find($request->group_id);
-        if ( $student->group_id != $request->group_id ) {
+        $group = Group::find($request->group_id);
+        if ($student->group_id != $request->group_id) {
             StudentInformation::create([
                 'user_id' => $student->id,
                 'group_id' => $request->group_id,
-                'group'=>$group->name
+                'group' => $group->name
             ]);
         }
 
@@ -171,11 +171,12 @@ class StudentController extends Controller
             'should_pay' => $request->should_pay,
             'photo' => $path ?? $student->photo ?? null,
             'description' => $request->description,
-            'room_id'=>$group->room_id,
+            'room_id' => $group->room_id,
+            'status' => ($group->id == 1) ? null : $student->status,
 
         ]);
 
-        $dept=DeptStudent::where('user_id',$id)->first();
+        $dept = DeptStudent::where('user_id', $id)->first();
 
         $dept->update([
             'dept' => $request->should_pay

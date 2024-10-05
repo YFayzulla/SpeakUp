@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\User;
 use App\Services\MessageService;
 use Illuminate\Console\Command;
 
@@ -22,8 +23,18 @@ class SendSms extends Command
     public function handle()
     {
         $message = 'Это тест от Eskiz';
-        $phone = 998930430959;
-        $this->service->sendMessage($phone, $message); // Use the injected service
+
+        $students = User::query()
+            ->role('student')
+            ->whereNotNull('status')
+            ->where('status', '<=', 0)
+            ->get();
+
+        foreach ($students as $student) {
+
+            $this->service->sendMessage($student->phone, $message);
+
+        }
 
         return Command::SUCCESS;
     }

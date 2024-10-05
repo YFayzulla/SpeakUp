@@ -22,6 +22,7 @@ class MessageService
         }
 
         $token = Cache::get('token');
+        $phone = '998'.$phone;
         if (!$token) {
             $token = $this->getToken();
             Cache::put('token', $token);

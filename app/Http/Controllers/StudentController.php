@@ -72,6 +72,7 @@ class StudentController extends Controller
             'photo' => $path ?? null,
             'should_pay' => ($group->id == 1) ? null : $request->should_pay,
             'description' => $request->description,
+            'status'=>($group->id == 1) ? null : 0,
             'room_id' => $group->id
         ])->assignRole('student');
 

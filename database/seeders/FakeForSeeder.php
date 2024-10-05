@@ -55,31 +55,31 @@ class FakeForSeeder extends Seeder
 
         $i = 1;
 
-        for ($i = 1; $i <= 10; $i++) {
-
-
-            $student = User::query()->forceCreate([
-                'name' => 'student' . $i,
-                'password' => Hash::make('student' . $i),
-                'phone' => '93043096' . $i,
-                'should_pay' => 10000,
-                'group_id' => rand($group1->id, $group2->id)
-            ])->assignRole('student');
-
-
-            StudentInformation::create([
-                'user_id' => $student->id,
-                'group_id' => $group1->id,
-                'group' => $group1->name,
-            ]);
-
-            DeptStudent::create([
-                'user_id' => $student->id,
-                'payed' => 0,
-                'dept' => 10000,
-                'status_month' => 0
-            ]);
-        }
+//        for ($i = 1; $i <= 10; $i++) {
+//
+//
+//            $student = User::query()->forceCreate([
+//                'name' => 'student' . $i,
+//                'password' => Hash::make('student' . $i),
+//                'phone' => '93043096' . $i,
+//                'should_pay' => 10000,
+//                'group_id' => rand($group1->id, $group2->id)
+//            ])->assignRole('student');
+//
+//
+//            StudentInformation::create([
+//                'user_id' => $student->id,
+//                'group_id' => $group1->id,
+//                'group' => $group1->name,
+//            ]);
+//
+//            DeptStudent::create([
+//                'user_id' => $student->id,
+//                'payed' => 0,
+//                'dept' => 10000,
+//                'status_month' => 0
+//            ]);
+//        }
 
     }
 }

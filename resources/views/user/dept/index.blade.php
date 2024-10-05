@@ -24,7 +24,10 @@
                         <th>{{$loop->index+1}}</th>
                         <th>{{$student->name}}</th>
                         <th>{{$student->group->name ?? null}}</th>
-                        <th>@if( $student->status <= 0 )
+                        <th>@if($student->status == null)
+                                <p class="text-info"> disabled </p>
+
+                            @elseif( $student->status <= 0 )
                                 <p class="text-danger"> debtor </p>
                             @else
                                 <p class="text-success"> paid </p>

@@ -62,7 +62,7 @@
 {{--                    <option value="{{ $student->group_id }}" selected>{{ $student->group->name }}</option>--}}
                     @foreach($groups as $group)
                         <option value="{{ $group->id }}" data-payment="{{ $group->monthly_payment }}" {{ old('group_id') == $group->id ? 'selected' : '' }}>
-                            {{ optional($group->room)->room }} -> {{ $group->name }}
+                            {{ optional($group->room)->room ?? 'room '.  0 }} -> {{ $group->name }}
                         </option>
                     @endforeach
                 </select>

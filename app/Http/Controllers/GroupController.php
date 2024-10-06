@@ -83,7 +83,7 @@ class GroupController extends Controller
      */
     public function edit(Group $group)
     {
-        $rooms = Room::all();
+        $rooms = Room::query()->orderBy('name')->get();
         return view('user.group.edit', compact('group', 'rooms'));
     }
 

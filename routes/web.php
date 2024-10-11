@@ -9,6 +9,7 @@ use App\Http\Controllers\GroupExtraController;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\RefreshController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherAdminPanel;
 use App\Http\Controllers\TeacherController;
@@ -51,8 +52,6 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::get('Test', [TestResultController::class, 'index'])->name('test');
     Route::get('Test/{id}/show', [TestResultController::class, 'showResults'])->name('test.show');
 
-//    Route::get('dashboard',
-
 //    PDF
 
     Route::get('/student/pdf/{id}', [PdfController::class, 'history']);
@@ -63,6 +62,7 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::get('/student/pdf', [PdfController::class, 'student']);
 
 //    Excel
+
     Route::get('export-attendances/{id}', [GroupExtraController::class, 'export'])->name('export.attendances');
 
 //    group
@@ -82,6 +82,7 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::resource('student', StudentController::class);
     Route::post('student/dept', [Controller::class, 'search'])->name('student.search');
     Route::resource('dept', DeptStudentController::class);
+    Route::get('refresh/{id}/update',[RefreshController::class,'update'])->name('refresh.update');
 
 //    teacher
 

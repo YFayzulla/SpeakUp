@@ -13,7 +13,7 @@ class RefreshController extends Controller
 
         User::query()->findOrFail($id)->update(['status'=>0]);
 
-        return redirect()->back();
+        return redirect()->back()->with('success','data updated successfully');
 
     }
 

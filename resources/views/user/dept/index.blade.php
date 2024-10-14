@@ -51,7 +51,7 @@
                             </button>
 
                             <a class="btn btn-outline-info m-1"
-                               onclick="return confirm('Do you want to refresh the student\'s department?')"
+                               onclick="return confirm('Do you want to refresh the student\'s dept?')"
                                href="{{ route('refresh.update', $student->id) }}">
                                 <i class="bx bx-refresh"></i>
                             </a>

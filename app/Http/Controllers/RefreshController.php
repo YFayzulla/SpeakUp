@@ -16,5 +16,4 @@ class RefreshController extends Controller
         return redirect()->back()->with('success','data updated successfully');
 
     }
-
 }

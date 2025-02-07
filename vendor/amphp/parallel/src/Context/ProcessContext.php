@@ -29,10 +29,10 @@ final class ProcessContext extends AbstractContext
     ];
 
     private const XDEBUG_OPTIONS = [
-        "xdebug.mode" => "debug",
-        "xdebug.start_with_request" => "default",
-        "xdebug.client_port" => "9003",
-        "xdebug.client_host" => "localhost",
+        "xdebug.mode",
+        "xdebug.start_with_request",
+        "xdebug.client_port",
+        "xdebug.client_host",
     ];
 
     /** @var non-empty-string|null External version of SCRIPT_PATH if inside a PHAR. */
@@ -222,10 +222,12 @@ final class ProcessContext extends AbstractContext
 
         // This copies any ini values set via the command line (e.g., a debug run in PhpStorm)
         // to the child process, instead of relying only on those set in an ini file.
-        if (\ini_get("xdebug.mode") !== false) {
-            foreach (self::XDEBUG_OPTIONS as $option => $defaultValue) {
+        if (\extension_loaded('xdebug') && \ini_get("xdebug.mode") !== false) {
+            foreach (self::XDEBUG_OPTIONS as $option) {
                 $iniValue = \ini_get($option);
-                $options[$option] = $iniValue === false ? $defaultValue : $iniValue;
+                if ($iniValue !== false) {
+                    $options[$option] = $iniValue;
+                }
             }
         }
 
@@ -279,11 +281,16 @@ final class ProcessContext extends AbstractContext
         $data = $this->receiveExitResult($cancellation);
 
         $code = $this->process->join();
-        if ($code !== 0) {
-            throw new ContextException(\sprintf("Context exited with code %d", $code));
-        }
 
-        return $data->getResult();
+        try {
+            return $data->getResult();
+        } finally {
+            if ($code !== 0) {
+                // If an ExitFailure throws above, the exception will be automatically attached as the previous
+                // exception on the instance thrown below.
+                throw new ContextException(\sprintf("Context exited with code %d", $code));
+            }
+        }
     }
 
     /**

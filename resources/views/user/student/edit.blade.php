@@ -55,7 +55,7 @@
                 <input id="description" name="description" value="{{ old('description', $student->description) }}" type="text" class="form-control">
 
                 <label for="should_pay" class="text-dark">Should Pay</label>
-                <input id="should_pay" name="should_pay" value="{{ old('should_pay', $student->should_pay) }}" type="text" class="form-control">
+                <input id="should_pay" name="should_pay" value="{{ number_format(old('should_pay', $student->should_pay)) }}" type="text" class="form-control">
 
                 <label for="group_id" class="text-dark">Group</label>
                 <select id="group_id" class="form-control" name="group_id">

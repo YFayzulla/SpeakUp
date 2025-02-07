@@ -9,6 +9,7 @@ use Doctrine\DBAL\Exception\InvalidColumnIndex;
 use PDO;
 use PDOException;
 use PDOStatement;
+use ValueError;
 
 final class Result implements ResultInterface
 {
@@ -78,15 +79,17 @@ final class Result implements ResultInterface
     {
         try {
             $meta = $this->statement->getColumnMeta($index);
-
-            if ($meta === false) {
-                throw InvalidColumnIndex::new($index);
-            }
-
-            return $meta['name'];
+        } catch (ValueError $exception) {
+            throw InvalidColumnIndex::new($index, $exception);
         } catch (PDOException $exception) {
             throw Exception::new($exception);
         }
+
+        if ($meta === false) {
+            throw InvalidColumnIndex::new($index);
+        }
+
+        return $meta['name'];
     }
 
     public function free(): void
@@ -95,7 +98,7 @@ final class Result implements ResultInterface
     }
 
     /**
-     * @psalm-param PDO::FETCH_* $mode
+     * @phpstan-param PDO::FETCH_* $mode
      *
      * @throws Exception
      */
@@ -109,7 +112,7 @@ final class Result implements ResultInterface
     }
 
     /**
-     * @psalm-param PDO::FETCH_* $mode
+     * @phpstan-param PDO::FETCH_* $mode
      *
      * @return list<mixed>
      *

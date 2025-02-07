@@ -21,14 +21,14 @@ class FakeForSeeder extends Seeder
     public function run()
     {
 
-        $teacher = User::query()->forceCreate([
+        $teacher1 = User::query()->forceCreate([
             'name' => 'test',
             'password' => Hash::make('a'),
             'phone' => '987456327',
             'room_id' => 1
         ])->assignRole('user');
 
-        User::query()->forceCreate([
+        $teacher2=User::query()->forceCreate([
             'name' => 'test2',
             'password' => Hash::make('a'),
             'phone' => '987456321',
@@ -45,11 +45,11 @@ class FakeForSeeder extends Seeder
         ]);
 
         GroupTeacher::query()->firstOrCreate([
-            'teacher_id' => $teacher->id,
+            'teacher_id' => $teacher1->id,
             'group_id' => $group1->id,
         ]);
         GroupTeacher::query()->firstOrCreate([
-            'teacher_id' => $teacher->id,
+            'teacher_id' => $teacher2->id,
             'group_id' => $group2->id,
         ]);
 

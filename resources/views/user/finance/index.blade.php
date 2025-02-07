@@ -30,8 +30,7 @@
                             <div class="d-flex justify-content-between flex-sm-row flex-column gap-3">
                                 <div class="d-flex flex-sm-column flex-row align-items-start justify-content-between">
                                     <div class="card-title">
-                                        <h5 class="text-nowrap mb-2">Daily Consumption</h5>
-                                        <span class="badge bg-label-warning rounded-pill">{{today()->format('d-m-y')}}</span>
+                                        <h5 class="text-nowrap mb-2">Today's Consumption</h5>
                                     </div>
                                     <div class="mt-sm-auto">
                                         <h3 class="mb-0">{{$daily_consumption}}</h3>
@@ -82,7 +81,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 

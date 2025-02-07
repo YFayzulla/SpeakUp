@@ -12,7 +12,7 @@ final class TimeoutCancellation implements Cancellation
     use ForbidCloning;
     use ForbidSerialization;
 
-    private readonly string $watcher;
+    private readonly string $callbackId;
 
     private readonly Cancellation $cancellation;
 
@@ -27,7 +27,7 @@ final class TimeoutCancellation implements Cancellation
         $trace = null; // Defined in case assertions are disabled.
         \assert((bool) ($trace = \debug_backtrace(0)));
 
-        $this->watcher = EventLoop::delay($timeout, static function () use ($source, $message, $trace): void {
+        $this->callbackId = EventLoop::delay($timeout, static function () use ($source, $message, $trace): void {
             if ($trace) {
                 $message .= \sprintf("\r\n%s was created here: %s", self::class, Internal\formatStacktrace($trace));
             } else {
@@ -37,7 +37,7 @@ final class TimeoutCancellation implements Cancellation
             $source->cancel(new TimeoutException($message));
         });
 
-        EventLoop::unreference($this->watcher);
+        EventLoop::unreference($this->callbackId);
     }
 
     /**
@@ -45,7 +45,7 @@ final class TimeoutCancellation implements Cancellation
      */
     public function __destruct()
     {
-        EventLoop::cancel($this->watcher);
+        EventLoop::cancel($this->callbackId);
     }
 
     public function subscribe(\Closure $callback): string

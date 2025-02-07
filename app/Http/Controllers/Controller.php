@@ -48,13 +48,12 @@ class Controller extends BaseController
                 ]
             );
 
-        } else
+        }
+        if (auth()->user()->hasRole('student')) {
 
-            $id = auth()->id();
+        }
 
-//            $groups = Group::
-
-            return view('dashboard');
+        return view('dashboard');
 
     }
 

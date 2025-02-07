@@ -3,19 +3,20 @@
     @role('admin')
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="row">
-            <div class="col-8">
+            <div class="col-lg-8 col-12">
                 <div class="row">
-                    <div class="col-lg-6 col-12 mb-4">
+
+                    <div class="col-md-6 col-12 mb-4">
                         <div class="card">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between flex-wrap align-items-center gap-3">
-                                    <div class="d-flex flex-column align-items-start justify-content-between w-100">
+                                    <div class="d-flex flex-column align-items-start justify-content-between">
                                         <div class="card-title">
                                             <h5 class="text-nowrap mb-2">Students</h5>
                                             <span class="badge bg-label-success rounded-pill">{{ now()->format('d-m-y') }}</span>
                                         </div>
-                                        <div class="mt-3">
-                                            <h3 class="mb-0"><b>{{ $number_of_students }}</b></h3>
+                                        <div class="mt-sm-auto">
+                                            <h6 class="mb-0"><b>{{ $number_of_students }}</b></h6>
                                         </div>
                                     </div>
                                 </div>
@@ -23,205 +24,108 @@
                         </div>
                     </div>
 
-
-
-                    <div class="col-lg-6 mb-6 order-0">
+                    <div class="col-md-6 col-12 mb-4 order-0">
                         <div class="card">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between flex-sm-row flex-column gap-3">
-                                    <div
-                                            class="d-flex flex-sm-column flex-row align-items-start justify-content-between">
+                                    <div class="d-flex flex-sm-column align-items-start justify-content-between">
                                         <div class="card-title">
                                             <h5 class="text-nowrap mb-2">Today's income</h5>
-                                            <span
-                                                    class="badge bg-label-warning rounded-pill">{{now()->format('d-m-y')}}</span>
+                                            <span class="badge bg-label-warning rounded-pill">{{ now()->format('d-m-y') }}</span>
                                         </div>
                                         <div class="mt-sm-auto">
-                                            <h6 class="mb-0"> {{number_format($daily_income, 0, '.', ' ')}} sum</h6>
+                                            <h6 class="mb-0">{{ number_format($daily_income, 0, '.', ' ') }} sum</h6>
                                         </div>
                                     </div>
-                                    <div id="profileReportChart" data-trent="{{ $trent->toJson() }}"></div>
+                                    <div id="profileReportChart" class="w-100" data-trent="{{ $trent->toJson() }}"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-
-                    <div class="col-12 ">
+                    <div class="col-12">
                         <div class="card m-2">
                             <h5 class="card-header">Teachers</h5>
-                            <div class="table-responsive text-nowrap">
+                            <div class="table-responsive">
                                 <table class="table">
                                     <thead>
                                     <tr>
                                         <th>Id</th>
-                                        <th>name</th>
+                                        <th>Name</th>
                                         <th><b>%</b></th>
-                                        <th>groups</th>
-                                        <th>students</th>
-                                        <th>salary</th>
+                                        <th>Groups</th>
+                                        <th>Students</th>
+                                        <th>Salary</th>
                                     </tr>
                                     </thead>
-                                    <tbody class="table-border-bottom-0">
+                                    <tbody>
                                     @foreach($teachers as $teacher)
                                         <tr>
-                                            <td>{{$loop->index+1}}</td>
-                                            <td>
-                                                {{--                                                <i class="fab fa-angular fa-lg text-danger me-3"></i>--}}
-                                                <strong>{{ $teacher->name }}</strong>
-                                            </td>
-                                            <td>
-                                                {{ $teacher->percent }}
-                                            </td>
-
-                                            <td>
-                                                {{ $teacher->teacherhasGroup() }}
-                                            </td>
-
-                                            <td>
-                                                {{ $teacher->teacherHasStudents() }}
-                                            </td>
-
-                                            <td>
-                                                {{ number_format( $teacher->teacherPayment() , 0, '.', ' ')    }}
-                                            </td>
-                                            <td></td>
+                                            <td>{{ $loop->index+1 }}</td>
+                                            <td><strong>{{ $teacher->name }}</strong></td>
+                                            <td>{{ $teacher->percent }}</td>
+                                            <td>{{ $teacher->teacherhasGroup() }}</td>
+                                            <td>{{ $teacher->teacherHasStudents() }}</td>
+                                            <td>{{ number_format($teacher->teacherPayment(), 0, '.', ' ') }}</td>
                                         </tr>
                                     @endforeach
                                     </tbody>
                                 </table>
-
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
 
-            <div class="col-lg-4 col-md-4 order-1">
-                <div class="card mb-3">
-                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
-                        <div class="card-title mb-0 text-center ">
-                            <h5 class="m-0 me-2 text-center mb-2"> Profit </h5>
-
-                            {{--                            <h6 class="mb-2">{{number_format($profit, 0, '.', ' ')}} sum</h6>--}}
-
-                        </div>
-                        <div class="dropdown">
-
-                        </div>
+            <div class="col-lg-4 col-12">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="m-0">Profit</h5>
                     </div>
                     <div class="card-body">
-                        {{--                        <div class="d-flex justify-content-between align-items-center mb-3">--}}
-
-                        <span class="badge bg-label-info rounded-pill mb-2">{{today()->format('d-m-y')}}</span>
-                        <h6 class="mb-2">{{number_format($profit, 0, '.', ' ')}} sum</h6>
-
-                        {{--                                                        @dd($pie_chart)--}}
-                        {{--                                                                                    <div id="orderStatisticsChart" data-pie-chart="{{ json_encode($pie_chart) }}"></div>--}}
-                        {{--                        </div>--}}
-
-{{--                        @foreach($students as $student)--}}
-{{--                            <ul class="p-0 m-0">--}}
-{{--                                <li class="d-flex mb-4 pb-1">--}}
-{{--                                    <div class="avatar flex-shrink-0 me-3">--}}
-{{--                            <span class="avatar-initial rounded bg-label-danger"--}}
-{{--                            ><i class="bx bx-minus"></i--}}
-{{--                                ></span>--}}
-{{--                                    </div>--}}
-{{--                                    <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">--}}
-{{--                                        <div class="me-2">--}}
-{{--                                            <h6 class="mb-0">{{$student->name}}</h6>--}}
-{{--                                        </div>--}}
-{{--                                        <div class="user-progress">--}}
-{{--                                            <small class="fw-semibold">{{$student->group->name}}</small>--}}
-{{--                                        </div>--}}
-{{--                                        <div class="user-progress">--}}
-{{--                                            <small class="fw-semibold">{{$student->status ==  1  ? "Qarzdor" : 'To`lagan'}}</small>--}}
-{{--                                        </div>--}}
-{{--                                        <div class="user-progress">--}}
-{{--                                            <small class="fw-semibold">+{{$student->phone}}</small>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                </li>--}}
-{{--                            </ul>--}}
-{{--                        @endforeach--}}
-
+                        <span class="badge bg-label-info rounded-pill mb-2">{{ today()->format('d-m-y') }}</span>
+                        <h6 class="mb-2">{{ number_format($profit, 0, '.', ' ') }} sum</h6>
                     </div>
                 </div>
 
                 <div class="card">
-                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
-                        <div class="card-title mb-0">
-                            {{--                            @dd($attendances)--}}
-                            <h5 class="m-0 me-2">{{count($attendances) == 0  ? 'AttendanceService is ok' : count($attendances) . " Students didn't come" }} </h5>
-                            <h2 class="mb-2"></h2>
-                        </div>
-                        <div class="dropdown">
-
-                        </div>
+                    <div class="card-header">
+                        <h5 class="m-0">{{ count($attendances) == 0 ? 'Attendance' : count($attendances) . " Students didn't come" }}</h5>
                     </div>
                     <div class="card-body">
-                        <ul class="p-0 m-0">
-
+                        <ul class="list-unstyled">
                             @foreach($attendances as $attendance)
-                                <li class="d-flex mb-4 pb-1">
-                                    <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                        <div class="me-2">
-                                            <h6 class="mb-0">{{$loop->index+1}}</h6>
-                                        </div>
-                                        <div class="me-2">
-                                            <h6 class="mb-0">{{$attendance->user->name}}</h6>
-                                        </div>
-                                        <div class="user-progress">
-                                            <small class="fw-semibold">{{$attendance->group->name}}</small>
-                                        </div>
-                                        {{--                                        <div class="user-progress">--}}
-                                        {{--                                            <small class="fw-semibold">{{$attendance->created_at}}</small>--}}
-                                        {{--                                        </div>--}}
-                                    </div>
+                                <li class="d-flex justify-content-between align-items-center mb-3">
+                                    <span>{{ $loop->index+1 }}. {{ $attendance->user->name }}</span>
+                                    <small class="fw-semibold">{{ $attendance->group->name }}</small>
                                 </li>
                             @endforeach
                         </ul>
                     </div>
                 </div>
             </div>
-            <!-- Total Revenue -->
-
-            <!--/ Total Revenue -->
-
         </div>
-        <!--/ Expense Overview -->
     </div>
     @endrole
+
     @role('user')
     <div class="row">
-
-        <div class="col-lg-6 col-12 mb-4">
+        <div class="col-md-6 col-12 mb-4">
             <div class="card">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between flex-wrap align-items-center gap-3">
-                        <div class="d-flex flex-column align-items-start justify-content-between w-100"><p
-                                    class="text-success">Test Results</p>
-                            <canvas id="myChart"></canvas>
-                            <div>
-                            </div>
-
-                        </div>
-
+                    <p class="text-success">Test Results</p>
+                    <div class="w-100">
+                        <canvas id="myChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-6 mb-6 order-0">
+        <div class="col-md-6 col-12 mb-4">
             <div class="card">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between flex-sm-row flex-column gap-3">
-                        <div
-                                class="d-flex flex-sm-column flex-row align-items-start justify-content-between">
-                            <div class="card-title">Salary</div>
-                        </div>
-                    </div>
+                    <h5 class="card-title">Salary</h5>
                 </div>
             </div>
         </div>
@@ -229,13 +133,9 @@
     @endrole
 
     <script>
-
-        const ctx = document.getElementById('myChart');
-
+        const ctx = document.getElementById('myChart').getContext('2d');
         new Chart(ctx, {
-
             type: 'bar',
-
             data: {
                 labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
                 datasets: [{
@@ -244,8 +144,9 @@
                     borderWidth: 1
                 }]
             },
-
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                     y: {
                         beginAtZero: true
@@ -253,7 +154,27 @@
                 }
             }
         });
-
     </script>
+
+    <style>
+        @media (max-width: 768px) {
+            .table-responsive {
+                overflow-x: auto;
+            }
+
+            .card-title h5 {
+                font-size: 1rem;
+            }
+
+            .badge {
+                font-size: 0.8rem;
+            }
+
+            canvas {
+                width: 100% !important;
+                height: auto !important;
+            }
+        }
+    </style>
 
 @endsection

@@ -13,7 +13,7 @@ final class SignalCancellation implements Cancellation
     use ForbidSerialization;
 
     /** @var list<string> */
-    private readonly array $watchers;
+    private readonly array $callbackIds;
 
     private readonly Cancellation $cancellation;
 
@@ -32,11 +32,11 @@ final class SignalCancellation implements Cancellation
         $trace = null; // Defined in case assertions are disabled.
         \assert((bool) ($trace = \debug_backtrace(0)));
 
-        $watchers = [];
+        $callbackIds = [];
 
-        $callback = static function () use (&$watchers, $source, $message, $trace): void {
-            foreach ($watchers as $watcher) {
-                EventLoop::cancel($watcher);
+        $callback = static function () use (&$callbackIds, $source, $message, $trace): void {
+            foreach ($callbackIds as $callbackId) {
+                EventLoop::cancel($callbackId);
             }
 
             if ($trace) {
@@ -49,10 +49,10 @@ final class SignalCancellation implements Cancellation
         };
 
         foreach ($signals as $signal) {
-            $watchers[] = EventLoop::unreference(EventLoop::onSignal($signal, $callback));
+            $callbackIds[] = EventLoop::unreference(EventLoop::onSignal($signal, $callback));
         }
 
-        $this->watchers = $watchers;
+        $this->callbackIds = $callbackIds;
     }
 
     /**
@@ -60,7 +60,7 @@ final class SignalCancellation implements Cancellation
      */
     public function __destruct()
     {
-        foreach ($this->watchers as $watcher) {
+        foreach ($this->callbackIds as $watcher) {
             EventLoop::cancel($watcher);
         }
     }

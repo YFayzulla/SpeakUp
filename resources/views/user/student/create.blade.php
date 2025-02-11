@@ -60,7 +60,7 @@
                         <input type="tel" id="parents_tel" name="parents_tel" maxlength="9" placeholder="912345678"
                                value="{{ old('parents_tel') }}" class="form-control">
                     </div>
-                    @error('phone')
+                    @error('parents_tel')
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>

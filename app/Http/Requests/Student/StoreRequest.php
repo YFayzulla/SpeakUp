@@ -27,7 +27,7 @@ class StoreRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'password' => 'nullable|string|min:8|max:16',
-            'phone' => ['required', 'string', 'digits:9'],
+            'phone' => ['required', 'string', 'digits:9',Rule::unique('users', 'phone')],
 //            'passport' => ['nullable', 'string', 'regex:/^[A-Z]{2}\d{7}$/', Rule::unique('users', 'passport')],
             'date_born' => 'nullable|date',
             'location' => 'nullable|string|max:255',

@@ -111,6 +111,14 @@ class User extends Authenticatable
         return GroupTeacher::query()->where('teacher_id', $this->id)->count();
     }
 
+    public function checkAttendanceStatus()
+    {
+        return $this->attendances()
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->exists();
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

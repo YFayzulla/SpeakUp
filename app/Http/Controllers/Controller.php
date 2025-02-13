@@ -50,7 +50,7 @@ class Controller extends BaseController
 
         }
         if (auth()->user()->hasRole('student')) {
-
+            return view('studentPage');
         }
 
         return view('dashboard');

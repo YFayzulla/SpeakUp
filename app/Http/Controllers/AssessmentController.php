@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActiveStudent;
 use App\Models\Assessment;
 use App\Models\Attendance;
 use App\Models\Group;
@@ -82,49 +83,54 @@ class AssessmentController extends Controller
 
     public function update(Request $request, $id)
     {
-        $end_mark = $request->end_mark;
-        $rec_group = $request->recommended;
-        $reason = $request->reason;
-        $user = $request->student;
-        $count = count($reason);
-        $group = Group::find($id);
+        $end_marks = $request->end_mark;
+        $rec_groups = $request->recommended;
+        $reasons = $request->reason;
+        $users = $request->student;
 
-//        if ($request->lesson) {
-            $history = LessonAndHistory::query()->create([
-                'group' => $group->id,
-                'name' => $request->lesson ?? auth()->user()->name,
-                'data' => 2
-            ]);
-//        }
+        $count = count($reasons);
+        $group = Group::findOrFail($id);
 
-//        dd($request->lesson);
-//        if ()
+        $history = LessonAndHistory::create([
+            'group' => $group->id,
+            'name' => $request->lesson ?? auth()->user()->name,
+            'data' => 2
+        ]);
+
+        $assessments = [];
+        $studentsToUpdate = [];
+
         for ($i = 0; $i < $count; $i++) {
-            $data = new Assessment();
-            if ($end_mark[$i] != null || $end_mark [$i] != 0) {
-                $data->get_mark = $end_mark[$i];
-                $data->user_id = $user[$i];
-                $data->for_what = $reason[$i];
-                $data->rec_group = $rec_group[$i];
-                $data->group = $group->name ;
-                $data->history_id = $history->id ;
-                $data->save();
+            $mark = $end_marks[$i] ?? null;
+            if ($mark !== null && $mark != 0) {
+                $assessments[] = [
+                    'get_mark' => $mark,
+                    'user_id' => $users[$i],
+                    'for_what' => $reasons[$i],
+                    'rec_group' => $rec_groups[$i],
+                    'group' => $group->name,
+                    'history_id' => $history->id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ];
             }
-
-
-            $student = User::find($user[$i]);
-
-//            $student = StudentInformation::where('user_id',$user[$i])->where('group_id',$group)->get();
-//            dd($student);
-
-            $student->update([
-                'mark' => $end_mark[$i]
-            ]);
-
-
+            $studentsToUpdate[$users[$i]] = $mark;
         }
+// Bulk insert for better performance
+        if (!empty($assessments)) {
+            Assessment::insert($assessments);
+        }
+// Bulk update marks
+        User::whereIn('id', array_keys($studentsToUpdate))->get()->each(function ($student) use ($studentsToUpdate) {
+            $student->update(['mark' => $studentsToUpdate[$student->id]]);
+            // Handle active students
+            if (!$student->checkAttendanceStatus()) {
+                ActiveStudent::create(['user_id' => $student->id]);
+            }
+        });
 
         return redirect()->route('assessment.index')->with('success', 'Grades saved');
+
     }
 
     /**

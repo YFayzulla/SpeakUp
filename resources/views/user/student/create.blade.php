@@ -89,7 +89,7 @@
                 <div class="mb-3">
                     <label for="should_pay" class="form-label text-dark">Should Pay</label>
                     <input id="should_pay" name="should_pay" type="text"
-                           value="{{ number_format(old('should_pay', 100000), 0, ' ', ' ') }}"
+                           value="{{ number_format(old('should_pay', 500000), 0, ' ', ' ') }}"
                            class="form-control">
                     @error('should_pay')
                     <div class="text-danger">{{ $message }}</div>
@@ -127,6 +127,7 @@
         document.getElementById('group_id').dispatchEvent(new Event('change'));
 
         const shouldPayInput = document.getElementById('should_pay');
+
 
         // Function to format number with spaces
         function formatNumberWithSpaces(value) {

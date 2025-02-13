@@ -69,6 +69,8 @@ class TeacherAdminPanel extends Controller
                     'status' => 1,
                     'lesson_id' => $lesson->id,
                 ]);
+
+
             }
             return redirect()->back()->with('success', 'Saved');
 

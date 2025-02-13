@@ -19,28 +19,19 @@ use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/1', function () {
-    $student = User::find(3);
-    return view('user.pdf.student_show', compact('student'));
-});
-
 //attendance list
 
 //Route::get('/2', [ FinanceController::class,'index'] );
 
 
-Route::delete('attendance/delete/{id}', [ExtraTeacherController::class, 'attendanceDelete'])->name('attendance.delete');
-
+//profile
 Route::middleware('auth')->group(function () {
     Route::get('/', [Controller::class, 'index'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-
 //attendance
-
-    Route::get('group/assessment/{id}', [GroupExtraController::class, 'attendance'])->name('group.attendance');
 
 });
 
@@ -71,7 +62,7 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::delete('/delete-multiple', [GroupExtraController::class, 'deleteMultiple'])->name('deleteMultiple');
     Route::get('waiters', [WaitersController::class, 'index'])->name('waiters.index');
     Route::post('group/change/{id}', [GroupExtraController::class, 'change_group'])->name('student.change.group');
-    Route::get('group/{id}/room',[GroupController::class, 'makeGroup'])->name('group.create.room');
+    Route::get('group/{id}/room', [GroupController::class, 'makeGroup'])->name('group.create.room');
 
     //    Route::get('group/attendance/filter/{id}', [GroupExtraController::class, 'filter'])->name('attendance.filter');
 
@@ -82,7 +73,7 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
     Route::resource('student', StudentController::class);
     Route::post('student/dept', [Controller::class, 'search'])->name('student.search');
     Route::resource('dept', DeptStudentController::class);
-    Route::get('refresh/{id}/update',[RefreshController::class,'update'])->name('refresh.update');
+    Route::get('refresh/{id}/update', [RefreshController::class, 'update'])->name('refresh.update');
 
 //    teacher
 
@@ -99,9 +90,19 @@ Route::group(['middleware' => ['auth', 'role:admin']], function () {
 
 });
 
+//checking
+
+Route::group(['middleware' => ['auth', 'role:user||admin']], function () {
+    Route::get('group/assessment/{id}', [GroupExtraController::class, 'attendance'])->name('group.attendance');
+    Route::delete('attendance/delete/{id}', [ExtraTeacherController::class, 'attendanceDelete'])->name('attendance.delete');
+
+    Route::get('/1', function () {
+        $student = User::find(3);
+        return view('user.pdf.student_show', compact('student'));
+    });
+});
 
 //Teachers
-
 Route::group(['middleware' => ['auth', 'role:user']], function () {
 //teacher panel
     Route::get('attendance/lists', [TeacherAdminPanel::class, 'attendanceIndex'])->name('attendance.index');

@@ -70,7 +70,7 @@ class StudentController extends Controller
             'group_id' => $group->id,
             'location' => $request->location,
             'photo' => $path ?? null,
-            'should_pay' => ($group->id == 1) ? null : $request->should_pay,
+            'should_pay' => (int) $request->should_pay,
             'description' => $request->description,
             'status'=>($group->id == 1) ? null : 0,
             'room_id' => $group->id
@@ -134,10 +134,7 @@ class StudentController extends Controller
      */
     public function update(UpdateRequest $request, $id)
     {
-        $request->validate([
-            'name' => 'required',
-            'phone' => ['required', 'string'],
-        ]);
+
 
         $student = User::find($id);
 
@@ -160,7 +157,6 @@ class StudentController extends Controller
         }
 
         $student->update([
-
             'name' => $request->name,
             'phone' => $request->phone,
             'password' => bcrypt($request->password),

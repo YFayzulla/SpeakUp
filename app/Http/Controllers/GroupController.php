@@ -47,7 +47,7 @@ class GroupController extends Controller
             'name' => $request->name,
             'start_time' => $request->start_time,
             'finish_time' => $request->finish_time,
-            'monthly_payment' => $request->monthly_payment,
+            'monthly_payment' => (int) $request->monthly_payment,
             'room_id' => $request->room,
         ]);
 

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('name');
             $table->time('start_time')->nullable();
             $table->time('finish_time')->nullable();
-            $table->integer('monthly_payment')->nullable();
+            $table->mediumInteger('monthly_payment')->nullable();
             $table->timestamps();
         });
     }

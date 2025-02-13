@@ -13,13 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-
-
-            Schema::table('users', function (Blueprint $table) {
-                $table->string('mark')->nullable();
-            });
-
+        Schema::create('active_students', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->timestamps();
         });
     }
 
@@ -30,8 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('student_information', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('active_students');
     }
 };

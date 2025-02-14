@@ -33,7 +33,7 @@
                                         <h5 class="text-nowrap mb-2">Today's Consumption</h5>
                                     </div>
                                     <div class="mt-sm-auto">
-                                        <h3 class="mb-0">{{$daily_consumption}}</h3>
+                                        <h3 class="mb-0">{{number_format($daily_consumption,0,' ',' ')}}</h3>
                                     </div>
                                 </div>
                                 <div id="profileReportChart"></div>
@@ -65,12 +65,12 @@
                                 <tbody id="myTable" class="table-border-bottom-0">
                                 <tr>
                                     <td>{{ $finance->reason }}</td>
-                                    <td>{{ $finance->payment }}</td>
+                                    <td>{{ number_format($finance->payment,0,'',' ') }}</td>
                                     <td>{{ $finance->type_name }}</td>
                                     <td>{{ $finance->created_at }}</td>
                                     <td>
                                         <div class="d-flex">
-                                            @include('user.finance.edit')
+{{--                                            @include('user.finance.edit')--}}
                                             @include('user.finance.delete')
                                         </div>
                                     </td>
@@ -84,4 +84,20 @@
         </div>
     </div>
 
+    <script>
+
+        function formatNumber(input) {
+            let value = input.value.replace(/\s+/g, '');
+            if (!isNaN(value)) {
+                input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+            }
+        }
+
+        function formatAllNumbersBeforeSubmit() {
+            document.querySelectorAll('input[type="text"]').forEach(input => {
+                input.value = input.value.replace(/\s+/g, '');
+            });
+        }
+
+    </script>
 @endsection

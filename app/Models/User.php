@@ -60,6 +60,7 @@ class User extends Authenticatable
     public function teacherPayment()
     {
 
+//        dd('blin');
         $summa = 0;
         $groups = GroupTeacher::query()->where('teacher_id', $this->id)->get();
 
@@ -67,10 +68,12 @@ class User extends Authenticatable
             $payment = Group::query()->findOrFail($group->group_id);
             $number = User::query()->where('group_id', $group->group_id)->count();
 //            dd($number,$payment->monthly_payment);
-            $summa += $payment->monthly_payment * $number;
+            $summa += $payment-> monthly_payment * $number;
+//            dd($summa,$payment ,$number ,$group);
         }
 
         $summa = $summa * $this->percent / 100;
+
         return $summa;
 
     }

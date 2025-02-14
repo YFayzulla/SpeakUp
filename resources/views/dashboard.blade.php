@@ -66,7 +66,7 @@
                                             <td>{{ $teacher->percent }}</td>
                                             <td>{{ $teacher->teacherhasGroup() }}</td>
                                             <td>{{ $teacher->teacherHasStudents() }}</td>
-                                            <td>{{ number_format($teacher->teacherPayment(), 0, '.', ' ') }}</td>
+                                            <td>{{ number_format($teacher->teacherPayment(), 0, ' ', ' ') }}</td>
                                         </tr>
                                     @endforeach
                                     </tbody>

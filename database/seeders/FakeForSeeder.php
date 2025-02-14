@@ -21,39 +21,39 @@ class FakeForSeeder extends Seeder
     public function run()
     {
 
-        $teacher1 = User::query()->forceCreate([
-            'name' => 'test',
-            'password' => Hash::make('a'),
-            'phone' => '987456327',
-            'room_id' => 1
-        ])->assignRole('user');
-
-        $teacher2=User::query()->forceCreate([
-            'name' => 'test2',
-            'password' => Hash::make('a'),
-            'phone' => '987456321',
-            'room_id' => 2
-        ])->assignRole('user');
-
-        $group1 = Group::query()->firstOrCreate([
-            'room_id' => 2,
-            'name' => 'group_test1',
-        ]);
-        $group2 = Group::query()->firstOrCreate([
-            'room_id' => 1,
-            'name' => 'group_test2',
-        ]);
-
-        GroupTeacher::query()->firstOrCreate([
-            'teacher_id' => $teacher1->id,
-            'group_id' => $group1->id,
-        ]);
-        GroupTeacher::query()->firstOrCreate([
-            'teacher_id' => $teacher2->id,
-            'group_id' => $group2->id,
-        ]);
-
-        $i = 1;
+//        $teacher1 = User::query()->forceCreate([
+//            'name' => 'test',
+//            'password' => Hash::make('a'),
+//            'phone' => '987456327',
+//            'room_id' => 1
+//        ])->assignRole('user');
+//
+//        $teacher2=User::query()->forceCreate([
+//            'name' => 'test2',
+//            'password' => Hash::make('a'),
+//            'phone' => '987456321',
+//            'room_id' => 2
+//        ])->assignRole('user');
+//
+//        $group1 = Group::query()->firstOrCreate([
+//            'room_id' => 2,
+//            'name' => 'group_test1',
+//        ]);
+//        $group2 = Group::query()->firstOrCreate([
+//            'room_id' => 1,
+//            'name' => 'group_test2',
+//        ]);
+//
+//        GroupTeacher::query()->firstOrCreate([
+//            'teacher_id' => $teacher1->id,
+//            'group_id' => $group1->id,
+//        ]);
+//        GroupTeacher::query()->firstOrCreate([
+//            'teacher_id' => $teacher2->id,
+//            'group_id' => $group2->id,
+//        ]);
+//
+//        $i = 1;
 
 //        for ($i = 1; $i <= 10; $i++) {
 //

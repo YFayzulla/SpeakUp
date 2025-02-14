@@ -66,7 +66,7 @@
                         @foreach($student->studenthistory as $item)
                             <tr>
                                 <th>{{$loop->index+1}}</th>
-                                <th>{{$item->payment}}</th>
+                                <th>{{number_format($item->payment,0,'',' ')}}</th>
                                 <th>{{$item->type_of_money}}</th>
                                 <th>@if($item->date ==null)
                                         {{$item->created_at.'data'}}

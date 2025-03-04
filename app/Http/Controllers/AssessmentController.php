@@ -117,17 +117,17 @@ class AssessmentController extends Controller
             $studentsToUpdate[$users[$i]] = $mark;
         }
 // Bulk insert for better performance
-        if (!empty($assessments)) {
-            Assessment::insert($assessments);
-        }
-// Bulk update marks
-        User::whereIn('id', array_keys($studentsToUpdate))->get()->each(function ($student) use ($studentsToUpdate) {
-            $student->update(['mark' => $studentsToUpdate[$student->id]]);
-            // Handle active students
-            if (!$student->checkAttendanceStatus()) {
-                ActiveStudent::create(['user_id' => $student->id]);
-            }
-        });
+//        if (!empty($assessments)) {
+//            Assessment::insert($assessments);
+//        }
+//// Bulk update marks
+//        User::whereIn('id', array_keys($studentsToUpdate))->get()->each(function ($student) use ($studentsToUpdate) {
+//            $student->update(['mark' => $studentsToUpdate[$student->id]]);
+//            // Handle active students
+//            if (!$student->checkAttendanceStatus()) {
+//                ActiveStudent::create(['user_id' => $student->id]);
+//            }
+//        });
 
         return redirect()->route('assessment.index')->with('success', 'Grades saved');
 

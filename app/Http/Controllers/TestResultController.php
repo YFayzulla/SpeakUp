@@ -24,6 +24,7 @@ class TestResultController extends Controller
 
         $assessment = Assessment::query()->where('history_id',$id)->get();
 
+        dd($id , $assessment);
 //        dd($assessment);
         $name = $assessment[0]->group;
         return view('assessment.index', [

@@ -48,7 +48,7 @@
                     <tr>
                         <td>{{$loop->index+1}}</td>
                         <td>{{$teacher->name}}</td>
-                        <td>+998 {{$teacher->phone}}</td>
+                        <td>+{{$teacher->phone}}</td>
                         <td>{{$teacher->location}}</td>
                         <td>{{$teacher->date_born}}</td>
                         <td>{{ $teacher->room ? $teacher->room->room : 'Room not assigned' }}</td>

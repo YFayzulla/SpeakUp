@@ -94,29 +94,23 @@ class DeptStudentController extends Controller
                 $student->payed = $payment;
                 $student->date = Carbon::now()->format('Y-m-d');
 
-            } elseif($payment + $student->payed == $student->dept ) {
+            } elseif ($payment + $student->payed == $student->dept) {
 
                 $student->payed = 0;
                 $student->status_month++;
                 $user->status += 1;
 
-            }else{
-
+            } else {
                 $student->payed += $payment;
-
             }
-
-
         } else {
 
             $item = ($payment / $dept);
 
             if ((int)$item == $item) {
-
                 $student->status_month += $item;
                 $user->status += $item;
                 $student->date = $request->date_paid ?? Carbon::now()->format('Y-m-d');
-
             } else {
                 $student->status_month += (int)$item;
                 $user->status += (int)$item;
@@ -125,11 +119,9 @@ class DeptStudentController extends Controller
                 $student->date = Carbon::now()->addMonths((int)$item)->format('Y-m-d');
             }
         }
-
         $student->save();
         $user->save();
-
-        HistoryPayments::create([
+        $payment = HistoryPayments::create([
             'user_id' => $student->user_id,
             'name' => $user->name,
             'payment' => $request->payment,
@@ -138,7 +130,12 @@ class DeptStudentController extends Controller
             'type_of_money' => $request->money_type,
         ]);
 
-        return redirect()->back()->with('success', 'Successful');
+
+        return view('user.pdf.chek', [
+            'payment' => $payment,
+            'student' => $user,
+            'dept' => $student->dept,
+        ]);
     }
 
     /**

@@ -27,7 +27,7 @@
                 <div class="mb-3">
                     <label for="phone" class="form-label text-dark">Phone</label>
                     <div class="input-group input-group-merge">
-                        <span class="input-group-text">+99 8</span>
+                        <span class="input-group-text">+998</span>
                         <input type="tel" id="phone" name="phone" maxlength="9" placeholder="912345678"
                                value="{{ old('phone') }}" class="form-control">
                     </div>
@@ -56,7 +56,7 @@
                 <div class="mb-3">
                     <label for="parents_tel" class="form-label text-dark">Parents Phone</label>
                     <div class="input-group input-group-merge">
-                        <span class="input-group-text">+99 8</span>
+                        <span class="input-group-text">+998</span>
                         <input type="tel" id="parents_tel" name="parents_tel" maxlength="9" placeholder="912345678"
                                value="{{ old('parents_tel') }}" class="form-control">
                     </div>

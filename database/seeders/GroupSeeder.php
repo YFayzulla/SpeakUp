@@ -18,7 +18,8 @@ class GroupSeeder extends Seeder
     {
         $faker = Faker::create();
         Group::create([
-            'name' => 'waiters'
+            'name' => 'Waiting Room',
+            'description' => 'This is the waiting room for new members.',
         ]);
     }
 }

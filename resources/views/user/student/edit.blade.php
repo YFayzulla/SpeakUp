@@ -18,7 +18,7 @@
 
                 <label for="phone" class="text-dark">Phone</label>
                 <div class="input-group input-group-merge">
-                    <span class="input-group-text">+99 8</span>
+                    <span class="input-group-text">+998</span>
                     <input type="tel" id="phone" name="phone" pattern="[0-9]{9}" maxlength="9" class="form-control"
                            placeholder="912345678" value="{{ old('phone', $student->phone) }}"
                     />
@@ -43,7 +43,7 @@
 
                 <label for="parents_tel" class="text-dark">Parents Tel</label>
                 <div class="input-group input-group-merge">
-                    <span class="input-group-text">+99 8</span>
+                    <span class="input-group-text">+998</span>
                     <input type="tel" id="parents_tel" name="parents_tel" pattern="[0-9]{9}" maxlength="9"
                            class="form-control" placeholder="912345678"
                            value="{{ old('parents_tel', $student->parents_tel) }}"

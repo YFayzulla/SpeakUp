@@ -22,11 +22,13 @@ final class Types
     public const DATETIMETZ_MUTABLE   = 'datetimetz';
     public const DATETIMETZ_IMMUTABLE = 'datetimetz_immutable';
     public const DECIMAL              = 'decimal';
+    public const NUMBER               = 'number';
     public const FLOAT                = 'float';
     public const ENUM                 = 'enum';
     public const GUID                 = 'guid';
     public const INTEGER              = 'integer';
     public const JSON                 = 'json';
+    public const JSONB                = 'jsonb';
     public const SIMPLE_ARRAY         = 'simple_array';
     public const SMALLFLOAT           = 'smallfloat';
     public const SMALLINT             = 'smallint';

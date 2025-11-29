@@ -8,6 +8,7 @@ use Amp\DeferredFuture;
 use Amp\ForbidCloning;
 use Amp\ForbidSerialization;
 use Amp\Pipeline\ConcurrentIterator;
+use Amp\Pipeline\DisposedException;
 use Amp\Pipeline\Pipeline;
 
 /**
@@ -79,6 +80,10 @@ final class ReadableIterableStream implements ReadableStream, \IteratorAggregate
         } catch (\Throwable $exception) {
             if ($exception instanceof CancelledException && $cancellation?->isRequested()) {
                 throw $exception; // Read cancelled, stream did not fail.
+            }
+
+            if ($exception instanceof DisposedException) {
+                $exception = new ClosedException('Stream manually closed', previous: $exception);
             }
 
             throw $this->exception = $exception;

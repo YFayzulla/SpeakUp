@@ -4,13 +4,20 @@ declare(strict_types=1);
 
 namespace Doctrine\DBAL\Schema;
 
+use Doctrine\DBAL\Schema\Name\OptionallyQualifiedName;
+use Doctrine\DBAL\Schema\Name\Parser\OptionallyQualifiedNameParser;
+use Doctrine\DBAL\Schema\Name\Parsers;
+use Doctrine\Deprecations\Deprecation;
+
 use function count;
 use function sprintf;
 
 /**
  * Sequence structure.
+ *
+ * @extends AbstractNamedObject<OptionallyQualifiedName>
  */
-class Sequence extends AbstractAsset
+class Sequence extends AbstractNamedObject
 {
     protected int $allocationSize = 1;
 
@@ -22,9 +29,15 @@ class Sequence extends AbstractAsset
         int $initialValue = 1,
         protected ?int $cache = null,
     ) {
-        $this->_setName($name);
+        parent::__construct($name);
+
         $this->setAllocationSize($allocationSize);
         $this->setInitialValue($initialValue);
+    }
+
+    protected function getNameParser(): OptionallyQualifiedNameParser
+    {
+        return Parsers::getOptionallyQualifiedNameParser();
     }
 
     public function getAllocationSize(): int
@@ -68,9 +81,18 @@ class Sequence extends AbstractAsset
      *
      * This is used inside the comparator to not report sequences as missing,
      * when the "from" schema implicitly creates the sequences.
+     *
+     * @deprecated
      */
     public function isAutoIncrementsFor(Table $table): bool
     {
+        Deprecation::triggerIfCalledFromOutside(
+            'doctrine/dbal',
+            'https://github.com/doctrine/dbal/pull/6654',
+            '%s is deprecated and will be removed in 5.0.',
+            __METHOD__,
+        );
+
         $primaryKey = $table->getPrimaryKey();
 
         if ($primaryKey === null) {

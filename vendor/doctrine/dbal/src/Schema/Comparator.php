@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Doctrine\DBAL\Schema;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\Deprecations\Deprecation;
 
 use function array_map;
 use function assert;
@@ -17,8 +18,10 @@ use function strtolower;
 class Comparator
 {
     /** @internal The comparator can be only instantiated by a schema manager. */
-    public function __construct(private readonly AbstractPlatform $platform)
-    {
+    public function __construct(
+        private readonly AbstractPlatform $platform,
+        private readonly ComparatorConfig $config = new ComparatorConfig(),
+    ) {
     }
 
     /**
@@ -143,15 +146,25 @@ class Comparator
      */
     public function compareTables(Table $oldTable, Table $newTable): TableDiff
     {
-        $addedColumns        = [];
-        $modifiedColumns     = [];
-        $droppedColumns      = [];
-        $addedIndexes        = [];
-        $modifiedIndexes     = [];
-        $droppedIndexes      = [];
-        $addedForeignKeys    = [];
-        $modifiedForeignKeys = [];
-        $droppedForeignKeys  = [];
+        $shouldReportModifiedIndexes = $this->config->getReportModifiedIndexes();
+        if ($shouldReportModifiedIndexes) {
+            Deprecation::trigger(
+                'doctrine/dbal',
+                'https://github.com/doctrine/dbal/pull/6890',
+                'Detection of modified indexes is deprecated. Please disable it by configuring the comparator'
+                    . ' using ComparatorConfig::withReportModifiedIndexes(false).',
+            );
+        }
+
+        $addedColumns       = [];
+        $modifiedColumns    = [];
+        $droppedColumns     = [];
+        $addedIndexes       = [];
+        $modifiedIndexes    = [];
+        $droppedIndexes     = [];
+        $renamedIndexes     = [];
+        $addedForeignKeys   = [];
+        $droppedForeignKeys = [];
 
         $oldColumns = $oldTable->getColumns();
         $newColumns = $newTable->getColumns();
@@ -207,7 +220,9 @@ class Comparator
             );
         }
 
-        $this->detectRenamedColumns($modifiedColumns, $addedColumns, $droppedColumns);
+        if ($this->config->getDetectRenamedColumns()) {
+            $this->detectRenamedColumns($modifiedColumns, $addedColumns, $droppedColumns);
+        }
 
         $oldIndexes = $oldTable->getIndexes();
         $newIndexes = $newTable->getIndexes();
@@ -241,10 +256,17 @@ class Comparator
                 continue;
             }
 
-            $modifiedIndexes[] = $newIndex;
+            if ($shouldReportModifiedIndexes) {
+                $modifiedIndexes[] = $newIndex;
+            } else {
+                $droppedIndexes[$oldIndexName] = $oldIndex;
+                $addedIndexes[$oldIndexName]   = $newIndex;
+            }
         }
 
-        $renamedIndexes = $this->detectRenamedIndexes($addedIndexes, $droppedIndexes);
+        if ($this->config->getDetectRenamedIndexes()) {
+            $renamedIndexes = $this->detectRenamedIndexes($addedIndexes, $droppedIndexes);
+        }
 
         $oldForeignKeys = $oldTable->getForeignKeys();
         $newForeignKeys = $newTable->getForeignKeys();
@@ -255,7 +277,8 @@ class Comparator
                     unset($oldForeignKeys[$oldKey], $newForeignKeys[$newKey]);
                 } else {
                     if (strtolower($oldForeignKey->getName()) === strtolower($newForeignKey->getName())) {
-                        $modifiedForeignKeys[] = $newForeignKey;
+                        $droppedForeignKeys[$oldKey] = $oldForeignKey;
+                        $addedForeignKeys[$newKey]   = $newForeignKey;
 
                         unset($oldForeignKeys[$oldKey], $newForeignKeys[$newKey]);
                     }
@@ -281,7 +304,6 @@ class Comparator
             droppedIndexes: $droppedIndexes,
             renamedIndexes: $renamedIndexes,
             addedForeignKeys: $addedForeignKeys,
-            modifiedForeignKeys: $modifiedForeignKeys,
             droppedForeignKeys: $droppedForeignKeys,
         );
     }

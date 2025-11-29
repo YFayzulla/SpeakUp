@@ -17,8 +17,6 @@ use Revolt\EventLoop\UncaughtThrowable;
  * Callbacks (enabled or new callbacks) MUST immediately be marked as enabled, but only be activated (i.e. callbacks can
  * be called) right before the next tick. Callbacks MUST NOT be called in the tick they were enabled.
  *
- * All registered callbacks MUST NOT be called from a file with strict types enabled (`declare(strict_types=1)`).
- *
  * @internal
  */
 abstract class AbstractDriver implements Driver
@@ -48,6 +46,8 @@ abstract class AbstractDriver implements Driver
 
     private readonly \Closure $interruptCallback;
     private readonly \Closure $queueCallback;
+
+    /** @var \Closure():(null|\Closure(): mixed) */
     private readonly \Closure $runCallback;
 
     private readonly \stdClass $internalSuspensionMarker;
@@ -68,6 +68,7 @@ abstract class AbstractDriver implements Driver
     {
         if (\PHP_VERSION_ID < 80117 || \PHP_VERSION_ID >= 80200 && \PHP_VERSION_ID < 80204) {
             // PHP GC is broken on early 8.1 and 8.2 versions, see https://github.com/php/php-src/issues/10496
+            /** @psalm-suppress RiskyTruthyFalsyComparison */
             if (!\getenv('REVOLT_DRIVER_SUPPRESS_ISSUE_10496')) {
                 throw new \Error('Your version of PHP is affected by serious garbage collector bugs related to fibers. Please upgrade to a newer version of PHP, i.e. >= 8.1.17 or => 8.2.4');
             }
@@ -86,12 +87,19 @@ abstract class AbstractDriver implements Driver
         /** @psalm-suppress InvalidArgument */
         $this->interruptCallback = $this->setInterrupt(...);
         $this->queueCallback = $this->queue(...);
-        $this->runCallback = function () {
-            if ($this->fiber->isTerminated()) {
-                $this->createLoopFiber();
-            }
+        $this->runCallback = function (): ?\Closure {
+            do {
+                if ($this->fiber->isTerminated()) {
+                    $this->createLoopFiber();
+                }
 
-            return $this->fiber->isStarted() ? $this->fiber->resume() : $this->fiber->start();
+                $result = $this->fiber->isStarted() ? $this->fiber->resume() : $this->fiber->start();
+                if ($result) { // Null indicates the loop fiber terminated without suspending.
+                    return $result;
+                }
+            } while (\gc_collect_cycles() && !$this->stopped);
+
+            return null;
         };
     }
 
@@ -105,17 +113,14 @@ abstract class AbstractDriver implements Driver
             throw new \Error(\sprintf("Can't call %s() within a fiber (i.e., outside of {main})", __METHOD__));
         }
 
-        if ($this->fiber->isTerminated()) {
-            $this->createLoopFiber();
-        }
-
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $lambda = $this->fiber->isStarted() ? $this->fiber->resume() : $this->fiber->start();
+        $lambda = ($this->runCallback)();
 
         if ($lambda) {
             $lambda();
 
-            throw new \Error('Interrupt from event loop must throw an exception: ' . ClosureHelper::getDescription($lambda));
+            throw new \Error(
+                'Interrupt from event loop must throw an exception: ' . ClosureHelper::getDescription($lambda)
+            );
         }
     }
 
@@ -136,7 +141,7 @@ abstract class AbstractDriver implements Driver
 
     public function defer(\Closure $closure): string
     {
-        $deferCallback = new DeferCallback($this->nextId++, $closure);
+        $deferCallback = new DeferCallback($this->callbackId(), $closure);
 
         $this->callbacks[$deferCallback->id] = $deferCallback;
         $this->enableDeferQueue[$deferCallback->id] = $deferCallback;
@@ -150,7 +155,7 @@ abstract class AbstractDriver implements Driver
             throw new \Error("Delay must be greater than or equal to zero");
         }
 
-        $timerCallback = new TimerCallback($this->nextId++, $delay, $closure, $this->now() + $delay);
+        $timerCallback = new TimerCallback($this->callbackId(), $delay, $closure, $this->now() + $delay);
 
         $this->callbacks[$timerCallback->id] = $timerCallback;
         $this->enableQueue[$timerCallback->id] = $timerCallback;
@@ -164,7 +169,7 @@ abstract class AbstractDriver implements Driver
             throw new \Error("Interval must be greater than or equal to zero");
         }
 
-        $timerCallback = new TimerCallback($this->nextId++, $interval, $closure, $this->now() + $interval, true);
+        $timerCallback = new TimerCallback($this->callbackId(), $interval, $closure, $this->now() + $interval, true);
 
         $this->callbacks[$timerCallback->id] = $timerCallback;
         $this->enableQueue[$timerCallback->id] = $timerCallback;
@@ -174,7 +179,7 @@ abstract class AbstractDriver implements Driver
 
     public function onReadable(mixed $stream, \Closure $closure): string
     {
-        $streamCallback = new StreamReadableCallback($this->nextId++, $closure, $stream);
+        $streamCallback = new StreamReadableCallback($this->callbackId(), $closure, $stream);
 
         $this->callbacks[$streamCallback->id] = $streamCallback;
         $this->enableQueue[$streamCallback->id] = $streamCallback;
@@ -184,7 +189,7 @@ abstract class AbstractDriver implements Driver
 
     public function onWritable($stream, \Closure $closure): string
     {
-        $streamCallback = new StreamWritableCallback($this->nextId++, $closure, $stream);
+        $streamCallback = new StreamWritableCallback($this->callbackId(), $closure, $stream);
 
         $this->callbacks[$streamCallback->id] = $streamCallback;
         $this->enableQueue[$streamCallback->id] = $streamCallback;
@@ -194,7 +199,7 @@ abstract class AbstractDriver implements Driver
 
     public function onSignal(int $signal, \Closure $closure): string
     {
-        $signalCallback = new SignalCallback($this->nextId++, $closure, $signal);
+        $signalCallback = new SignalCallback($this->callbackId(), $closure, $signal);
 
         $this->callbacks[$signalCallback->id] = $signalCallback;
         $this->enableQueue[$signalCallback->id] = $signalCallback;
@@ -633,5 +638,29 @@ abstract class AbstractDriver implements Driver
                     : throw UncaughtThrowable::throwingErrorHandler($errorHandler, $exception);
             }
         };
+    }
+
+    private function callbackId(): string
+    {
+        $callbackId = $this->nextId;
+
+        if (\PHP_VERSION_ID >= 80300) {
+            /** @psalm-suppress UndefinedFunction */
+            $this->nextId = \str_increment($this->nextId);
+        } else {
+            $this->nextId++;
+        }
+
+        return $callbackId;
+    }
+
+    final public function __serialize(): never
+    {
+        throw new \Error(__CLASS__ . ' does not support serialization');
+    }
+
+    final public function __unserialize(array $data): never
+    {
+        throw new \Error(__CLASS__ . ' does not support deserialization');
     }
 }

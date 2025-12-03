@@ -1,4 +1,4 @@
-@extends('template.master')
+@extends('layouts.app')
 @section('content')
 
     <input type="hidden" value="{{$sum=0}}">

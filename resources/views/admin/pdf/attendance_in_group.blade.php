@@ -1,4 +1,4 @@
-@extends('template.pdf')
+@extends('layouts.pdf')
 @section('pdf')
 
 <div class="table-responsive">

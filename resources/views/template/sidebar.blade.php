@@ -29,6 +29,13 @@
             </a>
         </li>
 
+        <li class="menu-item @if(request()->routeIs('group.index', 'group.create', 'group.edit', 'group.show', 'group.attendance', 'group.create.room')) active @endif">
+            <a href="{{ route('group.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-group"></i>
+                <div data-i18n="Analytics">Rooms</div>
+            </a>
+        </li>
+
         <li class="menu-item @if(request()->routeIs('student.index', 'student.create', 'student.edit', 'student.show')) active @endif">
             <a href="{{ route('student.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bxs-user"></i>
@@ -36,12 +43,6 @@
             </a>
         </li>
 
-        <li class="menu-item @if(request()->routeIs('group.index', 'group.create', 'group.edit', 'group.show', 'group.attendance', 'group.create.room')) active @endif">
-            <a href="{{ route('group.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-group"></i>
-                <div data-i18n="Analytics">Rooms</div>
-            </a>
-        </li>
 
         <li class="menu-item @if(request()->routeIs('dept.index')) active @endif">
             <a href="{{ route('dept.index') }}" class="menu-link">

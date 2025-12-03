@@ -1,4 +1,4 @@
-@extends('template.master')
+@extends('layouts.app')
 @section('content')
 
     <div class="container-xxl flex-grow-1 container-p-y">
@@ -47,7 +47,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                         <h5 class="mb-0">Finance</h5>
-                        @include('user.finance.create')
+                        @include('admin.finance.create')
                     </div>
 
                     <div class="table-responsive text-nowrap">
@@ -70,8 +70,8 @@
                                     <td>{{ $finance->created_at }}</td>
                                     <td>
                                         <div class="d-flex">
-{{--                                            @include('user.finance.edit')--}}
-                                            @include('user.finance.delete')
+{{--                                            @include('admin.finance.edit')--}}
+                                            @include('admin.finance.delete')
                                         </div>
                                     </td>
                                 </tr>

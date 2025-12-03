@@ -1,4 +1,4 @@
-@extends('template.master')
+@extends('layouts.app')
 @section('content')
-@include('template.attendance')
+@include('layouts.attendance')
 @endsection

@@ -16,13 +16,6 @@
                     @enderror
                 </div>
 
-                <div class="mb-3">
-                    <label for="passport" class="form-label text-dark">Passport</label>
-                    <input id="passport" name="passport" type="text" value="{{ old('passport') }}" class="form-control">
-                    @error('passport')
-                    <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
 
                 <div class="mb-3">
                     <label for="phone" class="form-label text-dark">Phone</label>
@@ -36,22 +29,6 @@
                     @enderror
                 </div>
 
-                <div class="mb-3">
-                    <label for="location" class="form-label text-dark">Location</label>
-                    <input id="location" name="location" type="text" value="{{ old('location') }}" class="form-control">
-                    @error('location')
-                    <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                <div class="mb-3">
-                    <label for="parents_name" class="form-label text-dark">Parents Name</label>
-                    <input id="parents_name" name="parents_name" type="text" value="{{ old('parents_name') }}"
-                           class="form-control">
-                    @error('parents_name')
-                    <div class="text-danger">{{ $message }}</div>
-                    @enderror
-                </div>
 
                 <div class="mb-3">
                     <label for="parents_tel" class="form-label text-dark">Parents Phone</label>
@@ -87,7 +64,7 @@
                 {{--                </div>--}}
 
                 <div class="mb-3">
-                    <label for="should_pay" class="form-label text-dark">Should Pay</label>
+                    <label for="should_pay" class="form-label text-dark">Payment</label>
                     <input id="should_pay" name="should_pay" type="text"
                            value="{{ number_format(old('should_pay', 500000), 0, ' ', ' ') }}"
                            class="form-control">
@@ -102,7 +79,31 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="photo" class="form-label text-dark">Photo</label>
+                    <label for="passport" class="form-label text-dark">Passport "not necessary"</label>
+                    <input id="passport" name="passport" type="text" value="{{ old('passport') }}" class="form-control">
+                    @error('passport')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="mb-3">
+                    <label for="location" class="form-label text-dark">Location "not necessary"</label>
+                    <input id="location" name="location" type="text" value="{{ old('location') }}" class="form-control">
+                    @error('location')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label for="parents_name" class="form-label text-dark">Parents Name "not necessary"</label>
+                    <input id="parents_name" name="parents_name" type="text" value="{{ old('parents_name') }}"
+                           class="form-control">
+                    @error('parents_name')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="mb-3">
+                    <label for="photo" class="form-label text-dark">Photo "not necessary"</label>
                     <input id="photo" name="photo" type="file" class="form-control">
                     @error('photo')
                     <div class="text-danger">{{ $message }}</div>

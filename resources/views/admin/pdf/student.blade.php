@@ -1,4 +1,4 @@
-@extends('template.pdf')
+@extends('layouts.pdf')
 @section('pdf')
     <input type="hidden" value="{{$sum=0}}">
     <div class="container" style="display: flex; justify-content: space-between;">

@@ -16,14 +16,18 @@
         <!-- Table body -->
 
         <tbody>
-        @foreach($items as $item)
+        @forelse($items as $item)
             <tr>
                 <td>{{ $loop->index+1 }}</td>
                 <td>{{ $item->student->name }}</td>
                 <td>{{ $item->teacher->name }}</td>
                 <td>{{ $item->created_at }}</td>
             </tr>
-        @endforeach
+        @empty
+            <tr>
+                <td colspan="4" class="text-center">No attendance records found for this group.</td>
+            </tr>
+        @endforelse
         </tbody>
     </table>
 </div>

@@ -11,10 +11,10 @@
                         <option value="">Select Month</option>
                         @php
                             $currentYear = date('Y');
-                            for ($month = 1; $month <= 12; $month++) {
-                                $monthNum = str_pad($month, 2, '0', STR_PAD_LEFT);
+                            for ($monthOption = 1; $monthOption <= 12; $monthOption++) {
+                                $monthNum = str_pad($monthOption, 2, '0', STR_PAD_LEFT);
                                 $monthYear = $currentYear . '-' . $monthNum;
-                                $monthName = date('F', mktime(0, 0, 0, $month, 1));
+                                $monthName = date('F', mktime(0, 0, 0, $monthOption, 1));
                                 $selected = (date('Y-m') == $monthYear) ? 'selected' : '';
                                 echo "<option value=\"$monthYear\" $selected>$monthName $currentYear</option>";
                             }
@@ -40,21 +40,18 @@
                 use Carbon\Carbon;
 
                 // Get the current year, month, day, and number of days in the month
-                $currentYear = Carbon::now()->year;
-                $currentMonth = Carbon::now()->month;
-                $today = Carbon::now()->day;
-                $daysInMonth = Carbon::now()->daysInMonth;
+                $currentMonthDays = Carbon::createFromDate($year, $month)->daysInMonth;
             @endphp
 
             <thead>
             <tr>
                 <th>Name</th>
-                @for ($i = 1; $i <= $daysInMonth; $i++)
+                @for ($i = 1; $i <= $currentMonthDays; $i++)
                     @php
                         // Create a date object for each day of the current month
-                        $currentDate = Carbon::createFromDate($currentYear, $currentMonth, $i);
+                        $currentDate = Carbon::createFromDate($year, $month, $i);
                         $isWeekend = $currentDate->isWeekend();
-                        $isToday = ($i == $today); // Check if the day is today
+                        $isToday = ($i == Carbon::now()->day && $month == Carbon::now()->month && $year == Carbon::now()->year);
                     @endphp
                             <!-- Add the class for weekends and highlight today in green -->
                     <th class="{{ $isToday ? 'bg-success text-white' : ($isWeekend ? 'bg-danger text-white' : '') }}">
@@ -66,10 +63,10 @@
 
             <tbody>
 
-            @foreach ($data as $userName => $days)
+            @forelse ($data as $userName => $days)
                 <tr>
                     <td>{{ $userName }}</td>
-                    @for ($i = 1; $i <= $daysInMonth; $i++)
+                    @for ($i = 1; $i <= $currentMonthDays; $i++)
                         @php
                             // Pad the day with leading zeros if necessary
                             $day = str_pad($i, 2, '0', STR_PAD_LEFT);
@@ -79,7 +76,7 @@
                             $isPresent = $status === '1' || $status === 1;
 
                             // Create a date object for the current year, month, and day
-                            $currentDate = Carbon::createFromDate($currentYear, $currentMonth, $i);
+                            $currentDate = Carbon::createFromDate($year, $month, $i);
                             $isWeekend = $currentDate->isWeekend();
                         @endphp
                         <td class="{{ $isDanger ? 'bg-danger text-white' : ($isWeekend ? 'bg-danger' : '') }}">
@@ -91,7 +88,11 @@
                         </td>
                     @endfor
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="{{ $currentMonthDays + 1 }}" class="text-center">No attendance data available for this month.</td>
+                </tr>
+            @endforelse
 
             </tbody>
         </table>
@@ -109,7 +110,7 @@
                 <td>date</td>
                 <td>delete</td>
             </tr>
-            @foreach($students as $attendance)
+            @forelse($students as $attendance)
                 <tr>
                     <td>{{ $loop->index + 1 }}</td>
                     <td>{{ $attendance->user->name }}</td>
@@ -124,11 +125,14 @@
                         </form>
                     </td>
                 </tr>
-            @endforeach
-        </table>
-        <div class="card-body">
-            {{ $students->links('pagination::bootstrap-5') }}
+            @empty
+                <tr>
+                    <td colspan="6" class="text-center">No recent attendance records found.</td>
+                </tr>
+            @endforelse
+            </table>
+            <div class="card-body">
+                {{ $students->links('pagination::bootstrap-5') }}
+            </div>
         </div>
     </div>
-</div>
-

@@ -10,7 +10,7 @@ class Group extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'start_time', 'finish_time', 'room_id', 'monthly_payment'];
+    protected $fillable = ['name', 'description','start_time', 'finish_time', 'room_id', 'monthly_payment'];
 
     public function teacherhasGroup()
     {

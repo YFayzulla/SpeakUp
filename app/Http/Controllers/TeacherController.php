@@ -52,7 +52,6 @@ class TeacherController extends Controller
     public function store(StoreRequest $request)
     {
         if ($request->hasFile('photo')) {
-
             $fileName = time() . '.' . $request->file('photo')->getClientOriginalExtension();
             $path = $request->file('photo')->storeAs('Photo', $fileName);
 
@@ -133,7 +132,7 @@ class TeacherController extends Controller
 
         $teacher->update([
             'name' => $request->name,
-            'phone' => $request->phone,
+            'phone' => 998 . $request->phone,
             'password' => bcrypt($request->password),
             'date_born' => $request->date_born,
             'location' => $request->location,

@@ -34,7 +34,7 @@ class UpdateRequest extends FormRequest
             'phone' => [
                 'required', 'string', 'digits:9', Rule::unique('users', 'phone')->ignore($this->route('teacher')),
             ],
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10048',
             'percent' => 'nullable|integer|min:0|max:100',
             'room_id' => 'nullable|exists:rooms,id',
         ];

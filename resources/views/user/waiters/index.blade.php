@@ -8,7 +8,7 @@
         @endphp
 
         <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-            <h5 class="mb-0">Students who failed</h5>
+            <h5 class="mb-0">Waiting room</h5>
         </div>
 
         <div class="table-responsive text-nowrap">

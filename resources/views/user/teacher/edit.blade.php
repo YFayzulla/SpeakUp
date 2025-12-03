@@ -30,7 +30,7 @@
                     <div class="input-group input-group-merge">
                         <span class="input-group-text">+99 8</span>
                         <input type="tel" id="create_phone" name="phone" pattern="[0-9]{9}" maxlength="9"
-                               class="form-control" placeholder="912345678" value="{{ $teacher->phone }}" />
+                               class="form-control" placeholder="912345678" value="{{ substr($teacher->phone, 3) }}" />
                     </div>
                     @error('phone')
                     <div class="alert alert-danger mt-1">{{ $message }}</div>
@@ -103,4 +103,3 @@
     </div>
 
 @endsection
-

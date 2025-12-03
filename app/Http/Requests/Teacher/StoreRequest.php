@@ -29,7 +29,7 @@ class StoreRequest extends FormRequest
             'date_born' => 'nullable|date',
             'location' => 'nullable|string|max:255',
             'phone' => 'required|digits:9',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10048',
             'percent' => 'nullable|integer|min:0|max:100',
             'room_id' => 'nullable|exists:rooms,id',
         ];

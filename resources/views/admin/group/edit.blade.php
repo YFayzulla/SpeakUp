@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('template.master')
 @section('content')
     <div class="p-4 m-4 sm:p-8 bg-white shadow sm:rounded-lg ">
 
@@ -41,9 +41,11 @@
                 <label for="room" class="text-dark">Rooms</label>
                 <select name="room" class="form-control">
                     <option value="{{$group->room_id}}">{{$group->room->room}}</option>
-                    @foreach($rooms as $l)
+                    @forelse($rooms as $l)
                         <option value="{{$l->id}}">{{$l->room}}</option>
-                    @endforeach
+                    @empty
+                        <option value="">No rooms available</option>
+                    @endforelse
                 </select>
 
                 <button class="btn btn-warning m-4">Submit</button>

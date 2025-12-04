@@ -19,7 +19,7 @@ class DeptStudentController extends Controller
     public function index()
     {
         $students = User::role('student')->orderby('status')->orderby('name')->get();
-        return view('user.dept.index', compact('students'));
+        return view('admin.dept.index', compact('students'));
     }
 
     /**
@@ -131,7 +131,7 @@ class DeptStudentController extends Controller
         ]);
 
 
-        return view('user.pdf.chek', [
+        return view('admin.pdf.chek', [
             'payment' => $payment,
             'student' => $user,
             'dept' => $student->dept,

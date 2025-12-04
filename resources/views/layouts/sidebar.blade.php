@@ -1,91 +1,101 @@
-<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-    <div class="app-brand demo">
+<aside class="navbar navbar-vertical navbar-expand-lg" data-bs-theme="dark">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu" aria-controls="sidebar-menu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <h1 class="navbar-brand navbar-brand-autodark">
+            <a href="{{ route('dashboard') }}">
+                <img src="{{ asset('logos/main-white.svg') }}" width="110" height="32" alt="SpeakUp" class="navbar-brand-image">
+            </a>
+        </h1>
+        <div class="collapse navbar-collapse" id="sidebar-menu">
+            <ul class="navbar-nav pt-lg-3">
+                @role('admin')
+                <li class="nav-item @if(request()->routeIs('dashboard')) active @endif">
+                    <a class="nav-link" href="{{ route('dashboard') }}">
+                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </span>
+                        <span class="nav-link-title">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item @if(request()->routeIs('teacher.index', 'teacher.create', 'teacher.edit', 'teacher.show')) active @endif">
+                    <a class="nav-link" href="{{ route('teacher.index') }}">
+                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </span>
+                        <span class="nav-link-title">Teachers</span>
+                    </a>
+                </li>
+                <li class="nav-item @if(request()->routeIs('group.index', 'group.create', 'group.edit', 'group.show', 'group.attendance', 'group.create.room')) active @endif">
+                    <a class="nav-link" href="{{ route('group.index') }}">
+                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                            <i class="fas fa-door-open"></i>
+                        </span>
+                        <span class="nav-link-title">Rooms</span>
+                    </a>
+                </li>
+                <li class="nav-item @if(request()->routeIs('student.index', 'student.create', 'student.edit', 'student.show')) active @endif">
+                    <a class="nav-link" href="{{ route('student.index') }}">
+                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                            <i class="fas fa-user-graduate"></i>
+                        </span>
+                        <span class="nav-link-title">Students</span>
+                    </a>
+                </li>
+                <li class="nav-item @if(request()->routeIs('dept.index')) active @endif">
+                    <a class="nav-link" href="{{ route('dept.index') }}">
+                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </span>
+                        <span class="nav-link-title">Payments</span>
+                    </a>
+                </li>
+                <li class="nav-item @if(request()->routeIs('test') || request()->routeIs('test.show')) active @endif">
+                    <a class="nav-link" href="{{ route('test') }}">
+                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                            <i class="fas fa-clipboard-check"></i>
+                        </span>
+                        <span class="nav-link-title">Assessment</span>
+                    </a>
+                </li>
+                <li class="nav-item @if(request()->routeIs('waiters.index')) active @endif">
+                    <a class="nav-link" href="{{ route('waiters.index') }}">
+                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                            <i class="fas fa-hourglass-half"></i>
+                        </span>
+                        <span class="nav-link-title">Waiting Room</span>
+                    </a>
+                </li>
+                <li class="nav-item @if(request()->routeIs('finance.other')) active @endif">
+                    <a class="nav-link" href="{{ route('finance.other') }}">
+                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                            <i class="fas fa-coins"></i>
+                        </span>
+                        <span class="nav-link-title">Finance</span>
+                    </a>
+                </li>
+                @endrole
 
-
-        <a href="{{ route('dashboard') }}" class="app-brand-link">
-            <img style="width: 200px" src="{{ asset('logos/main.svg') }}" alt="">
-        </a>
-
-        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
-            <i class="bx bx-chevron-left bx-sm align-middle"></i>
-        </a>
+                @hasanyrole('user')
+                <li class="nav-item @if(request()->routeIs('assessment.index', 'assessment.show')) active @endif">
+                    <a class="nav-link" href="{{ route('assessment.index') }}">
+                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                            <i class="fas fa-tasks"></i>
+                        </span>
+                        <span class="nav-link-title">Tests</span>
+                    </a>
+                </li>
+                <li class="nav-item @if(request()->routeIs('attendance', 'attendance.check')) active @endif">
+                    <a class="nav-link" href="{{ route('attendance') }}">
+                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                            <i class="fas fa-user-check"></i>
+                        </span>
+                        <span class="nav-link-title">Attendance</span>
+                    </a>
+                </li>
+                @endhasanyrole
+            </ul>
+        </div>
     </div>
-
-    <div class="menu-inner-shadow"></div>
-
-    <ul class="menu-inner py-1">
-        @role('admin')
-        <li class="menu-item @if(request()->routeIs('dashboard')) active @endif">
-            <a href="{{ route('dashboard') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bxs-dashboard"></i>
-                <div data-i18n="Analytics">Dashboard</div>
-            </a>
-        </li>
-
-        <li class="menu-item @if(request()->routeIs('teacher.index', 'teacher.create', 'teacher.edit', 'teacher.show')) active @endif">
-            <a href="{{ route('teacher.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-user"></i>
-                <div data-i18n="Analytics">Teachers</div>
-            </a>
-        </li>
-
-        <li class="menu-item @if(request()->routeIs('group.index', 'group.create', 'group.edit', 'group.show', 'group.attendance', 'group.create.room')) active @endif">
-            <a href="{{ route('group.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-group"></i>
-                <div data-i18n="Analytics">Rooms</div>
-            </a>
-        </li>
-
-        <li class="menu-item @if(request()->routeIs('student.index', 'student.create', 'student.edit', 'student.show')) active @endif">
-            <a href="{{ route('student.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bxs-user"></i>
-                <div data-i18n="Analytics">Students</div>
-            </a>
-        </li>
-
-        <li class="menu-item @if(request()->routeIs('dept.index')) active @endif">
-            <a href="{{ route('dept.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-money"></i>
-                <div data-i18n="Analytics">Payment</div>
-            </a>
-        </li>
-
-        <li class="menu-item @if(request()->routeIs('test') || request()->routeIs('test.show')) active @endif">
-            <a href="{{ route('test') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-test-tube"></i>
-                <div data-i18n="Analytics">Assessment</div>
-            </a>
-        </li>
-
-        <li class="menu-item @if(request()->routeIs('waiters.index')) active @endif">
-            <a href="{{ route('waiters.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-door-open"></i>
-                <div data-i18n="Analytics">Waiting Room</div>
-            </a>
-        </li>
-
-        <li class="menu-item @if(request()->routeIs('finance.other')) active @endif">
-            <a href="{{ route('finance.other') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-coin-stack"></i>
-                <div data-i18n="Analytics">Finance</div>
-            </a>
-        </li>
-        @endrole
-
-        @hasanyrole('user')
-        <li class="menu-item @if(request()->routeIs('assessment.index', 'assessment.show')) active @endif">
-            <a href="{{ route('assessment.index') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-list-check"></i>
-                <div data-i18n="Analytics">Test</div>
-            </a>
-        </li>
-
-        <li class="menu-item @if(request()->routeIs('attendance', 'attendance.check')) active @endif">
-            <a href="{{ route('attendance') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-task"></i>
-                <div data-i18n="Analytics">Checking Attendance</div>
-            </a>
-        </li>
-        @endhasanyrole
-    </ul>
 </aside>

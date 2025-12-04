@@ -43,7 +43,6 @@
             </a>
         </li>
 
-
         <li class="menu-item @if(request()->routeIs('dept.index')) active @endif">
             <a href="{{ route('dept.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-money"></i>

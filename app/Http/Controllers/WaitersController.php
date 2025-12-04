@@ -14,6 +14,6 @@ class WaitersController extends Controller
     {
         $groups = Group::where('id', '!=', 1)->get();
         $students = User::role('student')->orderby('name') ->where('group_id', 1)->get();
-        return view('user.waiters.index', compact('students', 'groups'));
+        return view('admin.waiters.index', compact('students', 'groups'));
     }
 }

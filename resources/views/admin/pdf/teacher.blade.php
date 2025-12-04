@@ -10,7 +10,7 @@
             <th>Date born</th>
         </TR>
 
-        @foreach($teacher as $item)
+        @forelse($teacher as $item)
             <tr>
                 <th>{{$loop->index+1}}</th>
                 <th>{{$item->name}}</th>
@@ -18,7 +18,11 @@
                 <th>{{$item->location}}</th>
                 <th>{{$item->date_born}}</th>
             </tr>
-        @endforeach
+        @empty
+            <tr>
+                <td colspan="5" class="text-center">No teacher data available.</td>
+            </tr>
+        @endforelse
 
 
     </table>

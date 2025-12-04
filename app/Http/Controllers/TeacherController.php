@@ -24,7 +24,7 @@ class TeacherController extends Controller
     {
 
         $teachers = User::role('user')->orderBy('name')->get();
-        return view('user.teacher.index', compact('teachers'));
+        return view('admin.teacher.index', compact('teachers'));
 
     }
 
@@ -37,7 +37,7 @@ class TeacherController extends Controller
     public function create()
     {
 
-        return view('user.teacher.create',[
+        return view('admin.teacher.create',[
             'rooms' => Room::all()
         ]);
 
@@ -104,7 +104,7 @@ class TeacherController extends Controller
         $teacher = User::find($id);
         $rooms = Room::all();
         if ($teacher !== null)
-            return view('user.teacher.edit', compact('teacher' , 'rooms'));
+            return view('admin.teacher.edit', compact('teacher', 'rooms'));
         else
             return abort('403');
     }

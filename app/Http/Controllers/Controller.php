@@ -83,7 +83,7 @@ class Controller extends BaseController
         $users = $query->get();
 
         // Pass the users and date range to the view
-        return view('user.index', [
+        return view('admin.index', [
             'users' => $users,
             'start_date' => $startDate ? $startDate->toDateString() : null,
             'end_date' => $endDate ? $endDate->toDateString() : null,

@@ -1,4 +1,4 @@
-`@extends('layouts.app')
+@extends('template.master')
 @section('content')
 
     <div class="card">
@@ -12,7 +12,7 @@
                     <th>group</th>
                 </tr>
                 </thead>
-                @foreach($students as $student)
+                @forelse($students as $student)
                     <tbody id="myTable" class="table-group-divider">
                     <tr>
                         <th>{{$loop->index+1}}</th>
@@ -20,11 +20,14 @@
                         <th>{{$student->phone}}</th>
                         <th>{{$student->group->name}}</th>
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="4" class="text-center">No students found in this group.</td>
+                    </tr>
+                @endforelse
                 </tbody>
             </table>
         </div>
     </div>
 
 @endsection
-`

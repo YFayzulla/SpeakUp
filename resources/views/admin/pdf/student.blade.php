@@ -14,7 +14,7 @@
                     <th>Group</th>
                     <th>Should Pay</th>
                 </tr>
-                @foreach($student as $students)
+                @forelse($student as $students)
                     <tr>
                         <th>{{$loop->index+1}}</th>
                         {{--                    @dd($student->name)--}}
@@ -26,7 +26,11 @@
                         <th>{{$students->group->name}}</th>
                         <th>{{$students->should_pay}}</th>
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="7" class="text-center">No student data available.</td>
+                    </tr>
+                @endforelse
             </table>
         </div>
     </div>

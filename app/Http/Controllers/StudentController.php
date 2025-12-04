@@ -28,7 +28,7 @@ class StudentController extends Controller
 //        {
 ////            var_dump($user->name);
 //        }
-        return view('user.student.index', compact('students'));
+        return view('admin.student.index', compact('students'));
     }
 
     /**
@@ -40,7 +40,7 @@ class StudentController extends Controller
     public function create()
     {
         $groups = Group::with('room')->orderby('room_id')->get();
-        return view('user.student.create', compact('groups'));
+        return view('admin.student.create', compact('groups'));
     }
 
     /**
@@ -105,7 +105,7 @@ class StudentController extends Controller
         $attendances = Attendance::where('user_id', $id)->get();
         $student = User::find($id);
         $groups = Group::all();
-        return view('user.student.show', compact('student', 'attendances', 'groups'));
+        return view('admin.student.show', compact('student', 'attendances', 'groups'));
     }
 
     /**
@@ -120,7 +120,7 @@ class StudentController extends Controller
         $student = User::find($id);
         $groups = Group::query()->orderBy('name')->get();
         if ($student !== null)
-            return view('user.student.edit', compact('student', 'groups'));
+            return view('admin.student.edit', compact('student', 'groups'));
         else
             return abort('403');
     }

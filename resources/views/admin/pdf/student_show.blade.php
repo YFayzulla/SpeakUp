@@ -13,24 +13,13 @@
                 <h4><b>Parents Tel </b> {{$student->parents_tel}}</h4>
                 <h4><b>Description:</b> {{($student->description)}}</h4>
 
-                {{--                    <table class="table">--}}
-                {{--                        <tr>--}}
-                {{--                            <th>id</th>--}}
-                {{--                            <th>name</th>--}}
-                {{--                        </tr>--}}
-                {{--                        <tr>--}}
-                {{--                            <th>salom</th>--}}
-                {{--                        </tr>--}}
-                {{--                    </table>--}}
-
-
                 <table class="table">
 
                     <th>No</th>
                     <th>Paid</th>
                     <th> type </th>
                     <th>Date</th>
-                    @foreach($student->studenthistory as $item)
+                    @forelse($student->studenthistory as $item)
                         <tr>
                             <th>{{$loop-> index+1 }}</th>
                             <th>{{$item-> payment }}</th>
@@ -41,7 +30,11 @@
                                     {{$item->date}}
                                 @endif</th>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="4" class="text-center">No payment history found.</td>
+                        </tr>
+                    @endforelse
                 </table>
 
                 <p>travel of group</p>
@@ -51,13 +44,17 @@
                         <th>group</th>
                         <th>Date</th>
                     </tr>
-                    @foreach($student->studentinformation as $item)
+                    @forelse($student->studentinformation as $item)
                         <tr>
                             <th>{{$loop->index+1}}</th>
                             <th>{{$item->group}}</th>
                             <th>{{$item->created_at}}</th>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="3" class="text-center">No group history found.</td>
+                        </tr>
+                    @endforelse
                 </table>
 
                 <p>Attendance</p>
@@ -70,13 +67,17 @@
 
                     </tr>
 
-                    @foreach($attendances as $attendance)
+                    @forelse($attendances as $attendance)
                         <tr>
                             <th>{{$attendance->student->name}}</th>
                             <th>{{$attendance->group->name}}</th>
                             <th>{{$attendance->created_at}}</th>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="3" class="text-center">No attendance records found.</td>
+                        </tr>
+                    @endforelse
                 </table>
             </div>
         </div>

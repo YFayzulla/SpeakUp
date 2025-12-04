@@ -1,4 +1,4 @@
-@extends('layouts.pdf')
+@extends('template.pdf')
 @section('pdf')
 
     <table class="table table-striped">
@@ -12,7 +12,7 @@
             <th>cost</th>
         </TR>
 
-        @foreach($group as $item)
+        @forelse($group as $item)
             <tr>
                 <th>{{$loop->index+1}}</th>
                 <th>{{$item->name}}</th>
@@ -22,7 +22,11 @@
                 <th>{{$item->level}}</th>
                 <th>{{$item->monthly_payment}}</th>
             </tr>
-        @endforeach
+        @empty
+            <tr>
+                <td colspan="7" class="text-center">No group data available.</td>
+            </tr>
+        @endforelse
 
 
     </table>

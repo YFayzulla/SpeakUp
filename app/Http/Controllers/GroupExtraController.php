@@ -76,13 +76,13 @@ class GroupExtraController extends Controller
 
             // Pass the filtered attendance records to the view
 
-            return view('user.group.attendance', compact('items', 'group'));
+            return view('admin.group.attendance', compact('items', 'group'));
 
         } elseif ($request->input('task') === 'report') {
 
             $items = Attendance::whereDate('created_at', $selectedDate)->get();
 
-            $pdf = PDF::loadView('user.pdf.attendance_in_group', ['items' => $items]);
+            $pdf = PDF::loadView('admin.pdf.attendance_in_group', ['items' => $items]);
 
             return $pdf->download('orders.pdf');
 
@@ -100,7 +100,7 @@ class GroupExtraController extends Controller
 
         $students = User::where('group_id', $id)->orderby('name')->role('student')->get();
 
-        return view('user.group.student', compact('students'));
+        return view('admin.group.student', compact('students'));
 
     }
 
@@ -154,7 +154,7 @@ class GroupExtraController extends Controller
 
 //new code ended
 
-        return view('user.group.attendance', [
+        return view('admin.group.attendance', [
             'group' => $group,
             //new items
             'students' => Attendance::where('group_id', $id)->orderByDesc('created_at')->paginate(10),

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('template.master')
 @section('content')
 
     <div class="container-xxl flex-grow-1 container-p-y">
@@ -61,8 +61,8 @@
                                 <th>Actions</th>
                             </tr>
                             </thead>
-                            @foreach($finances as $finance)
-                                <tbody id="myTable" class="table-border-bottom-0">
+                            <tbody id="myTable">
+                            @forelse($finances as $finance)
                                 <tr>
                                     <td>{{ $finance->reason }}</td>
                                     <td>{{ number_format($finance->payment,0,'',' ') }}</td>
@@ -70,13 +70,17 @@
                                     <td>{{ $finance->created_at }}</td>
                                     <td>
                                         <div class="d-flex">
-{{--                                            @include('admin.finance.edit')--}}
+                                            @include('admin.finance.edit')
                                             @include('admin.finance.delete')
                                         </div>
                                     </td>
                                 </tr>
-                                </tbody>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center">No finance records found.</td>
+                                </tr>
+                            @endforelse
+                            </tbody>
                         </table>
                     </div>
                 </div>

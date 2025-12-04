@@ -1,4 +1,4 @@
-`@extends('template.master')
+@extends('template.master')
 @section('content')
 
     <div class="p-4 m-4 sm:p-8 bg-white shadow sm:rounded-lg ">
@@ -35,7 +35,7 @@
 
                     {{--                    @dd($groups)--}}
 
-                    @foreach($assessments as $assessment)
+                    @forelse($assessments as $assessment)
                         <tbody id="myTable" class="table-group-divider">
                         <tr>
                             <td>
@@ -55,14 +55,18 @@
                             </th>
                         </tr>
                         </tbody>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="7" class="text-center">No assessment records found for this group.</td>
+                        </tr>
+                    @endforelse
                 </table>
             </div>
         </form>
     </div>
 
     <!-- Modal -->
-    @foreach($assessments as $assessment)
+    @forelse($assessments as $assessment)
         <div class="modal fade" id="exampleModal{{$assessment->user_id}}" tabindex="-1"
              aria-labelledby="exampleModalLabel"
              aria-hidden="true">
@@ -77,9 +81,11 @@
                             <label for="recipient-name"
                                    class="form-label"> change group </label>
                             <select name="group_id" class="form-select">
-                                @foreach($groups as $group)
+                                @forelse($groups as $group)
                                     <option value="{{$group->id}}">{{$group->name}}</option>
-                                @endforeach
+                                @empty
+                                    <option value="">No groups available</option>
+                                @endforelse
                             </select>
                             <div class="mt-3">
                                 <button type="submit" class="btn btn-outline-success m-2">save
@@ -90,7 +96,9 @@
                 </div>
             </div>
         </div>
-    @endforeach
+    @empty
+        {{-- No modals needed if no assessments --}}
+    @endforelse
 
     <script>
         $(document).ready(function () {
@@ -102,4 +110,3 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 @endsection
-`

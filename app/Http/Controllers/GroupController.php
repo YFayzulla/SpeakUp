@@ -13,9 +13,8 @@ class GroupController extends Controller
 {
     public function index()
     {
-        return view('user.group.room', [
-//            'rooms' => Room::all(),
-        ]);
+        $rooms = Room::all(); // Fetch all rooms
+        return view('admin.group.room', compact('rooms'));
     }
 
     /**
@@ -71,7 +70,7 @@ class GroupController extends Controller
     {
 
         $groups = Group::where('id', '!=', 1)->where('room_id', $id)->orderby('start_time')->get();
-        return view('user.group.index', compact('groups', 'id'));
+        return view('admin.group.index', compact('groups', 'id'));
 
     }
 
@@ -84,7 +83,7 @@ class GroupController extends Controller
     public function edit(Group $group)
     {
         $rooms = Room::query()->orderBy('room')->get();
-        return view('user.group.edit', compact('group', 'rooms'));
+        return view('admin.group.edit', compact('group', 'rooms'));
     }
 
     /**
@@ -145,7 +144,7 @@ class GroupController extends Controller
 
     public function makeGroup($id)
     {
-        return view('user.group.create', compact('id'));
+        return view('admin.group.create', compact('id'));
 
     }
 

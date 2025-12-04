@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('template.master')
 @section('content')
 
     <div class="card">
@@ -18,7 +18,7 @@
                     <td>pay</td>
                 </tr>
                 </thead>
-                @foreach($students as $student)
+                @forelse($students as $student)
                     <tbody id="myTable" class="table-border-bottom-0">
                     <tr>
                         <th>{{$loop->index+1}}</th>
@@ -92,7 +92,11 @@
                         </th>
                     </tr>
                     </tbody>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="5" class="text-center">No students found with payment information.</td>
+                    </tr>
+                @endforelse
             </table>
         </div>
     </div>
@@ -106,7 +110,7 @@
         }
 
         function formatAllNumbersBeforeSubmit() {
-            document.querySelectorAll('input[type="text"]').forEach(input => {
+            document.querySelectorAll('input[name="payment"]').forEach(input => {
                 input.value = input.value.replace(/\s+/g, '');
             });
         }

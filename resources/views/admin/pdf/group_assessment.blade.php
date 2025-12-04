@@ -11,7 +11,7 @@
             <th>rec group</th>
         </TR>
 
-        @foreach($groups as $group)
+        @forelse($groups as $group)
             <tr>
                 <th>{{$loop->index+1}}</th>
                 <th>{{$group->student->name}}</th>
@@ -20,7 +20,11 @@
                 <th>{{$group->for_what}}</th>
                 <th>{{$group->rec_group}}</th>
             </tr>
-        @endforeach
+        @empty
+            <tr>
+                <td colspan="6" class="text-center">No assessment data available for this group.</td>
+            </tr>
+        @endforelse
 
 
     </table>

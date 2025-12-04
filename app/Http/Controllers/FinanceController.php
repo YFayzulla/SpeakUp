@@ -12,7 +12,7 @@ class FinanceController extends Controller
 
     public function index()
     {
-        return view('user.finance.index', [
+        return view('admin.finance.index', [
             'finances' => Finance::all(),
             'consumption' => Finance::sum('payment'),
             'daily_consumption'=> Finance::whereDate('created_at', today())->sum('payment')

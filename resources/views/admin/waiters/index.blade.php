@@ -24,7 +24,7 @@
                     <th class="">action</th>
                 </tr>
                 </thead>
-                @foreach($students as $student)
+                @forelse($students as $student)
                     <tbody id="myTable" class="table-border-bottom-0">
                     <tr>
                         <th>{{$loop->index+1}}</th>
@@ -51,9 +51,11 @@
                                                 <label for="recipient-name"
                                                        class="col-form-label"> sitting in another group </label>
                                                 <select name="group_id" class="form-control">
-                                                    @foreach($groups as $g)
+                                                    @forelse($groups as $g)
                                                         <option value="{{$g->id}}">{{$g->name}}</option>
-                                                    @endforeach
+                                                    @empty
+                                                        <option value="">No groups available</option>
+                                                    @endforelse
                                                 </select>
 
                                                 <button type="submit" class="btn btn-outline-primary m-2">save
@@ -66,7 +68,11 @@
                         </th>
                     </tr>
                     </tbody>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="6" class="text-center">No students in the waiting room.</td>
+                    </tr>
+                @endforelse
             </table>
         </div>
     </div>

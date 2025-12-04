@@ -1,15 +1,10 @@
-@extends('layouts.app')
+@extends('template.master')
 @section('content')
 
     <input type="hidden" value="{{$sum=0}}">
     <div class="float-left col-lg-12">
         <div class="p-4 m-4 sm:p-8 bg-white shadow sm:rounded-lg ">
 
-
-{{--            @dd($date[1])--}}
-
-
-{{--            <a class="btn btn-danger float-right m-2" href="{{ URL::to('/dept/pdf') }}?date={{ urlencode($date) }}">Report</a>--}}
 
             <form action="{{ URL::to('/dept/pdf') }}">
 
@@ -31,7 +26,7 @@
                             <th>type</th>
                             <th>date</th>
                         </tr>
-                        @foreach($users as $student)
+                        @forelse($users as $student)
                             <tr>
                                 <th>{{$loop->index+1}}</th>
                                 <th>{{$student->name}}</th>
@@ -43,7 +38,11 @@
                                     $sum += $student->payment
                                 @endphp
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center">No payment records found for the selected period.</td>
+                            </tr>
+                        @endforelse
                     </table>
                 </div>
             </div>
@@ -51,4 +50,3 @@
         </div>
     </div>
 @endsection
-

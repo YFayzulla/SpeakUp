@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('template.master')
 @section('content')
 
     <div class="card">
@@ -40,16 +40,14 @@
                     <th>name</th>
                     <th>tel</th>
                     <th>Parents tel</th>
-                    {{--                <th>oylik to`lov</th>--}}
                     <th>group</th>
                     <th class="text-center">action</th>
                 </tr>
                 </thead>
-                @foreach($students as $student)
-                    <tbody id="myTable" class="table-border-bottom-0">
+                <tbody id="myTable" class="table-border-bottom-0">
+                @forelse($students as $student)
                     <tr>
-                        <th>{{$loop->index+1}}</th>
-                        {{--                    @dd($student->name)--}}
+                        <th>{{$loop->iteration}}</th>
                         <th>{{$student->name}}</th>
                         <th>+998 {{$student->phone}}</th>
                         <th>{{$student->parents_tel}}</th>
@@ -70,11 +68,13 @@
                             </form>
                         </th>
                     </tr>
-                    </tbody>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="6" class="text-center">No students found.</td>
+                    </tr>
+                @endforelse
+                </tbody>
             </table>
         </div>
     </div>
-
-
 @endsection

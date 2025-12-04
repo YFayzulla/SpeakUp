@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('template.master')
 @section('content')
 
     <div class="p-4 m-4 sm:p-8 bg-white shadow sm:rounded-lg ">
@@ -29,9 +29,11 @@
                                     <div class="row">
                                     <label for="exampleFormControlSelect1" class="form-label">Groups</label>
                                     <select class="form-select" name="group_id" id="exampleFormControlSelect1">
-                                        @foreach($groups as $group)
+                                        @forelse($groups as $group)
                                             <option value="{{$group->id}}">{{$group->name}}</option>
-                                        @endforeach
+                                        @empty
+                                            <option value="">No groups available</option>
+                                        @endforelse
                                     </select>
                                     </div>
                                     <div class="modal-footer mt-3">
@@ -58,7 +60,7 @@
                     <th> Delete</th>
                 </tr>
 
-                @foreach($teachers as $teacher)
+                @forelse($teachers as $teacher)
                     <tr>
                         <th>{{$loop->index+1}}</th>
                         <th>{{$teacher->group->name}}</th>
@@ -73,7 +75,11 @@
                             </form>
                         </td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="3" class="text-center">No groups assigned to this teacher.</td>
+                    </tr>
+                @endforelse
 
             </table>
         </div>

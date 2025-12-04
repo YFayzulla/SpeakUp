@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('template.master')
 @section('content')
 
     <div class="card">
@@ -63,7 +63,7 @@
                         </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
-                        @foreach($student->studenthistory as $item)
+                        @forelse($student->studenthistory as $item)
                             <tr>
                                 <th>{{$loop->index+1}}</th>
                                 <th>{{number_format($item->payment,0,'',' ')}}</th>
@@ -74,7 +74,11 @@
                                         {{$item->date}}
                                     @endif</th>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="4" class="text-center">No payment history found.</td>
+                            </tr>
+                        @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -94,14 +98,18 @@
                         </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
-                        @foreach($student->studentinformation as $item)
+                        @forelse($student->studentinformation as $item)
 
                             <tr>
                                 <th>{{$loop->index+1}}</th>
                                 <th>{{$item->group}}</th>
                                 <th>{{$item->created_at}}</th>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="3" class="text-center">No group history found.</td>
+                            </tr>
+                        @endforelse
                         </tbody>
                     </table>
                 </div>

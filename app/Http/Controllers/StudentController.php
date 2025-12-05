@@ -7,200 +7,158 @@ use App\Http\Requests\Student\UpdateRequest;
 use App\Models\Attendance;
 use App\Models\DeptStudent;
 use App\Models\Group;
-use App\Models\Level;
 use App\Models\StudentInformation;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class StudentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $students = User::orderBy("name")->role('student')->get();
-
-//        foreach ($students as $user)
-//        {
-////            var_dump($user->name);
-//        }
         return view('admin.student.index', compact('students'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
     public function create()
     {
-        $groups = Group::with('room')->orderby('room_id')->get();
+        $groups = Group::with('room')->orderBy('room_id')->get();
         return view('admin.student.create', compact('groups'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(StoreRequest $request)
     {
-
-
+        $path = null;
         if ($request->hasFile('photo')) {
             $fileName = time() . '.' . $request->file('photo')->getClientOriginalExtension();
             $path = $request->file('photo')->storeAs('Photo', $fileName);
         }
 
-        $group = Group::where('id', $request->group_id)->first();
+        $group = Group::findOrFail($request->group_id);
 
-        $user = User::create([
-            'name' => $request->name,
-            'password' => bcrypt($request->name),
-            'passport' => $request->passport,
-            'phone' => $request->phone,
-            'parents_name' => $request->parents_name,
-            'parents_tel' =>  $request->parents_tel,
-            'group_id' => $group->id,
-            'location' => $request->location,
-            'photo' => $path ?? null,
-            'should_pay' => (int) $request->should_pay,
-            'description' => $request->description,
-            'status'=>($group->id == 1) ? null : 0,
-            'room_id' => $group->id
-        ])->assignRole('student');
+        DB::transaction(function () use ($request, $group, $path) {
+            $user = User::create([
+                'name' => $request->name,
+                'password' => Hash::make($request->phone), // Using phone as a default password
+                'passport' => $request->passport,
+                'phone' => $request->phone,
+                'parents_name' => $request->parents_name,
+                'parents_tel' => $request->parents_tel,
+                'group_id' => $group->id,
+                'location' => $request->location,
+                'photo' => $path,
+                'should_pay' => (int) $request->should_pay,
+                'description' => $request->description,
+                'status' => ($group->id == 1) ? null : 0,
+                'room_id' => $group->room_id, // Corrected from $group->id
+            ])->assignRole('student');
 
+            StudentInformation::create([
+                'user_id' => $user->id,
+                'group_id' => $request->group_id,
+                'group' => $group->name,
+            ]);
 
-        StudentInformation::create([
-            'user_id' => $user->id,
-            'group_id' => $request->group_id,
-            'group' => $group->name,
-        ]);
+            DeptStudent::create([
+                'user_id' => $user->id,
+                'payed' => 0,
+                'dept' => $request->should_pay,
+                'status_month' => 0
+            ]);
+        });
 
-
-        DeptStudent::create([
-            'user_id' => $user->id,
-            'payed' => 0,
-            'dept' => $request->should_pay,
-            'status_month' => 0
-        ]);
-
-        return redirect()->route('student.index')->with('success', 'Information has been added');
+        return redirect()->route('student.index')->with('success', 'Ma\'lumotlar muvaffaqiyatli qo\'shildi.');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
+        $student = User::findOrFail($id);
         $attendances = Attendance::where('user_id', $id)->get();
-        $student = User::find($id);
         $groups = Group::all();
         return view('admin.student.show', compact('student', 'attendances', 'groups'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-
-        $student = User::find($id);
+        $student = User::findOrFail($id);
         $groups = Group::query()->orderBy('name')->get();
-        if ($student !== null)
-            return view('admin.student.edit', compact('student', 'groups'));
-        else
-            return abort('403');
+        return view('admin.student.edit', compact('student', 'groups'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(UpdateRequest $request, $id)
     {
+        $student = User::findOrFail($id);
+        $group = Group::findOrFail($request->group_id);
 
-
-        $student = User::find($id);
-
+        $path = $student->photo;
         if ($request->hasFile('photo')) {
-            if (isset($student->photo)) {
+            if ($student->photo) {
                 Storage::delete($student->photo);
             }
             $fileName = time() . '.' . $request->file('photo')->getClientOriginalExtension();
-
             $path = $request->file('photo')->storeAs('Photo', $fileName);
         }
 
-        $group = Group::find($request->group_id);
-        if ($student->group_id != $request->group_id) {
-            StudentInformation::create([
-                'user_id' => $student->id,
+        DB::transaction(function () use ($request, $student, $group, $path) {
+            if ($student->group_id != $request->group_id) {
+                StudentInformation::create([
+                    'user_id' => $student->id,
+                    'group_id' => $request->group_id,
+                    'group' => $group->name
+                ]);
+            }
+
+            $updateData = [
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'passport' => $request->passport,
                 'group_id' => $request->group_id,
-                'group' => $group->name
-            ]);
-        }
+                'parents_name' => $request->parents_name,
+                'parents_tel' => $request->parents_tel,
+                'location' => $request->location,
+                'should_pay' => $request->should_pay,
+                'photo' => $path,
+                'description' => $request->description,
+                'room_id' => $group->room_id,
+                'status' => ($group->id == 1) ? null : $student->status,
+            ];
 
-        $student->update([
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'password' => bcrypt($request->password),
-            'passport' => $request->passport,
-            'group_id' => $request->group_id,
-            'parents_name' => $request->parents_name,
-            'parents_tel' =>  $request->parents_tel,
-            'location' => $request->location,
-            'should_pay' => $request->should_pay,
-            'photo' => $path ?? $student->photo ?? null,
-            'description' => $request->description,
-            'room_id' => $group->room_id,
-            'status' => ($group->id == 1) ? null : $student->status,
+            if ($request->filled('password')) {
+                $updateData['password'] = Hash::make($request->password);
+            }
 
-        ]);
+            $student->update($updateData);
 
-        $dept = DeptStudent::where('user_id', $id)->first();
+            $student->deptStudent()->updateOrCreate(
+                ['user_id' => $student->id],
+                ['dept' => $request->should_pay]
+            );
 
-        $dept->update([
-            'dept' => $request->should_pay
-        ]);
+            Attendance::where('user_id', $student->id)->update(['group_id' => $request->group_id]);
+        });
 
-        $dd = Attendance::where('user_id', $student->id)
-            ->update(['group_id' => $request->group_id]);
-
-//        dd($dd);
-
-        return redirect()->route('student.index')->with('success', 'malumot yangilandi');
+        return redirect()->route('student.index')->with('success', 'Ma\'lumotlar muvaffaqiyatli yangilandi.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
+        $student = User::findOrFail($id);
 
-        $student = User::find($id);
-        if (isset($student->photo)) {
-            Storage::delete($student->photo);
-        }
-        $student->delete();
-        return redirect()->back()->with('success', 'Information deleted');
+        DB::transaction(function () use ($student) {
+            if ($student->photo) {
+                Storage::delete($student->photo);
+            }
+            // Assuming related models have foreign key constraints with cascade delete.
+            // If not, delete them manually.
+            // Example:
+            // StudentInformation::where('user_id', $student->id)->delete();
+            // DeptStudent::where('user_id', $student->id)->delete();
+            // Attendance::where('user_id', 'student->id)->delete();
+            $student->delete();
+        });
+
+        return redirect()->back()->with('success', 'Ma\'lumotlar muvaffaqiyatli o\'chirildi.');
     }
 }

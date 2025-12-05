@@ -4,13 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\ActiveStudent;
 use App\Models\Assessment;
-use App\Models\Attendance;
 use App\Models\Group;
 use App\Models\GroupTeacher;
 use App\Models\LessonAndHistory;
-use App\Models\StudentInformation;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AssessmentController extends Controller
 {
@@ -21,9 +20,8 @@ class AssessmentController extends Controller
      */
     public function index()
     {
-
-        $id = auth()->id();
-        $groups = GroupTeacher::where('teacher_id', $id)->get();
+        $teacherId = auth()->id();
+        $groups = GroupTeacher::where('teacher_id', $teacherId)->get();
 
         return view('teacher.assessment.index', compact('groups'));
     }
@@ -35,7 +33,7 @@ class AssessmentController extends Controller
      */
     public function create()
     {
-
+        // This action is not implemented.
     }
 
     /**
@@ -46,21 +44,27 @@ class AssessmentController extends Controller
      */
     public function store(Request $request)
     {
-
+        // This action is not implemented.
     }
 
     /**
-     * Display the specified resource.Reason
+     * Display the specified resource.
      *
-     * @param \App\Models\Assessment $assessment
+     * @param int $id The Group ID.
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
+        $group = Group::findOrFail($id);
         $students = User::where('group_id', $id)->orderBy('name')->get();
-        $groups = Group::OrderBy('name')->get();
-        $groupName = Group::find($id)->name; // Get the group name
-        return view('teacher.assessment.make_markes', compact('students', 'id', 'groups', 'groupName'));
+        $allGroups = Group::orderBy('name')->get();
+
+        return view('teacher.assessment.make_markes', [
+            'students' => $students,
+            'id' => $id,
+            'groups' => $allGroups, // 'groups' nomini view fayli bilan mosligi uchun saqlab qoldim
+            'groupName' => $group->name
+        ]);
     }
 
     /**
@@ -71,67 +75,83 @@ class AssessmentController extends Controller
      */
     public function edit(Assessment $assessment)
     {
-        //
+        // This action is not implemented.
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Assessment $assessment
+     * @param int $id The Group ID.
      * @return \Illuminate\Http\Response
      */
-
     public function update(Request $request, $id)
     {
-        $end_marks = $request->end_mark;
-        $rec_groups = $request->recommended;
-        $reasons = $request->reason;
-        $users = $request->student;
+        $end_marks = $request->input('end_mark', []);
+        $rec_groups = $request->input('recommended', []);
+        $reasons = $request->input('reason', []);
+        $users = $request->input('student', []);
 
-        $count = count($reasons);
+        if (empty($reasons)) {
+            return redirect()->route('assessment.index')->with('error', 'Saqlash uchun ma\'lumot topilmadi.');
+        }
+
         $group = Group::findOrFail($id);
 
-        $history = LessonAndHistory::create([
-            'group' => $group->id,
-            'name' => $request->lesson ?? auth()->user()->name,
-            'data' => 2
-        ]);
+        DB::transaction(function () use ($request, $group, $end_marks, $rec_groups, $reasons, $users) {
+            $history = LessonAndHistory::create([
+                'group' => $group->id,
+                'name' => $request->lesson ?? auth()->user()->name,
+                'data' => 2
+            ]);
 
-        $assessments = [];
-        $studentsToUpdate = [];
+            $assessments = [];
+            $studentsToUpdate = [];
 
-        for ($i = 0; $i < $count; $i++) {
-            $mark = $end_marks[$i] ?? null;
-            if ($mark !== null && $mark != 0) {
-                $assessments[] = [
-                    'get_mark' => $mark,
-                    'user_id' => $users[$i],
-                    'for_what' => $reasons[$i],
-                    'rec_group' => $rec_groups[$i],
-                    'group' => $group->name,
-                    'history_id' => $history->id,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ];
+            foreach ($reasons as $i => $reason) {
+                $mark = $end_marks[$i] ?? null;
+                $userId = $users[$i] ?? null;
+
+                if ($userId && $mark !== null && $mark != 0) {
+                    $assessments[] = [
+                        'get_mark' => $mark,
+                        'user_id' => $userId,
+                        'for_what' => $reason,
+                        'rec_group' => $rec_groups[$i] ?? null,
+                        'group' => $group->name,
+                        'history_id' => $history->id,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ];
+                }
+                if ($userId) {
+                    $studentsToUpdate[$userId] = ['mark' => $mark];
+                }
             }
-            $studentsToUpdate[$users[$i]] = $mark;
-        }
-// Bulk insert for better performance
-//        if (!empty($assessments)) {
-//            Assessment::insert($assessments);
-//        }
-//// Bulk update marks
-//        User::whereIn('id', array_keys($studentsToUpdate))->get()->each(function ($student) use ($studentsToUpdate) {
-//            $student->update(['mark' => $studentsToUpdate[$student->id]]);
-//            // Handle active students
-//            if (!$student->checkAttendanceStatus()) {
-//                ActiveStudent::create(['user_id' => $student->id]);
-//            }
-//        });
 
-        return redirect()->route('assessment.index')->with('success', 'Grades saved');
+            if (!empty($assessments)) {
+                Assessment::insert($assessments);
+            }
 
+            $studentIds = array_keys($studentsToUpdate);
+            if (!empty($studentIds)) {
+                $students = User::whereIn('id', $studentIds)->get();
+
+                foreach ($students as $student) {
+                    if (isset($studentsToUpdate[$student->id])) {
+                        $student->update(['mark' => $studentsToUpdate[$student->id]['mark']]);
+
+                        // Eslatma: checkAttendanceStatus() har bir talaba uchun alohida so'rov yuborishi mumkin.
+                        // Agar bu sekin ishlasa, optimallashtirish talab etiladi.
+                        if (!$student->checkAttendanceStatus()) {
+                            ActiveStudent::firstOrCreate(['user_id' => $student->id]);
+                        }
+                    }
+                }
+            }
+        });
+
+        return redirect()->route('assessment.index')->with('success', 'Baholar muvaffaqiyatli saqlandi.');
     }
 
     /**
@@ -142,6 +162,6 @@ class AssessmentController extends Controller
      */
     public function destroy(Assessment $assessment)
     {
-        //
+        // This action is not implemented.
     }
 }

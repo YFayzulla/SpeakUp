@@ -7,13 +7,17 @@ use Illuminate\Http\Request;
 
 class RefreshController extends Controller
 {
-
-    public function update($id)
+    /**
+     * Foydalanuvchi statusini tiklaydi.
+     *
+     * @param int $id Foydalanuvchi IDsi
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(int $id)
     {
+        $user = User::findOrFail($id);
+        $user->update(['status' => 0]);
 
-        User::query()->findOrFail($id)->update(['status'=>0]);
-
-        return redirect()->back()->with('success','data updated successfully');
-
+        return redirect()->back()->with('success', 'Ma\'lumotlar muvaffaqiyatli yangilandi.');
     }
 }

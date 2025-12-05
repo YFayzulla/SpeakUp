@@ -7,91 +7,86 @@ use App\Models\Attendance;
 use App\Models\Group;
 use App\Models\HistoryPayments;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use PDF;
 
 class PdfController extends Controller
 {
+    public function __construct()
+    {
+        // Set a higher execution time limit for all methods in this controller
+        set_time_limit(300);
+    }
 
     public function RoomListPDF(Request $request)
     {
-        // Fetch table data based on flexible date range
-        $tableData = HistoryPayments::query()
-            ->when($request->startDate && $request->endDate, function ($query) use ($request) {
-                // If both startDate and endDate are provided, filter between these dates
-                $query->whereBetween('date', [$request->startDate, $request->endDate]);
-            })
-            ->when($request->startDate && !$request->endDate, function ($query) use ($request) {
-                // If only startDate is provided, treat it as a single day filter
-                $query->whereDate('date', $request->startDate);
-            })
-            ->when(!$request->startDate && $request->endDate, function ($query) use ($request) {
-                // If only endDate is provided, treat it as a single day filter
-                $query->whereDate('date', $request->endDate);
-            })
-            ->get();
+        $startDate = $request->input('startDate') ? Carbon::parse($request->input('startDate')) : null;
+        $endDate = $request->input('endDate') ? Carbon::parse($request->input('endDate')) : null;
 
-        // Generate the PDF
-        $pdf = PDF::loadView('user.pdf.payments', ['users' => $tableData]);
+        $query = HistoryPayments::query();
 
-        // Download the PDF or display it in the browser
-        return $pdf->download('orders.pdf');
+        if ($startDate && $endDate) {
+            $query->whereBetween('date', [$startDate->startOfDay(), $endDate->endOfDay()]);
+        } elseif ($startDate) {
+            $query->whereDate('date', $startDate);
+        } elseif ($endDate) {
+            $query->whereDate('date', $endDate);
+        }
+
+        $payments = $query->get();
+        $pdf = PDF::loadView('user.pdf.payments', ['users' => $payments]);
+        $fileName = 'payments_report_' . now()->format('Y-m-d') . '.pdf';
+
+        return $pdf->download($fileName);
     }
+
     public function history($id)
     {
-        set_time_limit(300); // Set to a value greater than 60 seconds
-        $today = now()->toDateString();
-        $student = User::find($id);
+        $student = User::findOrFail($id);
         $attendances = Attendance::where('user_id', $id)->get();
         $pdf = PDF::loadView('user.pdf.student_show', ['student' => $student, 'attendances' => $attendances]);
-        return $pdf->download('orders.pdf');
-        GeneratePdfJob::dispatch($id);
-        return "PDF generation job dispatched successfully!";
+        $fileName = 'student_history_' . $student->id . '_' . now()->format('Y-m-d') . '.pdf';
+
+        return $pdf->download($fileName);
     }
 
     public function teacher()
     {
-        set_time_limit(300); // Set to a value greater than 60 seconds
-        $today = now()->toDateString();
-        $teacher = User::role('user')->get();
-        $pdf = PDF::loadView('user.pdf.teacher', ['teacher' => $teacher]);
-        return $pdf->download('orders.pdf');
+        $teachers = User::role('user')->get();
+        $pdf = PDF::loadView('user.pdf.teacher', ['teacher' => $teachers]);
+        $fileName = 'teachers_list_' . now()->format('Y-m-d') . '.pdf';
 
-        return "PDF generation job dispatched successfully!";
+        return $pdf->download($fileName);
     }
 
     public function group()
     {
-        set_time_limit(300); // Set to a value greater than 60 seconds
-        $today = now()->toDateString();
-        $group = Group::where('id','!=',1)->get();
-        $pdf = PDF::loadView('user.pdf.group', ['group' => $group]);
-        return $pdf->download('orders.pdf');
+        $groups = Group::where('id', '!=', 1)->get();
+        $pdf = PDF::loadView('user.pdf.group', ['group' => $groups]);
+        $fileName = 'groups_list_' . now()->format('Y-m-d') . '.pdf';
 
-        return "PDF generation job dispatched successfully!";
+        return $pdf->download($fileName);
     }
-
 
     public function student()
     {
-        set_time_limit(300); // Set to a value greater than 60 seconds
-        $today = now()->toDateString();
-        $student = User::role('student')->get();
-        $pdf = PDF::loadView('user.pdf.student', ['student' => $student]);
-        return $pdf->download('orders.pdf');
+        $students = User::role('student')->get();
+        $pdf = PDF::loadView('user.pdf.student', ['student' => $students]);
+        $fileName = 'students_list_' . now()->format('Y-m-d') . '.pdf';
 
-        return "PDF generation job dispatched successfully!";
+        return $pdf->download($fileName);
     }
 
     public function Assessment($id)
     {
+        // Assuming 'group' column in 'assessments' table stores the group name, not ID.
+        // If it stores group ID, this should be changed to use the ID.
+        $group = Group::findOrFail($id);
+        $assessments = Assessment::where('group', $group->name)->get();
+        $pdf = PDF::loadView('user.pdf.group_assessment', ['groups' => $assessments]);
+        $fileName = 'group_assessment_' . $group->name . '_' . now()->format('Y-m-d') . '.pdf';
 
-        $groups = Assessment::where('group', $id)->get();
-
-        $pdf = PDF::loadView('user.pdf.group_assessment', ['groups' => $groups]);
-
-        return $pdf->download('orders.pdf');
-
+        return $pdf->download($fileName);
     }
 }

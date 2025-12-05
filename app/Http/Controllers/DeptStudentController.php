@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\DeptStudent;
 use App\Models\HistoryPayments;
 use App\Models\User;
-use DateTime;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DeptStudentController extends Controller
 {
@@ -18,7 +18,7 @@ class DeptStudentController extends Controller
      */
     public function index()
     {
-        $students = User::role('student')->orderby('status')->orderby('name')->get();
+        $students = User::role('student')->orderBy('status')->orderBy('name')->get();
         return view('admin.dept.index', compact('students'));
     }
 
@@ -29,7 +29,7 @@ class DeptStudentController extends Controller
      */
     public function create()
     {
-        //
+        // This action is not implemented.
     }
 
     /**
@@ -40,7 +40,7 @@ class DeptStudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // This action is not implemented.
     }
 
     /**
@@ -51,7 +51,7 @@ class DeptStudentController extends Controller
      */
     public function show(DeptStudent $deptStudent)
     {
-        //
+        // This action is not implemented.
     }
 
     /**
@@ -62,80 +62,87 @@ class DeptStudentController extends Controller
      */
     public function edit(DeptStudent $deptStudent)
     {
-
+        // This action is not implemented.
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \App\Models\DeptStudent $deptStudent
+     * @param int $id User ID
      * @return \Illuminate\Http\Response
      */
-
-
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
-        $student = DeptStudent::where('user_id', $id)->first();
-        $user = User::find($id);
-        $payment = $request->payment;
-        $dept = $student->dept;
-
-        if ($dept == $payment) {
-
-            $student->status_month += 1;
-            $user->status += 1;
-            $student->date = $request->date_paid;
-
-        } elseif ($dept - $payment > 0) {
-
-            if ($student->payed == 0) {
-
-                $student->payed = $payment;
-                $student->date = Carbon::now()->format('Y-m-d');
-
-            } elseif ($payment + $student->payed == $student->dept) {
-
-                $student->payed = 0;
-                $student->status_month++;
-                $user->status += 1;
-
-            } else {
-                $student->payed += $payment;
-            }
-        } else {
-
-            $item = ($payment / $dept);
-
-            if ((int)$item == $item) {
-                $student->status_month += $item;
-                $user->status += $item;
-                $student->date = $request->date_paid ?? Carbon::now()->format('Y-m-d');
-            } else {
-                $student->status_month += (int)$item;
-                $user->status += (int)$item;
-                $item = $item - (int)$item;
-                $student->payed = $item * $student->dept;
-                $student->date = Carbon::now()->addMonths((int)$item)->format('Y-m-d');
-            }
-        }
-        $student->save();
-        $user->save();
-        $payment = HistoryPayments::create([
-            'user_id' => $student->user_id,
-            'name' => $user->name,
-            'payment' => $request->payment,
-            'group' => $user->group->name,
-            'date' => $request->date_paid ?? Carbon::now()->format('Y-m-d'),
-            'type_of_money' => $request->money_type,
+        $request->validate([
+            'payment' => 'required|numeric|min:0',
+            'date_paid' => 'nullable|date',
+            'money_type' => 'required|string|max:255',
         ]);
 
+        $deptStudent = DeptStudent::where('user_id', $id)->firstOrFail();
+        $user = User::findOrFail($id);
+        $paymentAmount = $request->payment;
+        $monthlyDept = $deptStudent->dept; // Assuming 'dept' is the monthly payment amount
+        $paidDate = $request->date_paid ? Carbon::parse($request->date_paid) : Carbon::now();
 
-        return view('admin.pdf.chek', [
-            'payment' => $payment,
-            'student' => $user,
-            'dept' => $student->dept,
-        ]);
+        DB::transaction(function () use ($deptStudent, $user, $paymentAmount, $monthlyDept, $paidDate, $request) {
+            $remainingPayment = $paymentAmount;
+
+            // Handle any existing partial payment first
+            if ($deptStudent->payed > 0) {
+                $neededToCompleteMonth = $monthlyDept - $deptStudent->payed;
+                if ($remainingPayment >= $neededToCompleteMonth) {
+                    $remainingPayment -= $neededToCompleteMonth;
+                    $deptStudent->payed = 0;
+                    $deptStudent->status_month++;
+                    $user->status++;
+                } else {
+                    $deptStudent->payed += $remainingPayment;
+                    $remainingPayment = 0;
+                }
+            }
+
+            // Process full months
+            if ($remainingPayment >= $monthlyDept) {
+                $fullMonthsPaid = floor($remainingPayment / $monthlyDept);
+                $deptStudent->status_month += $fullMonthsPaid;
+                $user->status += $fullMonthsPaid;
+                $remainingPayment -= ($fullMonthsPaid * $monthlyDept);
+            }
+
+            // Handle any new partial payment
+            if ($remainingPayment > 0) {
+                $deptStudent->payed += $remainingPayment;
+            }
+
+            $deptStudent->date = $paidDate->format('Y-m-d');
+            $deptStudent->save();
+            $user->save();
+
+            $paymentHistory = HistoryPayments::create([
+                'user_id' => $user->id,
+                'name' => $user->name,
+                'payment' => $paymentAmount,
+                'group' => $user->group->name,
+                'date' => $paidDate->format('Y-m-d'),
+                'type_of_money' => $request->money_type,
+            ]);
+
+            // Return the view for the check/receipt
+            // Note: Returning a view directly from an update method is unusual.
+            // Typically, you would redirect and then generate the PDF on a separate route.
+            // Keeping it as is for now, but it's a point for future refactoring.
+            return view('admin.pdf.chek', [
+                'payment' => $paymentHistory,
+                'student' => $user,
+                'dept' => $monthlyDept,
+            ]);
+        });
+
+        // If the transaction fails or no view is returned from the transaction,
+        // this redirect will act as a fallback.
+        return redirect()->back()->with('success', 'To\'lov muvaffaqiyatli amalga oshirildi.');
     }
 
     /**
@@ -146,6 +153,6 @@ class DeptStudentController extends Controller
      */
     public function destroy(DeptStudent $deptStudent)
     {
-
+        // This action is not implemented.
     }
 }

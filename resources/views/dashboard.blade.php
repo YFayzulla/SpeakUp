@@ -115,10 +115,10 @@
                 <div class="card h-100">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="m-0">Today's Absences</h5>
-                        <span class="badge bg-danger">{{ count($attendances) }}</span>
+                        <span class="badge bg-danger">{{ count($today_attendances) }}</span>
                     </div>
                     <div class="card-body">
-                        @forelse($attendances as $attendance)
+                        @forelse($today_attendances as $attendance)
                             <ul class="list-unstyled mb-0">
                                 <li class="d-flex justify-content-between align-items-center mb-2">
                                     <span>{{ $loop->iteration }}. {{ $attendance->user->name }}</span>

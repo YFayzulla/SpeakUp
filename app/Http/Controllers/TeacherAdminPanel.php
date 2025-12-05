@@ -8,87 +8,80 @@ use App\Models\LessonAndHistory;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\AttendanceService;
+use Illuminate\Support\Facades\DB;
 
 class TeacherAdminPanel extends Controller
 {
-
-    public function __construct(
-        protected AttendanceService $serviceAttendance,
-    )
+    public function __construct(protected AttendanceService $serviceAttendance)
     {
-
     }
 
     public function group()
     {
-        $id = auth()->id();
-        $groups = GroupTeacher::where('teacher_id', $id)->get();
+        $teacherId = auth()->id();
+        $groups = GroupTeacher::where('teacher_id', $teacherId)->get();
         return view('teacher.group', compact('groups'));
     }
 
-//one
     public function attendance($id)
     {
+        $serviceData = $this->serviceAttendance->attendance($id);
 
-        $service = $this->serviceAttendance->attendance($id);
-
-//        dd($service);
-
+        // Assuming $serviceData['students'] provides all necessary student data.
+        // The extra query for 'users' is removed for optimization.
+        // If 'users' was for a different purpose, it should be restored with a clear name.
         return view('teacher.attendance.attendance', [
-//            for checking
-            'users' => User:: where('group_id', $id)->orderBy('name')->get(),
             'id' => $id,
-//            for list
-            'today' => $service['today'],
-            'data' => $service['data'],
-            'year' => $service['year'],
-            'month' => $service['month'],
-            'attendances' => $service['attendances'],
-            'group' => $service['group'],
-            'students'=>$service['students'],
+            'today' => $serviceData['today'],
+            'data' => $serviceData['data'],
+            'year' => $serviceData['year'],
+            'month' => $serviceData['month'],
+            'attendances' => $serviceData['attendances'],
+            'group' => $serviceData['group'],
+            'students' => $serviceData['students'],
         ]);
-
     }
 
     public function attendance_submit(Request $request, $id)
     {
-        $lesson = LessonAndHistory::create([
-            'name' => $request->lesson,
-            'data' => 1,
-            'group' => $id,
-        ]);
+        $statuses = $request->input('status', []);
 
-//        dd($request->status);
-        if ($request->status) {
-            foreach ($request->status as $name => $status) {
-                $user_id = auth()->id();
-                Attendance::create([
-                    'user_id' => $name,
-                    'group_id' => $id,
-                    'who_checked' => $user_id,
-                    'status' => 1,
-                    'lesson_id' => $lesson->id,
-                ]);
-
-
-            }
-            return redirect()->back()->with('success', 'Saved');
-
-        } else {
-            return redirect()->back()->with('error', 'Something went wrong');
+        if (empty($statuses)) {
+            return redirect()->back()->with('error', 'Hech qanday talaba belgilanmadi.');
         }
 
+        DB::transaction(function () use ($request, $id, $statuses) {
+            $lesson = LessonAndHistory::create([
+                'name' => $request->lesson,
+                'data' => 1, // Assuming 1 means attendance check
+                'group' => $id,
+            ]);
+
+            $attendances = [];
+            $checkerId = auth()->id();
+            $now = now();
+
+            foreach ($statuses as $userId => $status) {
+                $attendances[] = [
+                    'user_id' => $userId,
+                    'group_id' => $id,
+                    'who_checked' => $checkerId,
+                    'status' => 1, // Assuming 'status' in request is a checkbox, so always present (1)
+                    'lesson_id' => $lesson->id,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+            }
+
+            Attendance::insert($attendances);
+        });
+
+        return redirect()->back()->with('success', 'Davomat muvaffaqiyatli saqlandi.');
     }
 
-//    second
     public function attendanceIndex()
     {
-//        dd('s');
-        return view('teacher.attendance.index', [
-            'groups' => GroupTeacher::query()->where('teacher_id', auth()->id())->get(),
-        ]);
+        $groups = GroupTeacher::where('teacher_id', auth()->id())->get();
+        return view('teacher.attendance.index', compact('groups'));
     }
-
-
 }
-

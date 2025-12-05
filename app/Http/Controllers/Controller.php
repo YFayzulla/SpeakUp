@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
-use App\Models\DeptStudent;
 use App\Models\Finance;
-use App\Models\Group;
-use App\Models\GroupTeacher;
 use App\Models\HistoryPayments;
 use App\Models\User;
 use Carbon\Carbon;
@@ -20,75 +17,67 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-
     public function index()
     {
+        $user = auth()->user();
 
-        if (auth()->user()->hasRole('admin')) {
+        if ($user->hasRole('admin')) {
+            $today = Carbon::today();
 
-            $teachers = User::query()->role('user')->get();
-
-            $summa = HistoryPayments::query()->sum('payment');
-
-            $consumption = Finance::query()->sum('payment');
-
-            $profit = $summa - $consumption;
-
-            $pie_chart = [$summa, $consumption];
+            $totalIncome = HistoryPayments::sum('payment');
+            $totalConsumption = Finance::sum('payment');
+            $profit = $totalIncome - $totalConsumption;
 
             return view('dashboard', [
-                    'teachers' => $teachers,
-                    'number_of_students' => User::query()->role('student')->count(),
-                    'daily_income' => HistoryPayments::query()->whereDate('created_at', today())->sum('payment'),
-                    'trent' => HistoryPayments::query()->whereDate('created_at', today())->get(['payment', 'name']),
-                    'students' => User::role('student')->where('status', '<', 0)->get(),
-                    'attendances' => Attendance::query()->whereDate('created_at', today())->get(),
-                    'profit' => $profit,
-                    'pie_chart' => $pie_chart
-                ]
-            );
-
+                'teachers' => User::role('user')->get(),
+                'number_of_students' => User::role('student')->count(),
+                'daily_income' => HistoryPayments::whereDate('created_at', $today)->sum('payment'),
+                'daily_transactions' => HistoryPayments::whereDate('created_at', $today)->get(['payment', 'name']), // 'trent' renamed
+                'debtor_students' => User::role('student')->where('status', '<', 0)->get(), // 'students' renamed
+                'today_attendances' => Attendance::whereDate('created_at', $today)->get(), // 'attendances' renamed
+                'profit' => $profit,
+                'pie_chart' => [$totalIncome, $totalConsumption]
+            ]);
         }
-        if (auth()->user()->hasRole('student')) {
+
+        if ($user->hasRole('student')) {
             return view('studentPage');
         }
 
-        return view('dashboard');
-
+        // For any other user, return the dashboard with empty data to prevent errors.
+        return view('dashboard', [
+            'teachers' => [],
+            'number_of_students' => 0,
+            'daily_income' => 0,
+            'daily_transactions' => [],
+            'debtor_students' => [],
+            'today_attendances' => [],
+            'profit' => 0,
+            'pie_chart' => [0, 0]
+        ]);
     }
-
 
     public function search(Request $request)
     {
-        // Convert input dates to Carbon instances and format them
         $startDate = $request->start_date ? Carbon::parse($request->start_date)->startOfDay() : null;
         $endDate = $request->end_date ? Carbon::parse($request->end_date)->endOfDay() : null;
 
-        // Start building the query
         $query = HistoryPayments::query();
 
-        // Apply filters based on provided dates
         if ($startDate && $endDate) {
-            // Both start and end dates are provided
             $query->whereBetween('date', [$startDate, $endDate]);
         } elseif ($startDate) {
-            // Only start date is provided
             $query->whereDate('date', $startDate);
         } elseif ($endDate) {
-            // Only end date is provided
             $query->whereDate('date', $endDate);
         }
 
-        // Execute the query
-        $users = $query->get();
+        $historyPayments = $query->get();
 
-        // Pass the users and date range to the view
         return view('admin.index', [
-            'users' => $users,
+            'historyPayments' => $historyPayments,
             'start_date' => $startDate ? $startDate->toDateString() : null,
             'end_date' => $endDate ? $endDate->toDateString() : null,
         ]);
     }
-
-
 }

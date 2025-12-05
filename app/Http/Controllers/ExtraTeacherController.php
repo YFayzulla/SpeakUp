@@ -3,26 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
-use App\Models\Group;
 use App\Models\GroupTeacher;
-use App\Models\StudentInformation;
-use App\Models\User;
-use Illuminate\Http\Request;
 
 class ExtraTeacherController extends Controller
 {
-    public function group_delete($id)
+    /**
+     * Delete a specific group-teacher assignment.
+     *
+     * @param int $id The ID of the GroupTeacher record.
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function group_delete(int $id)
     {
-        $group = GroupTeacher::query()->find($id);
-        $group->delete();
-        return redirect()->back()->with('success', 'Information deleted');
+        $groupTeacher = GroupTeacher::findOrFail($id);
+        $groupTeacher->delete();
+        return redirect()->back()->with('success', 'Guruh birikmasi muvaffaqiyatli o\'chirildi.');
     }
 
-
-    public function attendanceDelete($id)
+    /**
+     * Delete a specific attendance record.
+     *
+     * @param int $id The ID of the Attendance record.
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function attendanceDelete(int $id)
     {
-        $attendance = Attendance::query()->find($id);
+        $attendance = Attendance::findOrFail($id);
         $attendance->delete();
-        return redirect()->back()->with('success', 'Information deleted');
+        return redirect()->back()->with('success', 'Davomat yozuvi muvaffaqiyatli o\'chirildi.');
     }
 }

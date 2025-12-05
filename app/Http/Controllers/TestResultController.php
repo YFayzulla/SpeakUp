@@ -11,28 +11,35 @@ class TestResultController extends Controller
 {
     public function index()
     {
+        $testHistories = LessonAndHistory::where('data', 2)->paginate(10);
+        $topStudents = Assessment::orderBy('get_mark', 'desc')->take(5)->get();
+
         return view('assessment.main', [
-            'data' => LessonAndHistory::query()->where('data',2)->paginate(10),
-            'topStudents' => Assessment::query()->orderBy('get_mark', 'desc')
-                ->take(5)->get()
+            'data' => $testHistories,
+            'topStudents' => $topStudents
         ]);
     }
 
-
-    public function showResults($id)
+    public function showResults($historyId)
     {
+        $assessments = Assessment::where('history_id', $historyId)->get();
 
-        $assessment = Assessment::query()->where('history_id',$id)->get();
+        if ($assessments->isEmpty()) {
+            // Agar natijalar topilmasa, 404 xatolik qaytarish yoki bo'sh sahifaga yo'naltirish
+            abort(404, 'Baholash natijalari topilmadi.');
+        }
 
-        dd($id , $assessment);
-//        dd($assessment);
-        $name = $assessment[0]->group;
+        // Guruh nomini birinchi natijadan olish
+        $groupName = $assessments->first()->group;
+        
+        // Guruh ID sini topish uchun qo'shimcha so'rov (agar kerak bo'lsa)
+        $group = Group::where('name', $groupName)->first();
+
         return view('assessment.index', [
-            'assessments' => Assessment::query()->where('history_id', '=', $id)->get(),
-            'groups'=>Group::query()->orderBy('name')->get(),
-            'id'=>$name,
-
+            'assessments' => $assessments,
+            'groups' => Group::orderBy('name')->get(),
+            'id' => $group ? $group->id : null, // View faylida guruh ID si kerak bo'lsa
+            'groupName' => $groupName
         ]);
-
     }
 }

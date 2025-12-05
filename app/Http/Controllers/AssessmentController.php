@@ -10,95 +10,96 @@ use App\Models\LessonAndHistory;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AssessmentController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * O'qituvchiga tegishli guruhlarni ko'rsatish.
      */
     public function index()
     {
-        $teacherId = auth()->id();
-        $groups = GroupTeacher::where('teacher_id', $teacherId)->get();
+        try {
+            $teacherId = auth()->id();
 
-        return view('teacher.assessment.index', compact('groups'));
+            // O'zgartirish: ->with('group') qo'shildi.
+            // Bu orqali guruh ma'lumotlari alohida so'rovlar bilan emas, bitta so'rov bilan keladi.
+            $groups = GroupTeacher::where('teacher_id', $teacherId)
+                ->with('group')
+                ->get();
+
+            return view('teacher.assessment.index', compact('groups'));
+        } catch (\Exception $e) {
+            Log::error('AssessmentController@index error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Guruhlarni yuklashda xatolik yuz berdi.');
+        }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        // This action is not implemented.
-    }
 
     /**
-     * Store a newly created resource in storage.
+     * Guruh va talabalar ro'yxatini ko'rsatish (Baholash sahifasi).
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        // This action is not implemented.
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id The Group ID.
-     * @return \Illuminate\Http\Response
+     * @param int $id Group ID
      */
     public function show($id)
     {
-        $group = Group::findOrFail($id);
-        $students = User::where('group_id', $id)->orderBy('name')->get();
-        $allGroups = Group::orderBy('name')->get();
+        try {
+            $group = Group::findOrFail($id);
 
-        return view('teacher.assessment.make_markes', [
-            'students' => $students,
-            'id' => $id,
-            'groups' => $allGroups, // 'groups' nomini view fayli bilan mosligi uchun saqlab qoldim
-            'groupName' => $group->name
-        ]);
+            // Talabalarni ism bo'yicha saralab olish
+            // Kerakli ustunlarni tanlab olish (select) xotirani tejaydi
+            $students = User::where('group_id', $id)
+                ->orderBy('name')
+                ->get(); // Agar user table juda katta bo'lsa ->select('id', 'name', 'group_id', 'mark') qo'shish tavsiya etiladi
+
+            $allGroups = Group::orderBy('name')->get();
+
+            return view('teacher.assessment.make_markes', [
+                'students' => $students,
+                'id' => $id,
+                'groups' => $allGroups,
+                'groupName' => $group->name
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()->route('assessment.index')->with('error', 'Guruh topilmadi.');
+        } catch (\Exception $e) {
+            Log::error('AssessmentController@show error: ' . $e->getMessage());
+            return redirect()->route('assessment.index')->with('error', 'Ma\'lumotlarni yuklashda xatolik.');
+        }
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param \App\Models\Assessment $assessment
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Assessment $assessment)
-    {
-        // This action is not implemented.
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Baholarni saqlash va talabalarni yangilash.
      *
      * @param \Illuminate\Http\Request $request
-     * @param int $id The Group ID.
-     * @return \Illuminate\Http\Response
+     * @param int $id Group ID
      */
     public function update(Request $request, $id)
     {
+        // 1. Validatsiya (Ma'lumotlar butunligini tekshirish)
+        $request->validate([
+            'student' => 'required|array',
+            'reason' => 'required|array',
+            'end_mark' => 'array',
+            'recommended' => 'array',
+            'lesson' => 'nullable|string',
+        ]);
+
         $end_marks = $request->input('end_mark', []);
         $rec_groups = $request->input('recommended', []);
         $reasons = $request->input('reason', []);
         $users = $request->input('student', []);
 
         if (empty($reasons)) {
-            return redirect()->route('assessment.index')->with('error', 'Saqlash uchun ma\'lumot topilmadi.');
+            return redirect()->back()->with('error', 'Saqlash uchun ma\'lumot topilmadi.');
         }
 
-        $group = Group::findOrFail($id);
+        DB::beginTransaction(); // Tranzaksiyani boshlash
 
-        DB::transaction(function () use ($request, $group, $end_marks, $rec_groups, $reasons, $users) {
+        try {
+            $group = Group::findOrFail($id);
+
+            // 2. Tarix yaratish (History)
             $history = LessonAndHistory::create([
                 'group' => $group->id,
                 'name' => $request->lesson ?? auth()->user()->name,
@@ -108,60 +109,79 @@ class AssessmentController extends Controller
             $assessments = [];
             $studentsToUpdate = [];
 
-            foreach ($reasons as $i => $reason) {
-                $mark = $end_marks[$i] ?? null;
-                $userId = $users[$i] ?? null;
+            // 3. Ma'lumotlarni tayyorlash
+            foreach ($reasons as $index => $reason) {
+                $userId = $users[$index] ?? null;
+                $mark = $end_marks[$index] ?? null;
 
-                if ($userId && $mark !== null && $mark != 0) {
+                if (!$userId) continue;
+
+                // Agar baho mavjud bo'lsa va 0 bo'lmasa, assessment jadvaliga yozamiz
+                if ($mark !== null && $mark != 0) {
                     $assessments[] = [
                         'get_mark' => $mark,
                         'user_id' => $userId,
                         'for_what' => $reason,
-                        'rec_group' => $rec_groups[$i] ?? null,
+                        'rec_group' => $rec_groups[$index] ?? null,
                         'group' => $group->name,
                         'history_id' => $history->id,
                         'created_at' => now(),
                         'updated_at' => now()
                     ];
                 }
-                if ($userId) {
-                    $studentsToUpdate[$userId] = ['mark' => $mark];
-                }
+
+                // Talabaning joriy bahosini yangilash uchun arrayga yig'amiz
+                $studentsToUpdate[$userId] = $mark;
             }
 
+            // 4. Assessment jadvaliga bitta so'rov bilan yozish (Bulk Insert)
             if (!empty($assessments)) {
                 Assessment::insert($assessments);
             }
 
-            $studentIds = array_keys($studentsToUpdate);
-            if (!empty($studentIds)) {
-                $students = User::whereIn('id', $studentIds)->get();
+            // 5. Talabalarni yangilash va faollikni tekshirish
+            if (!empty($studentsToUpdate)) {
+                // Faqat kerakli talabalarni bazadan olamiz
+                $students = User::whereIn('id', array_keys($studentsToUpdate))->get();
 
                 foreach ($students as $student) {
-                    if (isset($studentsToUpdate[$student->id])) {
-                        $student->update(['mark' => $studentsToUpdate[$student->id]['mark']]);
+                    $newMark = $studentsToUpdate[$student->id] ?? null;
 
-                        // Eslatma: checkAttendanceStatus() har bir talaba uchun alohida so'rov yuborishi mumkin.
-                        // Agar bu sekin ishlasa, optimallashtirish talab etiladi.
-                        if (!$student->checkAttendanceStatus()) {
-                            ActiveStudent::firstOrCreate(['user_id' => $student->id]);
+                    // Faqat o'zgarish bo'lsa update qiladi (Laravel o'zi tekshiradi)
+                    if ($newMark !== null) {
+                        $student->update(['mark' => $newMark]);
+                    }
+
+                    // Eslatma: checkAttendanceStatus metodining ichki tuzilishini bilmayman,
+                    // lekin u har bir talaba uchun qo'shimcha query ishlatishi mumkin.
+                    // Agar bu metod juda og'ir bo'lsa, uni optimizatsiya qilish kerak bo'ladi.
+                    try {
+                        if (method_exists($student, 'checkAttendanceStatus')) {
+                            // Agar checkAttendanceStatus false qaytarsa, ActiveStudent ga qo'shamiz
+                            if (!$student->checkAttendanceStatus()) {
+                                ActiveStudent::firstOrCreate(['user_id' => $student->id]);
+                            }
                         }
+                    } catch (\Exception $subEx) {
+                        // Agar bitta talabaning statusini tekshirishda xato bo'lsa, butun jarayon to'xtamasligi kerakmi?
+                        // Hozircha log yozib davom ettiramiz yoki tranzaksiyani to'xtatishimiz mumkin.
+                        // Qat'iy talab bo'lsa, throw $subEx qilish kerak.
+                        Log::warning("Student ID {$student->id} attendance check failed: " . $subEx->getMessage());
                     }
                 }
             }
-        });
 
-        return redirect()->route('assessment.index')->with('success', 'Baholar muvaffaqiyatli saqlandi.');
-    }
+            DB::commit(); // Hammasi yaxshi bo'lsa, bazaga tasdiqlaymiz
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param \App\Models\Assessment $assessment
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Assessment $assessment)
-    {
-        // This action is not implemented.
+            return redirect()->route('assessment.index')->with('success', 'Baholar muvaffaqiyatli saqlandi.');
+
+        } catch (\Exception $e) {
+            DB::rollBack(); // Xatolik bo'lsa, barcha o'zgarishlarni bekor qilamiz
+            Log::error('AssessmentController@update error: ' . $e->getMessage());
+
+            return redirect()->back()
+                ->withInput() // Kiritilgan ma'lumotlar o'chib ketmasligi uchun
+                ->with('error', 'Tizimda xatolik yuz berdi. Iltimos qaytadan urining.');
+        }
     }
 }

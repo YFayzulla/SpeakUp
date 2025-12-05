@@ -8,151 +8,131 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DeptStudentController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Talabalar va ularning qarzdorlik holatini ko'rsatish
      */
     public function index()
     {
-        $students = User::role('student')->orderBy('status')->orderBy('name')->get();
-        return view('admin.dept.index', compact('students'));
+        try {
+            // Faqat kerakli ustunlarni olish va N+1 muammosini oldini olish
+            // Agar User modelida 'deptStudent' degan relation bo'lsa, uni ham with() ga qo'shish kerak.
+            // Hozircha 'group' ni qo'shdim, chunki ko'pincha guruh nomi kerak bo'ladi.
+            $students = User::role('student')
+                ->with('group') // Guruh nomini olish uchun (agar kerak bo'lsa)
+                ->orderBy('status')
+                ->orderBy('name')
+                ->get();
+
+            return view('admin.dept.index', compact('students'));
+        } catch (\Exception $e) {
+            Log::error('DeptStudentController@index error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Ma\'lumotlarni yuklashda xatolik yuz berdi.');
+        }
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        // This action is not implemented.
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        // This action is not implemented.
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param \App\Models\DeptStudent $deptStudent
-     * @return \Illuminate\Http\Response
-     */
-    public function show(DeptStudent $deptStudent)
-    {
-        // This action is not implemented.
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param \App\Models\DeptStudent $deptStudent
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(DeptStudent $deptStudent)
-    {
-        // This action is not implemented.
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * To'lovni amalga oshirish va bazani yangilash
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id User ID
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, int $id)
     {
+        // 1. Validatsiya
         $request->validate([
-            'payment' => 'required|numeric|min:0',
-            'date_paid' => 'nullable|date',
+            'payment'    => 'required|numeric|min:0',
+            'date_paid'  => 'nullable|date',
             'money_type' => 'required|string|max:255',
         ]);
 
-        $deptStudent = DeptStudent::where('user_id', $id)->firstOrFail();
-        $user = User::findOrFail($id);
-        $paymentAmount = $request->payment;
-        $monthlyDept = $deptStudent->dept; // Assuming 'dept' is the monthly payment amount
-        $paidDate = $request->date_paid ? Carbon::parse($request->date_paid) : Carbon::now();
+        DB::beginTransaction();
 
-        DB::transaction(function () use ($deptStudent, $user, $paymentAmount, $monthlyDept, $paidDate, $request) {
+        try {
+            // 2. Ma'lumotlarni olish (lockForUpdate bilan)
+            // lockForUpdate - tranzaksiya tugamaguncha bu qatorni boshqalar o'zgartira olmaydi.
+            $deptStudent = DeptStudent::where('user_id', $id)->lockForUpdate()->firstOrFail();
+            $user        = User::with('group')->lockForUpdate()->findOrFail($id);
+
+            $paymentAmount = $request->payment;
+            $monthlyDept   = $deptStudent->dept; // Oylik to'lov miqdori
+            $paidDate      = $request->date_paid ? Carbon::parse($request->date_paid) : Carbon::now();
+
             $remainingPayment = $paymentAmount;
 
-            // Handle any existing partial payment first
+            // 3. To'lov hisob-kitobi (Mantiq)
+
+            // A) Agar oldindan qisman to'langan qismi bo'lsa, avval shuni yopamiz
             if ($deptStudent->payed > 0) {
                 $neededToCompleteMonth = $monthlyDept - $deptStudent->payed;
+
                 if ($remainingPayment >= $neededToCompleteMonth) {
+                    // Oyni yopdi
                     $remainingPayment -= $neededToCompleteMonth;
                     $deptStudent->payed = 0;
-                    $deptStudent->status_month++;
+                    $deptStudent->status_month++; // Qarzdorlik oyi kamaydi (yoki status oshdi)
                     $user->status++;
                 } else {
+                    // Oyni yopa olmadi, shunchaki qo'shib qo'yamiz
                     $deptStudent->payed += $remainingPayment;
                     $remainingPayment = 0;
                 }
             }
 
-            // Process full months
+            // B) To'liq oylarni yopish
             if ($remainingPayment >= $monthlyDept) {
-                $fullMonthsPaid = floor($remainingPayment / $monthlyDept);
+                $fullMonthsPaid = floor($remainingPayment / $monthlyDept); // Necha oyga yetishi
+
                 $deptStudent->status_month += $fullMonthsPaid;
                 $user->status += $fullMonthsPaid;
+
+                // Qolgan pulni hisoblash
                 $remainingPayment -= ($fullMonthsPaid * $monthlyDept);
             }
 
-            // Handle any new partial payment
+            // C) Ortib qolgan pulni 'payed' ga yozish (keyingi oy uchun avans yoki chala)
             if ($remainingPayment > 0) {
                 $deptStudent->payed += $remainingPayment;
             }
 
+            // 4. Saqlash
             $deptStudent->date = $paidDate->format('Y-m-d');
             $deptStudent->save();
             $user->save();
 
+            // 5. Tarixga yozish
+            // $user->group null bo'lsa xato bermasligi uchun optional() yoki ?? operatori ishlatildi
+            $groupName = $user->group ? $user->group->name : 'Guruhsiz';
+
             $paymentHistory = HistoryPayments::create([
-                'user_id' => $user->id,
-                'name' => $user->name,
-                'payment' => $paymentAmount,
-                'group' => $user->group->name,
-                'date' => $paidDate->format('Y-m-d'),
+                'user_id'       => $user->id,
+                'name'          => $user->name,
+                'payment'       => $paymentAmount,
+                'group'         => $groupName,
+                'date'          => $paidDate->format('Y-m-d'),
                 'type_of_money' => $request->money_type,
             ]);
 
-            // Return the view for the check/receipt
-            // Note: Returning a view directly from an update method is unusual.
-            // Typically, you would redirect and then generate the PDF on a separate route.
-            // Keeping it as is for now, but it's a point for future refactoring.
+            DB::commit(); // O'zgarishlarni tasdiqlash
+
+            // 6. Chek chiqarish (View qaytarish)
             return view('admin.pdf.chek', [
                 'payment' => $paymentHistory,
                 'student' => $user,
-                'dept' => $monthlyDept,
+                'dept'    => $monthlyDept,
             ]);
-        });
 
-        // If the transaction fails or no view is returned from the transaction,
-        // this redirect will act as a fallback.
-        return redirect()->back()->with('success', 'To\'lov muvaffaqiyatli amalga oshirildi.');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param \App\Models\DeptStudent $deptStudent
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(DeptStudent $deptStudent)
-    {
-        // This action is not implemented.
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Talaba yoki uning qarzdorlik ma\'lumotlari topilmadi.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('DeptStudentController@update error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'To\'lovni amalga oshirishda tizim xatoligi yuz berdi.');
+        }
     }
 }

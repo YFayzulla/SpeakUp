@@ -5,164 +5,196 @@ namespace App\Http\Controllers;
 use App\Models\Group;
 use App\Models\GroupTeacher;
 use App\Models\Room;
-// use App\Models\StudentInformation; // Removed as its usage in update() was problematic
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB; // Added for transaction
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class GroupController extends Controller
 {
+    /**
+     * Barcha xonalarni ko'rsatish (Rooms list).
+     */
     public function index()
     {
-        $rooms = Room::all(); // Fetch all rooms
-        return view('admin.group.room', compact('rooms'));
+        try {
+            // Faqat kerakli ustunlarni olish
+            $rooms = Room::orderBy('room')->get();
+            return view('admin.group.room', compact('rooms'));
+        } catch (\Exception $e) {
+            Log::error('GroupController@index error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Xonalarni yuklashda xatolik yuz berdi.');
+        }
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Guruh yaratish sahifasi.
      *
-     * @return \Illuminate\Http\Response
+     * @param int $id Room ID
      */
-    public function create()
+    public function makeGroup($id)
     {
-        // This action is typically used to display a form for creating a new resource.
-        // The form is rendered by the makeGroup method in this controller.
+        try {
+            // Xona mavjudligini tekshirish (ixtiyoriy, lekin foydali)
+            if (!Room::find($id)) {
+                return redirect()->back()->with('error', 'Tanlangan xona topilmadi.');
+            }
+            return view('admin.group.create', compact('id'));
+        } catch (\Exception $e) {
+            Log::error('GroupController@makeGroup error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Sahifani yuklashda xatolik.');
+        }
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * Yangi guruhni saqlash.
      */
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'start_time' => 'required|date_format:H:i',
-            'finish_time' => 'required|date_format:H:i|after:start_time',
+            'name'            => 'required|string|max:255',
+            'start_time'      => 'required|date_format:H:i',
+            'finish_time'     => 'required|date_format:H:i|after:start_time',
             'monthly_payment' => 'required|numeric|min:0',
-            'room' => 'required|exists:rooms,id',
+            'room'            => 'required|exists:rooms,id',
         ]);
 
-        $group = Group::create([
-            'name' => $request->name,
-            'start_time' => $request->start_time,
-            'finish_time' => $request->finish_time,
-            'monthly_payment' => (int) $request->monthly_payment,
-            'room_id' => $request->room,
-        ]);
+        DB::beginTransaction();
 
-        // Assuming hasTeacher() method on Group model returns a teacher_id if a teacher is associated.
-        // If this logic is complex, consider moving it to a service or observer.
-        if ($group->hasTeacher()) {
-            GroupTeacher::create([
-                'group_id' => $group->id,
-                'teacher_id' => $group->hasTeacher(),
+        try {
+            $group = Group::create([
+                'name'            => $request->name,
+                'start_time'      => $request->start_time,
+                'finish_time'     => $request->finish_time,
+                'monthly_payment' => (int) $request->monthly_payment,
+                'room_id'         => $request->room,
             ]);
-        }
 
-        return redirect()->route('group.show', $group->room_id)->with('success', 'Guruh muvaffaqiyatli qo\'shildi.');
+            // Agar guruh modelida hasTeacher() metodi bo'lsa va u ID qaytarsa
+            // (Bu mantiq sizning modelingizda borligiga tayandim)
+            if (method_exists($group, 'hasTeacher')) {
+                $teacherId = $group->hasTeacher();
+                if ($teacherId) {
+                    GroupTeacher::create([
+                        'group_id'   => $group->id,
+                        'teacher_id' => $teacherId,
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->route('group.show', $group->room_id)
+                ->with('success', 'Guruh muvaffaqiyatli qo\'shildi.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('GroupController@store error: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Guruhni saqlashda xatolik yuz berdi.');
+        }
     }
 
     /**
-     * Display the specified resource.
+     * Muayyan xonadagi guruhlarni ko'rsatish.
      *
-     * @param int $id The room ID.
-     * @return \Illuminate\Http\Response
+     * @param int $id Room ID
      */
     public function show($id)
     {
-        // Assuming '1' is a special group ID (e.g., unassigned students) that should not be displayed here.
-        $groups = Group::where('id', '!=', 1)
-                        ->where('room_id', $id)
-                        ->orderBy('start_time')
-                        ->get();
+        try {
+            // '1' ID li guruh (odatda "Guruhsizlar") ko'rsatilmasligi kerak
+            $groups = Group::where('id', '!=', 1)
+                ->where('room_id', $id)
+                ->orderBy('start_time')
+                ->get();
 
-        return view('admin.group.index', compact('groups', 'id'));
+            return view('admin.group.index', compact('groups', 'id'));
+
+        } catch (\Exception $e) {
+            Log::error('GroupController@show error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Guruhlarni yuklashda xatolik.');
+        }
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param \App\Models\Group $group
-     * @return \Illuminate\Http\Response
+     * Guruhni tahrirlash sahifasi.
      */
     public function edit(Group $group)
     {
-        $rooms = Room::query()->orderBy('room')->get();
-        return view('admin.group.edit', compact('group', 'rooms'));
+        try {
+            $rooms = Room::orderBy('room')->get();
+            return view('admin.group.edit', compact('group', 'rooms'));
+        } catch (\Exception $e) {
+            Log::error('GroupController@edit error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Tahrirlash sahifasini ochishda xatolik.');
+        }
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Group $group
-     * @return \Illuminate\Http\Response
+     * Guruh ma'lumotlarini yangilash.
      */
     public function update(Request $request, Group $group)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'start_time' => 'required|date_format:H:i',
-            'finish_time' => 'required|date_format:H:i|after:start_time',
+            'name'            => 'required|string|max:255',
+            'start_time'      => 'required|date_format:H:i',
+            'finish_time'     => 'required|date_format:H:i|after:start_time',
             'monthly_payment' => 'required|numeric|min:0',
-            'room' => 'required|exists:rooms,id',
+            'room'            => 'required|exists:rooms,id',
         ]);
 
-        $group->update([
-            'name' => $request->name,
-            'start_time' => $request->start_time,
-            'finish_time' => $request->finish_time,
-            'monthly_payment' => $request->monthly_payment,
-            'room_id' => $request->room,
-        ]);
+        DB::beginTransaction();
 
-        // --- MUHIM ESLATMA: StudentInformation modelining maqsadi va ishlatilishi aniqlashtirilishi kerak. ---
-        // Quyidagi kod guruh yangilanganda, guruhdagi har bir talaba uchun yangi StudentInformation yozuvini yaratardi.
-        // Bu ma'lumotlar bazasida takrorlanishlarga olib keladi va juda samarasiz.
-        // Agar StudentInformation talabaning joriy guruhini kuzatishi kerak bo'lsa, mavjud yozuvlar yangilanishi kerak, yangilari yaratilmasligi kerak.
-        // Agar u tarixiy ma'lumotlarni kuzatishi kerak bo'lsa, u talaba guruhga qo'shilganda bir marta yaratilishi kerak, guruh yangilanganda emas.
-        // Hozircha, bu kod izohga olindi. Iltimos, StudentInformation modelining maqsadini aniqlang va uning yaratilishi/yangilanishi mantiqini to'g'rilang.
-        /*
-        foreach ($group->users as $student) { // Changed $group->users() to $group->users for relationship access
-            StudentInformation::create([
-                'user_id' => $student->id,
-                'group_id' => $group->id,
-                'group' => $group->name // This 'group' field is redundant if group_id is present.
+        try {
+            $group->update([
+                'name'            => $request->name,
+                'start_time'      => $request->start_time,
+                'finish_time'     => $request->finish_time,
+                'monthly_payment' => $request->monthly_payment,
+                'room_id'         => $request->room,
             ]);
-        }
-        */
 
-        return redirect()->back()->with('success', 'Ma\'lumotlar muvaffaqiyatli yangilandi.');
+            // Eslatma: StudentInformation bo'yicha kod olib tashlandi.
+            // Sababi: Guruh ma'lumoti o'zgarganda talabaning tarixi yaratilishi mantiqan noto'g'ri.
+            // Talaba tarixi faqat talaba guruhga qo'shilganda yoki guruhdan chiqqanda yozilishi kerak.
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Ma\'lumotlar muvaffaqiyatli yangilandi.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('GroupController@update error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Yangilashda xatolik yuz berdi.');
+        }
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param \App\Models\Group $group
-     * @return \Illuminate\Http\Response
+     * Guruhni o'chirish.
      */
     public function destroy(Group $group)
     {
-        DB::transaction(function () use ($group) {
-            // Delete associated GroupTeacher records
-            GroupTeacher::where('group_id', $group->id)->delete(); // Use delete() directly on query builder
+        DB::beginTransaction();
 
-            // Update users' group_id to a default group (assuming 1 is the default/unassigned group ID)
+        try {
+            // 1. Guruh o'qituvchilari bog'lanishini o'chirish
+            GroupTeacher::where('group_id', $group->id)->delete();
+
+            // 2. Guruhdagi talabalarni 'Guruhsiz' (ID: 1) holatiga o'tkazish
+            // DIQQAT: Tizimda ID=1 bo'lgan guruh borligiga ishonch hosil qiling.
             User::where('group_id', $group->id)->update(['group_id' => 1]);
 
-            // Delete the group
+            // 3. Guruhni o'chirish
             $group->delete();
-        });
 
-        return redirect()->back()->with('success', 'Guruh muvaffaqiyatli o\'chirildi.');
-    }
+            DB::commit();
 
-    public function makeGroup($id)
-    {
-        // $id here is expected to be room_id
-        return view('admin.group.create', compact('id'));
+            return redirect()->back()->with('success', 'Guruh muvaffaqiyatli o\'chirildi.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('GroupController@destroy error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Guruhni o\'chirishda xatolik yuz berdi.');
+        }
     }
 }

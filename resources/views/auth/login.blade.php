@@ -1,76 +1,59 @@
 <x-guest-layout>
-    <div class="card">
-        <div class="card-body">
-            <div class="app-brand justify-content-center mb-4 mt-2">
-                <a href="/" class="app-brand-link gap-2">
-                    <span class="app-brand-logo demo">
-                        <img src="{{ asset('logos/SymbolRed.svg') }}" alt="Logo" width="40">
-                    </span>
-                    <span class="app-brand-text demo text-body fw-bold">SpeakUp</span>
-                </a>
-            </div>
-            <h4 class="mb-2 fw-bold">Welcome to SpeakUp! 👋</h4>
-            <p class="mb-4">Please sign-in to your account and start the adventure</p>
-
-            <!-- Session Status -->
-            <x-auth-session-status class="mb-4" :status="session('status')" />
-
-            <form id="formAuthentication" class="mb-3" method="POST" action="{{ route('login') }}">
-                @csrf
-
-                <div class="mb-3">
-                    <label for="login" class="form-label">Username or Phone</label>
-                    <input type="text" class="form-control" id="login" name="login" placeholder="Enter your username or phone" autofocus value="{{ old('login') }}" required />
-                    <x-input-error :messages="$errors->get('login')" class="mt-2" />
-                </div>
-
-                <div class="mb-3 form-password-toggle">
-                    <div class="d-flex justify-content-between">
-                        <label class="form-label" for="password">Password</label>
-                        @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}">
-                                <small>Forgot Password?</small>
-                            </a>
-                        @endif
-                    </div>
-                    <div class="input-group input-group-merge">
-                        <input type="password" id="password" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" required autocomplete="current-password" />
-                        <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                    </div>
-                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                </div>
-
-                <div class="mb-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="remember-me" name="remember">
-                        <label class="form-check-label" for="remember-me"> Remember Me </label>
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
-                </div>
-            </form>
-
-            <p class="text-center">
-                <span>New on our platform?</span>
-                <a href="{{ route('register') }}">
-                    <span>Create an account</span>
-                </a>
-            </p>
-
-            <div class="divider my-4">
-                <div class="divider-text">or</div>
-            </div>
-
-            <div class="d-flex justify-content-center">
-                <a href="javascript:;" class="btn btn-icon btn-label-google-plus me-3">
-                    <i class="tf-icons bx bxl-google-plus"></i>
-                </a>
-                <a href="javascript:;" class="btn btn-icon btn-label-facebook">
-                    <i class="tf-icons bx bxl-facebook"></i>
-                </a>
-            </div>
-        </div>
+    <!-- 1. LOGO VA SARLAVHA (Tuzatilgan qism) -->
+    <div class="mb-6 text-center m-2">
+        <a href="/" class="flex justify-center mb-4">
+            <!-- MUHIM: h-16 (64px) klassi logotipni ixcham qiladi -->
+            <img src="{{ asset('logos/SymbolRed.svg') }}" alt="Logo" style="width: 100px" />
+        </a>
+        <h2 class="text-2xl font-bold text-gray-800">SpeakUp</h2>
     </div>
+
+    <!-- Session Status -->
+    <x-auth-session-status class="mb-4" :status="session('status')" />
+
+    <form method="POST" action="{{ route('login') }}">
+        @csrf
+
+        <!-- 2. NAME / NUMBER INPUT -->
+        <div>
+            <x-input-label for="login" :value="__('Name / Number')" />
+            <x-text-input
+                    id="login"
+                    class="block mt-1 w-full px-4 py-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                    type="text"
+                    name="login"
+                    :value="old('login')"
+                    required
+                    autofocus
+                    placeholder="Username or Phone"
+            />
+            <x-input-error :messages="$errors->get('login')" class="mt-2" />
+        </div>
+
+        <!-- 3. PASSWORD INPUT -->
+        <div class="mt-4">
+            <x-input-label for="password" :value="__('Password')" />
+
+            <x-text-input
+                    id="password"
+                    class="block mt-1 w-full px-4 py-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                    type="password"
+                    name="password"
+                    required
+                    autocomplete="current-password"
+                    placeholder="••••••••"
+            />
+
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        </div>
+
+
+
+        <!-- 5. LOGIN BUTTON -->
+        <div class="mt-6 mb-6">
+            <x-primary-button class="w-full justify-center py-3 text-base bg-gray-800 hover:bg-gray-700">
+                {{ __('Log in') }}
+            </x-primary-button>
+        </div>
+    </form>
 </x-guest-layout>

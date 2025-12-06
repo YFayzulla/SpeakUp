@@ -39,45 +39,30 @@ class User extends Authenticatable
         'room_id',
     ];
 
-//    public function teacherhasGroup()
-//    {
-//        return $this->hasMany(Group::class);
-//    }
-
     public function teacherHasStudents()
     {
-
-        $groupIds = GroupTeacher::query()
-            ->where('teacher_id', $this->id)
-            ->pluck('group_id');
-
-        return User::role('student')
-            ->whereIn('group_id', $groupIds)
-            ->count();
-
+        $groupIds = GroupTeacher::where('teacher_id', $this->id)->pluck('group_id');
+        return User::role('student')->whereIn('group_id', $groupIds)->count();
     }
 
     public function teacherPayment()
     {
+        // Eager load groups with their student count to optimize queries
+        $groups = GroupTeacher::where('teacher_id', $this->id)
+            ->with(['group' => function ($query) {
+                $query->withCount('students');
+            }])
+            ->get();
 
-//        dd('blin');
-        $summa = 0;
-        $groups = GroupTeacher::query()->where('teacher_id', $this->id)->get();
+        $totalPayment = $groups->sum(function ($groupTeacher) {
+            if ($groupTeacher->group) {
+                return $groupTeacher->group->monthly_payment * $groupTeacher->group->students_count;
+            }
+            return 0;
+        });
 
-        foreach ($groups as $group) {
-            $payment = Group::query()->findOrFail($group->group_id);
-            $number = User::query()->where('group_id', $group->group_id)->count();
-//            dd($number,$payment->monthly_payment);
-            $summa += $payment-> monthly_payment * $number;
-//            dd($summa,$payment ,$number ,$group);
-        }
-
-        $summa = $summa * $this->percent / 100;
-
-        return $summa;
-
+        return $totalPayment * $this->percent / 100;
     }
-
 
     public function group()
     {
@@ -99,7 +84,10 @@ class User extends Authenticatable
         return $this->hasMany(Assessment::class);
     }
 
-    public function studentdept()
+    /**
+     * Get the debt record associated with the user.
+     */
+    public function deptStudent()
     {
         return $this->hasOne(DeptStudent::class, 'user_id', 'id');
     }
@@ -111,7 +99,7 @@ class User extends Authenticatable
 
     public function teacherHasGroup()
     {
-        return GroupTeacher::query()->where('teacher_id', $this->id)->count();
+        return GroupTeacher::where('teacher_id', $this->id)->count();
     }
 
     public function checkAttendanceStatus()
@@ -127,7 +115,6 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-
     protected $hidden = [
         'password',
         'remember_token',
@@ -149,9 +136,7 @@ class User extends Authenticatable
 
     public function room()
     {
-
         return $this->hasOne(Room::class, 'id', 'room_id');
-
     }
 
     public function studentsGroup()
@@ -166,5 +151,4 @@ class User extends Authenticatable
 
         return $room ? $room->room .'->' .$group->name : 'students without a group';
     }
-
 }

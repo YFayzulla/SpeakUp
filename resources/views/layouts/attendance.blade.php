@@ -1,138 +1,144 @@
-<div class="card mt-3">
-    <div class="p-4 mt-4 d-flex justify-content-between align-items-center mb-4">
-        <h4 class="mb-0">Attendance for {{ \Carbon\Carbon::createFromDate($year, $month)->format('F Y') }}</h4>
+@extends('template.master')
+@section('content')
 
-        <div class="d-flex">
-            @role('admin')
-
-            <div class="d-flex justify-content-center me-3">
-                <form method="GET" action="{{ route('group.attendance', $group->id) }}" class="d-flex">
-                    <select id="month" name="date" class="form-select me-1">
-                        <option value="">Select Month</option>
-                        @php
-                            $currentYear = date('Y');
-                            for ($monthOption = 1; $monthOption <= 12; $monthOption++) {
-                                $monthNum = str_pad($monthOption, 2, '0', STR_PAD_LEFT);
-                                $monthYear = $currentYear . '-' . $monthNum;
-                                $monthName = date('F', mktime(0, 0, 0, $monthOption, 1));
-                                $selected = (date('Y-m') == $monthYear) ? 'selected' : '';
-                                echo "<option value=\"$monthYear\" $selected>$monthName $currentYear</option>";
-                            }
-                        @endphp
-                    </select>
-                    <button type="submit" class="btn btn-primary">Show</button>
-                </form>
+    {{-- Yuqoridagi Matritsa qismi o'zgarishsiz qoladi... --}}
+    <div class="card mt-3">
+        <div class="p-4 mt-4 d-flex justify-content-between align-items-center mb-4">
+            <h4 class="mb-0">Attendance for {{ \Carbon\Carbon::createFromDate($year, $month)->format('F Y') }}</h4>
+            {{-- Filter va Export tugmalari joyida... --}}
+            <div class="d-flex">
+                @role('admin')
+                <div class="d-flex justify-content-center me-3">
+                    <form method="GET" action="{{ route('group.attendance', $group->id) }}" class="d-flex">
+                        <select id="month" name="date" class="form-select me-1">
+                            <option value="">Select Month</option>
+                            @php
+                                $currentYear = date('Y');
+                                for ($monthOption = 1; $monthOption <= 12; $monthOption++) {
+                                    $monthNum = str_pad($monthOption, 2, '0', STR_PAD_LEFT);
+                                    $monthYear = $currentYear . '-' . $monthNum;
+                                    $monthName = date('F', mktime(0, 0, 0, $monthOption, 1));
+                                    $selected = (request('date') == $monthYear || date('Y-m') == $monthYear && !request('date')) ? 'selected' : '';
+                                    echo "<option value=\"$monthYear\" $selected>$monthName $currentYear</option>";
+                                }
+                            @endphp
+                        </select>
+                        <button type="submit" class="btn btn-primary">Show</button>
+                    </form>
+                </div>
+                <div class="d-flex align-items-center">
+                    <form method="GET" action="{{ route('export.attendances', ['id' => $group->id]) }}">
+                        {{-- Sana ham yuborilishi kerak --}}
+                        <input type="hidden" name="date" value="{{ $year . '-' . $month }}">
+                        <button type="submit" class="btn btn-danger">Export to Excel</button>
+                    </form>
+                </div>
+                @endrole
             </div>
-
-            <div class="d-flex align-items-center">
-                <form method="GET"
-                      action="{{ route('export.attendances', ['id' => $group->id, 'date' => $year . '-' . $month]) }}">
-                    <button type="submit" class="btn btn-danger">Export to Excel</button>
-                </form>
-            </div>
-            @endrole
         </div>
-    </div>
 
-    <div class="table-responsive">
-        <table class="table table-bordered text-center">
-            @php
-                use Carbon\Carbon;
-
-                // Get the current year, month, day, and number of days in the month
-                $currentMonthDays = Carbon::createFromDate($year, $month)->daysInMonth;
-            @endphp
-
-            <thead>
-            <tr>
-                <th>Name</th>
-                @for ($i = 1; $i <= $currentMonthDays; $i++)
-                    @php
-                        // Create a date object for each day of the current month
-                        $currentDate = Carbon::createFromDate($year, $month, $i);
-                        $isWeekend = $currentDate->isWeekend();
-                        $isToday = ($i == Carbon::now()->day && $month == Carbon::now()->month && $year == Carbon::now()->year);
-                    @endphp
-                            <!-- Add the class for weekends and highlight today in green -->
-                    <th class="{{ $isToday ? 'bg-success text-white' : ($isWeekend ? 'bg-danger text-white' : '') }}">
-                        {{ $i }}
-                    </th>
-                @endfor
-            </tr>
-            </thead>
-
-            <tbody>
-
-            @forelse ($data as $userName => $days)
+        {{-- MATRITSA JADVALI --}}
+        <div class="table-responsive">
+            <table class="table table-bordered text-center">
+                @php
+                    $currentMonthDays = \Carbon\Carbon::createFromDate($year, $month)->daysInMonth;
+                @endphp
+                <thead>
                 <tr>
-                    <td>{{ $userName }}</td>
+                    <th>Name</th>
                     @for ($i = 1; $i <= $currentMonthDays; $i++)
                         @php
-                            // Pad the day with leading zeros if necessary
-                            $day = str_pad($i, 2, '0', STR_PAD_LEFT);
-                            // Get the status for the current day
-                            $status = $days[$day] ?? '1';
-                            $isDanger = $status === '0' || $status === 0;
-                            $isPresent = $status === '1' || $status === 1;
-
-                            // Create a date object for the current year, month, and day
-                            $currentDate = Carbon::createFromDate($year, $month, $i);
+                            $currentDate = \Carbon\Carbon::createFromDate($year, $month, $i);
                             $isWeekend = $currentDate->isWeekend();
+                            $isToday = $currentDate->isToday();
                         @endphp
-                        <td class="{{ $isDanger ? 'bg-danger text-white' : ($isWeekend ? 'bg-danger' : '') }}">
-                            @if ($isPresent)
-                                <span class="text-danger font-weight-bold">X</span>
-                            @else
-                                {{ $status }}
-                            @endif
-                        </td>
+                        <th class="{{ $isToday ? 'bg-success text-white' : ($isWeekend ? 'bg-danger text-white' : '') }}">
+                            {{ $i }}
+                        </th>
                     @endfor
                 </tr>
-            @empty
-                <tr>
-                    <td colspan="{{ $currentMonthDays + 1 }}" class="text-center">No attendance data available for this month.</td>
-                </tr>
-            @endforelse
+                </thead>
+                <tbody>
+                @forelse ($data as $userName => $days)
+                    <tr>
+                        <td class="text-start ps-3">{{ $userName }}</td>
+                        @for ($i = 1; $i <= $currentMonthDays; $i++)
+                            @php
+                                $day = str_pad($i, 2, '0', STR_PAD_LEFT);
+                                $status = $days[$day] ?? '';
 
-            </tbody>
-        </table>
-    </div>
-</div>
+                                // Logika: 0 = Kelmadi (Qizil), 1 = Keldi (Yashil/Oddiy)
+                                // Sizning kodingizda: $isPresent = ($status === '1' || $status === 1);
 
-<div class="card mt-4">
-    <div class="table-responsive text-nowrap">
-        <table class="table">
-            <tr>
-                <td>id</td>
-                <td>name</td>
-                <td>teacher</td>
-                <td>lesson</td>
-                <td>date</td>
-                <td>delete</td>
-            </tr>
-            @forelse($students as $attendance)
-                <tr>
-                    <td>{{ $loop->index + 1 }}</td>
-                    <td>{{ $attendance->user->name }}</td>
-                    <td>{{ $attendance->teacher->name }}</td>
-                    <td>{{ $attendance->lesson->name }}</td>
-                    <td>{{ $attendance->created_at }}</td>
-                    <td>
-                        <form action="{{route('attendance.delete', $attendance->id)}}" method="POST">
-                            @csrf
-                            @method("DELETE")
-                            <button class="btn btn-danger"><i class="bx bx-trash-alt"></i></button>
-                        </form>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="6" class="text-center">No recent attendance records found.</td>
-                </tr>
-            @endforelse
+                                $currentDate = \Carbon\Carbon::createFromDate($year, $month, $i);
+                                $isWeekend = $currentDate->isWeekend();
+                            @endphp
+
+                            <td class="{{ ($status === 0 || $status === '0') ? 'bg-danger text-white' : ($isWeekend ? 'bg-secondary text-white' : '') }}">
+                                @if ($status === 1 || $status === '1')
+                                    <i class='bx bx-check text-success'></i>
+                                @elseif ($status === 0 || $status === '0')
+                                    <span>NB</span>
+                                @else
+                                    {{ $status }}
+                                @endif
+                            </td>
+                        @endfor
+                    </tr>
+                @empty
+                    <tr><td colspan="{{ $currentMonthDays + 1 }}">Ma'lumot yo'q</td></tr>
+                @endforelse
+                </tbody>
             </table>
-            <div class="card-body">
-                {{ $students->links('pagination::bootstrap-5') }}
-            </div>
         </div>
     </div>
+
+    {{-- PASTKI JADVAL (History) --}}
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5>Batafsil Davomat Tarixi</h5>
+        </div>
+        <div class="table-responsive text-nowrap">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Talaba</th>
+                    <th>O'qituvchi</th>
+                    <th>Mavzu (Lesson)</th>
+                    <th>Vaqt</th>
+                    <th>Amal</th>
+                </tr>
+                </thead>
+                {{-- BU YERDA O'ZGARISH: $students emas, $attendanceRecords ishlatiladi --}}
+                @forelse($attendanceRecords as $attendance)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        {{-- Null Safe Operator (?->) va (??) ishlatildi --}}
+                        <td>{{ $attendance->user?->name ?? 'Noma\'lum' }}</td>
+                        <td>{{ $attendance->teacher?->name ?? 'Topilmadi' }}</td>
+                        <td>{{ $attendance->lesson?->name ?? 'Kiritilmagan' }}</td>
+                        <td>{{ $attendance->created_at->format('d.m.Y H:i') }}</td>
+                        <td>
+                            <form action="{{route('attendance.delete', $attendance->id)}}" method="POST"
+                                  onsubmit="return confirm('O\'chirilsinmi?');">
+                                @csrf
+                                @method("DELETE")
+                                <button class="btn btn-sm btn-outline-danger"><i class="bx bx-trash-alt"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" class="text-center">Joriy oy uchun davomat yozuvlari topilmadi.</td>
+                    </tr>
+                @endforelse
+            </table>
+        </div>
+        <div class="card-footer">
+            {{-- Pagination --}}
+            {{ $attendanceRecords->appends(['date' => request('date')])->links('pagination::bootstrap-5') }}
+        </div>
+    </div>
+
+@endsection

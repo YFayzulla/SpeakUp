@@ -11,109 +11,141 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <td>id</td>
-                    <td>name</td>
-                    <td>group</td>
-                    <td>status</td>
-                    <td>pay</td>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Group</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
+                <tbody class="table-border-bottom-0">
                 @forelse($students as $student)
-                    <tbody id="myTable" class="table-border-bottom-0">
                     <tr>
-                        <th>{{$loop->index+1}}</th>
-                        <th>{{$student->name}}</th>
-                        <th>{{$student->group->name ?? null}}</th>
-                        <th>
+                        <td>{{ $loop->iteration }}</td>
+                        <td><strong>{{ $student->name }}</strong></td>
+                        <td>{{ $student->group?->name ?? 'Guruhsiz' }}</td>
+                        <td>
                             @if($student->status === null)
-                                <p class="text-info"> disabled </p>
+                                <span class="badge bg-label-info">Disabled</span>
                             @elseif( $student->status <= 0 )
-                                <p class="text-danger"> debtor </p>
+                                <span class="badge bg-label-danger">Debtor</span>
                             @else
-                                <p class="text-success"> paid </p>
+                                <span class="badge bg-label-success">Paid</span>
                             @endif
-                        </th>
-                        <th>
-                            <a class="btn btn-outline-primary m-1" href="{{ route('student.show',$student->id) }}"><i class="bx bx-show-alt"></i></a>
+                        </td>
+                        <td>
+                            {{-- View Button --}}
+                            <a class="btn btn-sm btn-outline-primary m-1" href="{{ route('student.show',$student->id) }}">
+                                <i class="bx bx-show-alt"></i>
+                            </a>
 
-                            <button type="button" class="btn-outline-success btn m-2" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal{{$student->id}}" data-bs-whatever="@mdo">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                     class="bi bi-coin" viewBox="0 0 16 16">
-                                    <path d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9H5.5zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518l.087.02z"/>
-                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                    <path d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11zm0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"/>
-                                </svg>
+                            {{-- Payment Modal Button --}}
+                            <button type="button" class="btn btn-sm btn-outline-success m-1" data-bs-toggle="modal"
+                                    data-bs-target="#paymentModal{{$student->id}}">
+                                <i class="bx bx-dollar-circle"></i>
                             </button>
 
-                            <a class="btn btn-outline-info m-1"
+                            {{-- Refresh Button --}}
+                            <a class="btn btn-sm btn-outline-info m-1"
                                onclick="return confirm('Do you want to refresh the student\'s dept?')"
                                href="{{ route('refresh.update', $student->id) }}">
                                 <i class="bx bx-refresh"></i>
                             </a>
-                            {{-- Modal --}}
-                            <div class="modal fade" id="exampleModal{{$student->id}}" tabindex="-1"
-                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+                            {{-- MODAL --}}
+                            <div class="modal fade" id="paymentModal{{$student->id}}" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
+                                            <h5 class="modal-title">Make Payment for {{ $student->name }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="{{route('dept.update',$student->id)}}" method="post" onsubmit="formatAllNumbersBeforeSubmit()">
+                                            <form action="{{ route('dept.update', $student->id) }}" method="post" class="submit-payment-form">
                                                 @csrf
                                                 @method('PUT')
-                                                <label for="recipient-name" class="col-form-label">
-                                                    {{$student->name}} is going to pay, monthly payment {{number_format($student->should_pay,0,' ',' ')}}</label>
-                                                <p>@if(!empty($student->studentdept->payed))
-                                                        paid {{$student->studentdept->payed}} this date {{$student->studentdept->date}}
-                                                @else
+
+                                                <p>Monthly Payment: <strong>{{ number_format($student->should_pay, 0, '.', ' ') }}</strong></p>
+
+                                                @if($student->deptStudent?->payed > 0)
+                                                    <div class="alert alert-warning p-2 mb-2">
+                                                        Paid partially: {{ number_format($student->deptStudent->payed, 0, '.', ' ') }} <br>
+                                                        Last date: {{ $student->deptStudent->date }}
+                                                    </div>
                                                 @endif
+
                                                 @if($student->status < 0)
-                                                    <p>the student has a debt of {{abs($student->status)}} month</p>
+                                                    <div class="alert alert-danger p-2 mb-2">
+                                                        Debt: {{ abs($student->status) }} month(s)
+                                                    </div>
                                                 @endif
-                                                <div class="mb-3 d-flex">
-                                                    <input type="text" class="form-control me-1"
-                                                           value="@if($student->studentdept->payed !== null){{ number_format($student->studentdept->dept  -  $student->studentdept->payed, 0, '', ' ') }}@endif"
-                                                           name="payment" id="recipient-name"
+
+                                                <label class="form-label">Payment Amount</label>
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control payment-input"
+                                                           value="{{ $student->deptStudent?->payed > 0 ? number_format($student->deptStudent->dept - $student->deptStudent->payed, 0, '', ' ') : '' }}"
+                                                           name="payment" required
                                                            oninput="formatNumber(this)">
-                                                    <select name="money_type" id="" class="form-select me-1">
-                                                        <option value="cash">cash</option>
-                                                        <option value="electronic">electronic</option>
+
+                                                    <select name="money_type" class="form-select" style="max-width: 120px;">
+                                                        <option value="cash">Cash</option>
+                                                        <option value="electronic">Card</option>
                                                     </select>
-                                                    <input type="date" class="form-control" name="date_paid">
-                                                    <button type="submit" class="btn btn-outline-primary m-2">save</button>
+                                                </div>
+
+                                                <label class="form-label">Date (Optional)</label>
+                                                <div class="input-group">
+                                                    <input type="date" class="form-control" name="date_paid" value="{{ date('Y-m-d') }}">
+                                                    <button type="submit" class="btn btn-primary">Save</button>
                                                 </div>
                                             </form>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            {{-- End Modal --}}
 
-                        </th>
+                        </td>
                     </tr>
-                    </tbody>
                 @empty
                     <tr>
-                        <td colspan="5" class="text-center">No students found with payment information.</td>
+                        <td colspan="5" class="text-center">No students found.</td>
                     </tr>
                 @endforelse
+                </tbody>
             </table>
         </div>
     </div>
 
     <script>
-        function formatNumber(input) {
-            let value = input.value.replace(/\s+/g, '');
-            if (!isNaN(value)) {
-                input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        // Bu skript sahifa yuklanganda ishga tushadi
+        document.addEventListener('DOMContentLoaded', function() {
+            // Raqamlarni formatlash (1 000 000)
+            function formatNumber(input) {
+                let value = input.value.replace(/\s+/g, '').replace(/,/g, '');
+                if (!isNaN(value) && value.length > 0) {
+                    input.value = parseInt(value, 10).toLocaleString('en-US').replace(/,/g, ' ');
+                }
             }
-        }
 
-        function formatAllNumbersBeforeSubmit() {
-            document.querySelectorAll('input[name="payment"]').forEach(input => {
-                input.value = input.value.replace(/\s+/g, '');
+            // To'lov inputiga formatlash funksiyasini qo'shish
+            // Bu qismni global scope'ga chiqarish kerak, chunki oninput atributi uni chaqiradi
+            window.formatNumber = formatNumber;
+
+            // Form submit bo'lganda bo'sh joylarni olib tashlash
+            document.querySelectorAll('.submit-payment-form').forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    const input = this.querySelector('.payment-input');
+                    input.value = input.value.replace(/\s+/g, '');
+                });
             });
-        }
+
+            // Session'da chek ID'si borligini tekshirish va yangi oynada ochish
+            @if(session('payment_receipt_id'))
+                var receiptUrl = "{{ route('payment.receipt', session('payment_receipt_id')) }}";
+                window.open(receiptUrl, '_blank');
+            @endif
+        });
     </script>
 
 @endsection

@@ -2,23 +2,33 @@
 @section('content')
 
     <div class="card">
+        <div class="card-header">
+            <h5>Guruhdagi talabalar ro'yxati</h5>
+        </div>
         <div class="table-responsive text-nowrap">
             <table class="table">
                 <thead>
                 <tr>
-                    <th>id</th>
+                    <th>#</th>
                     <th>Name</th>
                     <th>T/N</th>
-                    <th>group</th>
+                    <th>Group</th>
                 </tr>
                 </thead>
+                <tbody class="table-border-bottom-0">
                 @forelse($students as $student)
-                    <tbody id="myTable" class="table-group-divider">
                     <tr>
-                        <th>{{$loop->index+1}}</th>
-                        <th>{{$student->name}}</th>
-                        <th>{{$student->phone}}</th>
-                        <th>{{$student->group->name}}</th>
+                        <td>{{ $loop->iteration }}</td>
+                        <td><strong>{{ $student->name }}</strong></td>
+                        <td>{{ $student->phone }}</td>
+
+                        {{-- XATOLIK BO'LGAN JOY TUZATILDI: --}}
+                        {{-- ?->name ishlatildi va ?? '...' qo'shildi --}}
+                        <td>
+                            <span class="badge bg-label-primary">
+                                {{ $student->group?->name ?? 'Guruhsiz' }}
+                            </span>
+                        </td>
                     </tr>
                 @empty
                     <tr>

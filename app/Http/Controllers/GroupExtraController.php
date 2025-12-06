@@ -53,7 +53,7 @@ class GroupExtraController extends Controller
         DB::beginTransaction();
 
         try {
-            $user  = User::findOrFail($id);
+            $user = User::findOrFail($id);
             $group = Group::findOrFail($request->group_id);
 
             // 1. User guruhini yangilash
@@ -61,9 +61,9 @@ class GroupExtraController extends Controller
 
             // 2. Tarix (StudentInformation) yaratish
             StudentInformation::create([
-                'user_id'  => $user->id,
+                'user_id' => $user->id,
                 'group_id' => $group->id,
-                'group'    => $group->name,
+                'group' => $group->name,
             ]);
 
             // 3. Eski davomatlarni yangi guruhga o'tkazish
@@ -89,8 +89,8 @@ class GroupExtraController extends Controller
     {
         try {
             $selectedDate = $request->filled('filter_date') ? Carbon::parse($request->input('filter_date')) : Carbon::today();
-            $group        = Group::findOrFail($id);
-            $task         = $request->input('task');
+            $group = Group::findOrFail($id);
+            $task = $request->input('task');
 
             // Umumiy query
             $items = Attendance::whereDate('created_at', $selectedDate)
@@ -107,7 +107,7 @@ class GroupExtraController extends Controller
                     $pdf = PDF::loadView('admin.pdf.attendance_in_group', [
                         'items' => $items,
                         'group' => $group,
-                        'date'  => $selectedDate
+                        'date' => $selectedDate
                     ]);
 
                     $fileName = 'attendance_report_' . $group->name . '_' . $selectedDate->format('Y-m-d') . '.pdf';
@@ -134,8 +134,11 @@ class GroupExtraController extends Controller
         try {
             $students = User::where('group_id', $id)
                 ->role('student')
+                // MUHIM: Guruh nomini olish uchun relationshipni yuklaymiz
+                ->with('group:id,name')
                 ->orderBy('name')
-                ->select('id', 'name', 'email', 'image', 'phone', 'status') // Kerakli ustunlar
+                // MUHIM: 'group_id' ni select ichiga qo'shish SHART, bo'lmasa relationship ishlamaydi
+                ->select('id', 'name', 'email', 'image', 'phone', 'status', 'group_id')
                 ->get();
 
             return view('admin.group.student', compact('students'));
@@ -153,7 +156,7 @@ class GroupExtraController extends Controller
         try {
             $group = Group::findOrFail($id);
 
-            // Sana validatsiyasi
+            // 1. Sana validatsiyasi
             $dateInput = request('date', now()->format('Y-m'));
             try {
                 $dateObj = Carbon::createFromFormat('Y-m', $dateInput);
@@ -161,35 +164,48 @@ class GroupExtraController extends Controller
                 $dateObj = now();
             }
 
-            $year  = $dateObj->year;
+            $year = $dateObj->year;
             $month = $dateObj->month;
 
+            // 2. Matritsa uchun talabalar ro'yxati (Ism bo'yicha)
             $students = User::role('student')
                 ->where('group_id', $group->id)
                 ->orderBy('name')
-                ->get(['id', 'name']); // Faqat kerakli ustunlar
+                ->get(['id', 'name']);
 
-            // Shu oydagi barcha davomatlarni olish
-            $attendances = Attendance::where('group_id', $id)
+            // 3. Matritsa ichini to'ldirish uchun davomatlar (faqat status)
+            $matrixAttendances = Attendance::where('group_id', $id)
                 ->whereYear('created_at', $year)
                 ->whereMonth('created_at', $month)
-                ->get(['user_id', 'status', 'created_at']) // Faqat kerakli ustunlar
+                ->get(['user_id', 'status', 'created_at'])
                 ->groupBy('user_id');
+
+            // 4. PASTKI JADVAL UCHUN: To'liq davomat tarixi (Pagination bilan)
+            // with() yordamida teacher va lesson ma'lumotlarini ham olamiz (N+1 oldini olish)
+            // DIQQAT: Attendance modelida 'teacher' (who_checked) va 'lesson' relationlari bo'lishi kerak.
+            $attendanceRecords = Attendance::where('group_id', $id)
+                ->whereYear('created_at', $year)
+                ->whereMonth('created_at', $month)
+                ->with([
+                    'user:id,name',      // Talaba ismi
+                    'teacher:id,name',   // Tekshirgan o'qituvchi ismi (Attendance modelida 'teacher' funksiyasi bo'lishi kerak)
+                    'lesson:id,name'     // Dars mavzusi
+                ])
+                ->latest()
+                ->paginate(20);
 
             $daysInMonth = $dateObj->daysInMonth;
 
-            // Ma'lumotlarni shakllantirish
-            $data = $students->mapWithKeys(function ($student) use ($attendances, $daysInMonth) {
-                $studentAttendances = $attendances->get($student->id);
+            // 5. Matritsani shakllantirish
+            $data = $students->mapWithKeys(function ($student) use ($matrixAttendances, $daysInMonth) {
+                $studentAttendances = $matrixAttendances->get($student->id);
                 $days = [];
 
-                // Bo'sh kunlarni to'ldirish
                 for ($i = 1; $i <= $daysInMonth; $i++) {
                     $dayStr = str_pad($i, 2, '0', STR_PAD_LEFT);
-                    $days[$dayStr] = '';
+                    $days[$dayStr] = ''; // Default bo'sh
                 }
 
-                // Bor davomatlarni joylash
                 if ($studentAttendances) {
                     foreach ($studentAttendances as $attendance) {
                         $day = $attendance->created_at->format('d');
@@ -200,16 +216,16 @@ class GroupExtraController extends Controller
             });
 
             return view('admin.group.attendance', [
-                'group'    => $group,
-                'data'     => $data,
-                'year'     => $year,
-                'month'    => str_pad($month, 2, '0', STR_PAD_LEFT),
-                'students' => $students,
+                'group' => $group,
+                'data' => $data,         // Matritsa uchun array
+                'year' => $year,
+                'month' => str_pad($month, 2, '0', STR_PAD_LEFT),
+                'attendanceRecords' => $attendanceRecords, // Pastki jadval uchun (YANGI)
             ]);
 
         } catch (\Exception $e) {
             Log::error('GroupExtraController@attendance error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Davomat jadvalini yuklashda xatolik.');
+            return redirect()->back()->with('error', 'Davomat jadvalini yuklashda xatolik: ' . $e->getMessage());
         }
     }
 

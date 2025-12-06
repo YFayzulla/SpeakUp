@@ -10,20 +10,19 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use PDF; // Barryvdh\DomPDF\Facade\Pdf ishlatilmoqda deb taxmin qilindi
+use PDF; // Assuming Barryvdh\DomPDF\Facade\Pdf is used
 
 class PdfController extends Controller
 {
     public function __construct()
     {
-        // PDF yaratish ko'p vaqt olishi mumkin, shuning uchun vaqt limitini oshiramiz
+        // Increase execution time and memory limit for PDF generation
         set_time_limit(300);
-        // Xotira limitini ham vaqtincha oshirish foydali bo'lishi mumkin
         ini_set('memory_limit', '256M');
     }
 
     /**
-     * To'lovlar tarixini PDF qilib yuklash.
+     * Download payment history as PDF.
      */
     public function RoomListPDF(Request $request)
     {
@@ -36,7 +35,6 @@ class PdfController extends Controller
             $startDate = $request->input('startDate') ? Carbon::parse($request->input('startDate')) : null;
             $endDate   = $request->input('endDate') ? Carbon::parse($request->input('endDate')) : null;
 
-            // Faqat kerakli ustunlarni tanlab olish
             $query = HistoryPayments::select('id', 'name', 'payment', 'date', 'group', 'type_of_money');
 
             if ($startDate && $endDate) {
@@ -61,17 +59,17 @@ class PdfController extends Controller
     }
 
     /**
-     * Talabaning shaxsiy tarixi va davomati.
+     * Student's personal history and attendance.
      */
     public function history($id)
     {
         try {
-            $student = User::select('id', 'name', 'email', 'phone', 'group_id')
-                ->with('group:id,name') // Guruh nomini olish uchun
+            $student = User::select('id', 'name', 'phone', 'group_id')
+                ->with('group:id,name') // Eager load group name
                 ->findOrFail($id);
 
             $attendances = Attendance::where('user_id', $id)
-                ->select('created_at', 'status', 'user_id') // Kerakli ustunlar
+                ->select('created_at', 'status')
                 ->latest()
                 ->get();
 
@@ -93,14 +91,13 @@ class PdfController extends Controller
     }
 
     /**
-     * O'qituvchilar ro'yxati PDF.
+     * Teachers list PDF.
      */
     public function teacher()
     {
         try {
-            // Faqat kerakli ustunlarni olish
             $teachers = User::role('user')
-                ->select('id', 'name', 'email', 'phone')
+                ->select('id', 'name', 'phone')
                 ->orderBy('name')
                 ->get();
 
@@ -115,14 +112,14 @@ class PdfController extends Controller
     }
 
     /**
-     * Guruhlar ro'yxati PDF.
+     * Groups list PDF.
      */
     public function group()
     {
         try {
             $groups = Group::where('id', '!=', 1)
                 ->select('id', 'name', 'start_time', 'finish_time', 'monthly_payment', 'room_id')
-                ->with('room:id,room') // Xona nomini olish (agar Room modelida room ustuni bo'lsa)
+                ->with('room:id,room') // Eager load room name
                 ->orderBy('name')
                 ->get();
 
@@ -137,15 +134,14 @@ class PdfController extends Controller
     }
 
     /**
-     * Talabalar ro'yxati PDF.
+     * Students list PDF.
      */
     public function student()
     {
         try {
-            // Memory Limit Error bermasligi uchun faqat kerakli ustunlar olinadi
             $students = User::role('student')
                 ->select('id', 'name', 'phone', 'group_id', 'status')
-                ->with('group:id,name') // N+1 ni oldini olish
+                ->with('group:id,name') // Prevent N+1 problem
                 ->orderBy('name')
                 ->get();
 
@@ -160,26 +156,35 @@ class PdfController extends Controller
     }
 
     /**
-     * Guruh baholari (Assessment) PDF.
+     * Group assessment PDF.
      */
     public function Assessment($id)
     {
         try {
-            $group = Group::findOrFail($id);
-
-            // Assessment jadvalida 'group' ustuni String (name) saqlaydi deb taxmin qilindi.
-            // Agar ID saqlasa, ->where('group_id', $group->id) ga o'zgartirish kerak.
-            $assessments = Assessment::where('group', $group->name)
-                ->with('user:id,name') // Talaba ismini olish uchun (N+1 oldini olish)
+            // Assuming 'assessments' table has a 'group_id' column.
+            // If it stores the group name, the logic needs to be different, but using ID is better practice.
+            $assessments = Assessment::where('group_id', $id)
+                ->with('user:id,name') // Eager load student name
                 ->get();
 
-            $pdf = PDF::loadView('user.pdf.group_assessment', ['groups' => $assessments]);
-            $fileName = 'group_assessment_' . $group->name . '_' . now()->format('Y-m-d') . '.pdf';
+            if ($assessments->isEmpty()) {
+                 // Try to find by group name as a fallback
+                 $group = Group::find($id);
+                 if($group) {
+                    $assessments = Assessment::where('group', $group->name)->with('user:id,name')->get();
+                 }
+                 if ($assessments->isEmpty()) {
+                    return redirect()->back()->with('warning', 'Ushbu guruh uchun baholash natijalari topilmadi.');
+                 }
+            }
+            
+            $groupName = $assessments->first()->group; // Get group name from the first record
+
+            $pdf = PDF::loadView('user.pdf.group_assessment', ['groups' => $assessments, 'groupName' => $groupName]);
+            $fileName = 'group_assessment_' . str_replace(' ', '_', $groupName) . '_' . now()->format('Y-m-d') . '.pdf';
 
             return $pdf->download($fileName);
 
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return redirect()->back()->with('error', 'Guruh topilmadi.');
         } catch (\Exception $e) {
             Log::error('PdfController@Assessment error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Baho hisobotini yuklashda xatolik.');

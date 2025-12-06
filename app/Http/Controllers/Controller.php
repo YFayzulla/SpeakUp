@@ -42,7 +42,6 @@ class Controller extends BaseController
                 // Optimallashtirilgan so'rovlar:
                 // Select() orqali faqat kerakli ustunlarni olamiz (xotirani tejash uchun)
                 $teachers = User::role('user')
-                    ->select('id', 'name', 'email') // Kerakli ustunlarni yozing
                     ->get();
 
                 // get()->count() emas, to'g'ridan-to'g'ri count() ishlatamiz
@@ -64,14 +63,14 @@ class Controller extends BaseController
                     ->get();
 
                 return view('dashboard', [
-                    'teachers'           => $teachers,
+                    'teachers' => $teachers,
                     'number_of_students' => $numberOfStudents,
-                    'daily_income'       => $dailyIncome,
+                    'daily_income' => $dailyIncome,
                     'daily_transactions' => $dailyTransactions,
-                    'debtor_students'    => $debtorStudents,
-                    'today_attendances'  => $todayAttendances,
-                    'profit'             => $profit,
-                    'pie_chart'          => [$totalIncome, $totalConsumption]
+                    'debtor_students' => $debtorStudents,
+                    'today_attendances' => $todayAttendances,
+                    'profit' => $profit,
+                    'pie_chart' => [$totalIncome, $totalConsumption]
                 ]);
             }
 
@@ -82,14 +81,14 @@ class Controller extends BaseController
 
             // 3. BOSHQA FOYDALANUVCHILAR UCHUN (Bo'sh dashboard)
             return view('dashboard', [
-                'teachers'           => [],
+                'teachers' => [],
                 'number_of_students' => 0,
-                'daily_income'       => 0,
+                'daily_income' => 0,
                 'daily_transactions' => [],
-                'debtor_students'    => [],
-                'today_attendances'  => [],
-                'profit'             => 0,
-                'pie_chart'          => [0, 0]
+                'debtor_students' => [],
+                'today_attendances' => [],
+                'profit' => 0,
+                'pie_chart' => [0, 0]
             ]);
 
         } catch (\Exception $e) {
@@ -109,12 +108,12 @@ class Controller extends BaseController
         // Validatsiya: Sanalar to'g'ri formatda ekanligini tekshiramiz
         $request->validate([
             'start_date' => 'nullable|date',
-            'end_date'   => 'nullable|date',
+            'end_date' => 'nullable|date',
         ]);
 
         try {
             $startDate = $request->start_date ? Carbon::parse($request->start_date)->startOfDay() : null;
-            $endDate   = $request->end_date ? Carbon::parse($request->end_date)->endOfDay() : null;
+            $endDate = $request->end_date ? Carbon::parse($request->end_date)->endOfDay() : null;
 
             $query = HistoryPayments::query();
 
@@ -131,8 +130,8 @@ class Controller extends BaseController
 
             return view('admin.index', [
                 'historyPayments' => $historyPayments,
-                'start_date'      => $startDate ? $startDate->toDateString() : null,
-                'end_date'        => $endDate ? $endDate->toDateString() : null,
+                'start_date' => $startDate ? $startDate->toDateString() : null,
+                'end_date' => $endDate ? $endDate->toDateString() : null,
             ]);
 
         } catch (\Exception $e) {

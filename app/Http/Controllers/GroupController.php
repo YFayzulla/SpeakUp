@@ -12,13 +12,9 @@ use Illuminate\Support\Facades\Log;
 
 class GroupController extends Controller
 {
-    /**
-     * Barcha xonalarni ko'rsatish (Rooms list).
-     */
     public function index()
     {
         try {
-            // Faqat kerakli ustunlarni olish
             $rooms = Room::orderBy('room')->get();
             return view('admin.group.room', compact('rooms'));
         } catch (\Exception $e) {
@@ -27,28 +23,12 @@ class GroupController extends Controller
         }
     }
 
-    /**
-     * Guruh yaratish sahifasi.
-     *
-     * @param int $id Room ID
-     */
     public function makeGroup($id)
     {
-        try {
-            // Xona mavjudligini tekshirish (ixtiyoriy, lekin foydali)
-            if (!Room::find($id)) {
-                return redirect()->back()->with('error', 'Tanlangan xona topilmadi.');
-            }
-            return view('admin.group.create', compact('id'));
-        } catch (\Exception $e) {
-            Log::error('GroupController@makeGroup error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Sahifani yuklashda xatolik.');
-        }
+        // This method simply shows the form to create a group for a specific room.
+        return view('admin.group.create', ['id' => $id]);
     }
 
-    /**
-     * Yangi guruhni saqlash.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -59,9 +39,9 @@ class GroupController extends Controller
             'room'            => 'required|exists:rooms,id',
         ]);
 
-        DB::beginTransaction();
-
         try {
+            // The GroupObserver will automatically handle assigning the teacher
+            // after the group is created.
             $group = Group::create([
                 'name'            => $request->name,
                 'start_time'      => $request->start_time,
@@ -70,41 +50,20 @@ class GroupController extends Controller
                 'room_id'         => $request->room,
             ]);
 
-            // Agar guruh modelida hasTeacher() metodi bo'lsa va u ID qaytarsa
-            // (Bu mantiq sizning modelingizda borligiga tayandim)
-            if (method_exists($group, 'hasTeacher')) {
-                $teacherId = $group->hasTeacher();
-                if ($teacherId) {
-                    GroupTeacher::create([
-                        'group_id'   => $group->id,
-                        'teacher_id' => $teacherId,
-                    ]);
-                }
-            }
-
-            DB::commit();
-
             return redirect()->route('group.show', $group->room_id)
-                ->with('success', 'Guruh muvaffaqiyatli qo\'shildi.');
+                ->with('success', 'Guruh muvaffaqiyatli qo\'shildi va o\'qituvchiga biriktirildi.');
 
         } catch (\Exception $e) {
-            DB::rollBack();
             Log::error('GroupController@store error: ' . $e->getMessage());
             return redirect()->back()->withInput()->with('error', 'Guruhni saqlashda xatolik yuz berdi.');
         }
     }
 
-    /**
-     * Muayyan xonadagi guruhlarni ko'rsatish.
-     *
-     * @param int $id Room ID
-     */
     public function show($id)
     {
         try {
-            // '1' ID li guruh (odatda "Guruhsizlar") ko'rsatilmasligi kerak
-            $groups = Group::where('id', '!=', 1)
-                ->where('room_id', $id)
+            $groups = Group::where('room_id', $id)
+                ->where('id', '!=', 1) // Assuming 1 is the "Unassigned" group
                 ->orderBy('start_time')
                 ->get();
 
@@ -116,23 +75,12 @@ class GroupController extends Controller
         }
     }
 
-    /**
-     * Guruhni tahrirlash sahifasi.
-     */
     public function edit(Group $group)
     {
-        try {
-            $rooms = Room::orderBy('room')->get();
-            return view('admin.group.edit', compact('group', 'rooms'));
-        } catch (\Exception $e) {
-            Log::error('GroupController@edit error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Tahrirlash sahifasini ochishda xatolik.');
-        }
+        $rooms = Room::orderBy('room')->get();
+        return view('admin.group.edit', compact('group', 'rooms'));
     }
 
-    /**
-     * Guruh ma'lumotlarini yangilash.
-     */
     public function update(Request $request, Group $group)
     {
         $request->validate([
@@ -143,54 +91,28 @@ class GroupController extends Controller
             'room'            => 'required|exists:rooms,id',
         ]);
 
-        DB::beginTransaction();
-
         try {
-            $group->update([
-                'name'            => $request->name,
-                'start_time'      => $request->start_time,
-                'finish_time'     => $request->finish_time,
-                'monthly_payment' => $request->monthly_payment,
-                'room_id'         => $request->room,
-            ]);
-
-            // Eslatma: StudentInformation bo'yicha kod olib tashlandi.
-            // Sababi: Guruh ma'lumoti o'zgarganda talabaning tarixi yaratilishi mantiqan noto'g'ri.
-            // Talaba tarixi faqat talaba guruhga qo'shilganda yoki guruhdan chiqqanda yozilishi kerak.
-
-            DB::commit();
+            $group->update($request->all());
+            // Note: If the room_id changes, the teacher assignment should also be updated.
+            // This logic can be added to the GroupObserver's "updated" method.
 
             return redirect()->back()->with('success', 'Ma\'lumotlar muvaffaqiyatli yangilandi.');
 
         } catch (\Exception $e) {
-            DB::rollBack();
             Log::error('GroupController@update error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Yangilashda xatolik yuz berdi.');
         }
     }
 
-    /**
-     * Guruhni o'chirish.
-     */
     public function destroy(Group $group)
     {
         DB::beginTransaction();
-
         try {
-            // 1. Guruh o'qituvchilari bog'lanishini o'chirish
             GroupTeacher::where('group_id', $group->id)->delete();
-
-            // 2. Guruhdagi talabalarni 'Guruhsiz' (ID: 1) holatiga o'tkazish
-            // DIQQAT: Tizimda ID=1 bo'lgan guruh borligiga ishonch hosil qiling.
-            User::where('group_id', $group->id)->update(['group_id' => 1]);
-
-            // 3. Guruhni o'chirish
+            User::where('group_id', $group->id)->update(['group_id' => 1]); // Move students to "Unassigned"
             $group->delete();
-
             DB::commit();
-
             return redirect()->back()->with('success', 'Guruh muvaffaqiyatli o\'chirildi.');
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('GroupController@destroy error: ' . $e->getMessage());

@@ -25,7 +25,7 @@ class RefreshController extends Controller
 
             // Statusni yangilash
             // update() methodi bool qaytaradi, shuning uchun save() ishlatish shart emas
-            $user->update(['status' => 0]);
+            $user->update(['status' => null]);
 
             DB::commit();
 

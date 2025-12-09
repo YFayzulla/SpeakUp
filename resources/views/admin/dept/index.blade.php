@@ -18,7 +18,7 @@
                     <th>Actions</th>
                 </tr>
                 </thead>
-                <tbody class="table-border-bottom-0">
+                <tbody class="table-border-bottom-0" id="myTable">
                 @forelse($students as $student)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
@@ -37,7 +37,8 @@
                         </td>
                         <td>
                             {{-- View Button --}}
-                            <a class="btn btn-sm btn-outline-primary m-1" href="{{ route('student.show',$student->id) }}">
+                            <a class="btn btn-sm btn-outline-primary m-1"
+                               href="{{ route('student.show',$student->id) }}">
                                 <i class="bx bx-show-alt"></i>
                             </a>
 
@@ -60,18 +61,24 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title">Make Payment for {{ $student->name }}</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="{{ route('dept.update', $student->id) }}" method="post" class="submit-payment-form">
+                                            <form action="{{ route('dept.update', $student->id) }}" method="post"
+                                                  class="submit-payment-form">
                                                 @csrf
                                                 @method('PUT')
 
-                                                <p>Monthly Payment: <strong>{{ number_format($student->should_pay, 0, '.', ' ') }}</strong></p>
+                                                <p>Monthly Payment:
+                                                    <strong>{{ number_format($student->should_pay, 0, '.', ' ') }}</strong>
+                                                </p>
 
                                                 @if($student->deptStudent?->payed > 0)
                                                     <div class="alert alert-warning p-2 mb-2">
-                                                        Paid partially: {{ number_format($student->deptStudent->payed, 0, '.', ' ') }} <br>
+                                                        Paid
+                                                        partially: {{ number_format($student->deptStudent->payed, 0, '.', ' ') }}
+                                                        <br>
                                                         Last date: {{ $student->deptStudent->date }}
                                                     </div>
                                                 @endif
@@ -89,7 +96,8 @@
                                                            name="payment" required
                                                            oninput="formatNumber(this)">
 
-                                                    <select name="money_type" class="form-select" style="max-width: 120px;">
+                                                    <select name="money_type" class="form-select"
+                                                            style="max-width: 120px;">
                                                         <option value="cash">Cash</option>
                                                         <option value="electronic">Card</option>
                                                     </select>
@@ -97,7 +105,8 @@
 
                                                 <label class="form-label">Date (Optional)</label>
                                                 <div class="input-group">
-                                                    <input type="date" class="form-control" name="date_paid" value="{{ date('Y-m-d') }}">
+                                                    <input type="date" class="form-control" name="date_paid"
+                                                           value="{{ date('Y-m-d') }}">
                                                     <button type="submit" class="btn btn-primary">Save</button>
                                                 </div>
                                             </form>
@@ -121,7 +130,7 @@
 
     <script>
         // Bu skript sahifa yuklanganda ishga tushadi
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Raqamlarni formatlash (1 000 000)
             function formatNumber(input) {
                 let value = input.value.replace(/\s+/g, '').replace(/,/g, '');
@@ -136,7 +145,7 @@
 
             // Form submit bo'lganda bo'sh joylarni olib tashlash
             document.querySelectorAll('.submit-payment-form').forEach(form => {
-                form.addEventListener('submit', function(e) {
+                form.addEventListener('submit', function (e) {
                     const input = this.querySelector('.payment-input');
                     input.value = input.value.replace(/\s+/g, '');
                 });
@@ -144,8 +153,8 @@
 
             // Session'da chek ID'si borligini tekshirish va yangi oynada ochish
             @if(session('payment_receipt_id'))
-                var receiptUrl = "{{ route('payment.receipt', session('payment_receipt_id')) }}";
-                window.open(receiptUrl, '_blank');
+            var receiptUrl = "{{ route('payment.receipt', session('payment_receipt_id')) }}";
+            window.open(receiptUrl, '_blank');
             @endif
         });
     </script>

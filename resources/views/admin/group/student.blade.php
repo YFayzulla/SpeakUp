@@ -3,7 +3,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h5>Guruhdagi talabalar ro'yxati</h5>
+            <h5>List of students in the group</h5>
         </div>
         <div class="table-responsive text-nowrap">
             <table class="table">
@@ -11,7 +11,7 @@
                 <tr>
                     <th>#</th>
                     <th>Name</th>
-                    <th>T/N</th>
+                    <th>Phone</th>
                     <th>Group</th>
                 </tr>
                 </thead>
@@ -26,7 +26,7 @@
                         {{-- ?->name ishlatildi va ?? '...' qo'shildi --}}
                         <td>
                             <span class="badge bg-label-primary">
-                                {{ $student->group?->name ?? 'Guruhsiz' }}
+                                {{ $student->group?->name ?? 'No group' }}
                             </span>
                         </td>
                     </tr>

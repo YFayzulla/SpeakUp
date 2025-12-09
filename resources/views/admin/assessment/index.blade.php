@@ -13,7 +13,7 @@
             @method('DELETE')
 
             <button type="button" id="selectAllBtn" class="btn btn-primary mb-3 me-1">Select All</button>
-            <button class="btn btn-danger mb-3 text-white">Delete specified data</button>
+            <button class="btn btn-danger mb-3 text-white">Delete Selected</button>
 
             <div class="table-responsive text-nowrap">
                 <table class="table table-hover">
@@ -22,12 +22,12 @@
                     <TR>
 
                         <td>+</td>
-                        <th>id</th>
-                        <th>name</th>
-                        <th>GOT MARK</th>
-                        <th>information</th>
-                        <th>rec group</th>
-                        <th>change group</th>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Mark</th>
+                        <th>Information</th>
+                        <th>Recommended Group</th>
+                        <th>Change Group</th>
 
                     </TR>
 
@@ -50,7 +50,7 @@
                             <th>
                                 <button type="button" class="btn-outline-success btn m-2" data-bs-toggle="modal"
                                         data-bs-target="#exampleModal{{$assessment->user_id}}" data-bs-whatever="@mdo"
-                                > submit
+                                > Submit
                                 </button>
                             </th>
                         </tr>
@@ -79,7 +79,7 @@
                         <form action="{{route('student.change.group',$assessment->user_id)}}" method="post">
                             @csrf
                             <label for="recipient-name"
-                                   class="form-label"> change group </label>
+                                   class="form-label"> Change Group </label>
                             <select name="group_id" class="form-select">
                                 @forelse($groups as $group)
                                     <option value="{{$group->id}}">{{$group->name}}</option>
@@ -88,7 +88,7 @@
                                 @endforelse
                             </select>
                             <div class="mt-3">
-                                <button type="submit" class="btn btn-outline-success m-2">save
+                                <button type="submit" class="btn btn-outline-success m-2">Save
                                 </button>
                             </div>
                         </form>

@@ -23,7 +23,7 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td><strong>{{ $student->name }}</strong></td>
-                        <td>{{ $student->group?->name ?? 'Guruhsiz' }}</td>
+                        <td>{{ $student->group?->name ?? 'No group' }}</td>
                         <td>
                             @if($student->status === null)
                                 <span class="badge bg-label-info">Disabled</span>

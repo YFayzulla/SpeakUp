@@ -86,7 +86,7 @@
                         @endfor
                     </tr>
                 @empty
-                    <tr><td colspan="{{ $currentMonthDays + 1 }}">Ma'lumot yo'q</td></tr>
+                    <tr><td colspan="{{ $currentMonthDays + 1 }}">No data available</td></tr>
                 @endforelse
                 </tbody>
             </table>
@@ -96,18 +96,18 @@
     {{-- PASTKI JADVAL (History) --}}
     <div class="card mt-4">
         <div class="card-header">
-            <h5>Batafsil Davomat Tarixi</h5>
+            <h5>Detailed Attendance History</h5>
         </div>
         <div class="table-responsive text-nowrap">
             <table class="table">
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Talaba</th>
-                    <th>O'qituvchi</th>
-                    <th>Mavzu (Lesson)</th>
-                    <th>Vaqt</th>
-                    <th>Amal</th>
+                    <th>Student</th>
+                    <th>Teacher</th>
+                    <th>Topic (Lesson)</th>
+                    <th>Time</th>
+                    <th>Action</th>
                 </tr>
                 </thead>
                 {{-- BU YERDA O'ZGARISH: $students emas, $attendanceRecords ishlatiladi --}}
@@ -115,13 +115,13 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         {{-- Null Safe Operator (?->) va (??) ishlatildi --}}
-                        <td>{{ $attendance->user?->name ?? 'Noma\'lum' }}</td>
-                        <td>{{ $attendance->teacher?->name ?? 'Topilmadi' }}</td>
-                        <td>{{ $attendance->lesson?->name ?? 'Kiritilmagan' }}</td>
+                        <td>{{ $attendance->user?->name ?? 'Unknown' }}</td>
+                        <td>{{ $attendance->teacher?->name ?? 'Not found' }}</td>
+                        <td>{{ $attendance->lesson?->name ?? 'Not entered' }}</td>
                         <td>{{ $attendance->created_at->format('d.m.Y H:i') }}</td>
                         <td>
                             <form action="{{route('attendance.delete', $attendance->id)}}" method="POST"
-                                  onsubmit="return confirm('O\'chirilsinmi?');">
+                                  onsubmit="return confirm('Are you sure you want to delete?');">
                                 @csrf
                                 @method("DELETE")
                                 <button class="btn btn-sm btn-outline-danger"><i class="bx bx-trash-alt"></i></button>
@@ -130,7 +130,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center">Joriy oy uchun davomat yozuvlari topilmadi.</td>
+                        <td colspan="6" class="text-center">No attendance records found for the current month.</td>
                     </tr>
                 @endforelse
             </table>

@@ -17,12 +17,18 @@
                         <div class="col mb-3">
                             <label for="reason{{ $finance->id }}" class="form-label">Reason</label>
                             <input type="text" id="reason{{ $finance->id }}" class="form-control" name="reason" value="{{ $finance->reason }}" required />
+                            @error('reason')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="row g-2">
                         <div class="col mb-3">
                             <label for="payment{{ $finance->id }}" class="form-label">Payment</label>
                             <input type="number" id="payment{{ $finance->id }}" class="form-control" name="payment" value="{{ $finance->payment }}" required />
+                            @error('payment')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="row g-2">
@@ -32,6 +38,9 @@
                                 <option value="{{ \App\Models\Finance::CASH }}" {{ $finance->type == \App\Models\Finance::CASH ? 'selected' : '' }}>Cash</option>
                                 <option value="{{ \App\Models\Finance::CARD }}" {{ $finance->type == \App\Models\Finance::CARD ? 'selected' : '' }}>Card</option>
                             </select>
+                            @error('type')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                            @enderror
                         </div>
                     </div>
                     <div class="modal-footer">

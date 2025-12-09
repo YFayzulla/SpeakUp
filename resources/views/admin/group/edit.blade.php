@@ -14,28 +14,28 @@
                 <input id="name" name="name" value="{{old('name')??$group->name}}" type="text" class="form-control">
 
                 @error('name')
-                <div class="alert alert-danger" role="alert">This place should be written</div>
+                <div class="alert alert-danger" role="alert">{{ $message }}</div>
                 @enderror
 
                 <label for="start_time" class="text-dark">Start Time</label>
                 <input id="start_time" name="start_time" value="{{$group->start_time}}" type="time" class="form-control">
 
                 @error('start_time')
-                <div class="alert alert-danger" role="alert">This place should be written</div>
+                <div class="alert alert-danger" role="alert">{{ $message }}</div>
                 @enderror
 
                 <label for="finish_time" class="text-dark">Finish Time</label>
                 <input id="finish_time" name="finish_time" value="{{$group->finish_time}}" type="time" class="form-control">
 
                 @error('finish_time')
-                <div class="alert alert-danger" role="alert">This place should be written</div>
+                <div class="alert alert-danger" role="alert">{{ $message }}</div>
                 @enderror
 
                 <label for="monthly_payment" class="text-dark">Cost</label>
                 <input id="monthly_payment" name="monthly_payment" value="{{ number_format($group->monthly_payment, 0, '', ' ') }}" type="text" class="form-control" oninput="formatNumber(this)">
 
                 @error('monthly_payment')
-                <div class="alert alert-danger" role="alert">This place should be written</div>
+                <div class="alert alert-danger" role="alert">{{ $message }}</div>
                 @enderror
 
                 <label for="room" class="text-dark">Rooms</label>
@@ -47,6 +47,9 @@
                         <option value="">No rooms available</option>
                     @endforelse
                 </select>
+                @error('room')
+                <div class="alert alert-danger" role="alert">{{ $message }}</div>
+                @enderror
 
                 <button class="btn btn-warning m-4">Submit</button>
 

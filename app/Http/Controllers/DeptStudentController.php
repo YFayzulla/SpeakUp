@@ -15,6 +15,9 @@ class DeptStudentController extends Controller
     {
         $students = User::role('student')
             ->with('deptStudent', 'group')
+            ->leftJoin('dept_students', 'users.id', '=', 'dept_students.user_id')
+            ->select('users.*', 'dept_students.payed')
+            ->orderByRaw("CASE WHEN dept_students.payed > 0 THEN 0 ELSE 1 END")
             ->orderBy('status')
             ->orderBy('name')
             ->get();

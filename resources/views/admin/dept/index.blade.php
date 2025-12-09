@@ -25,7 +25,9 @@
                         <td><strong>{{ $student->name }}</strong></td>
                         <td>{{ $student->group?->name ?? 'No group' }}</td>
                         <td>
-                            @if($student->status === null)
+                            @if($student->deptStudent && $student->deptStudent->payed > 0)
+                                <span class="badge bg-label-warning">Partially Paid</span>
+                            @elseif($student->status === null)
                                 <span class="badge bg-label-info">Disabled</span>
                             @elseif( $student->status <= 0 )
                                 <span class="badge bg-label-danger">Debtor</span>

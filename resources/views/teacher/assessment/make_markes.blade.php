@@ -7,7 +7,8 @@
             @method('PUT')
             <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                 <label for="lesson" class="mr-2"></label>
-                <input type="text" name="lesson" id="lesson" class="form-control w-50 m-3" placeholder="Test Name" required>
+                <input type="text" name="lesson" id="lesson" class="form-control w-50 m-3" placeholder="Test Name"
+                       required>
             </div>
 
             <div class="table-responsive text-nowrap">
@@ -17,7 +18,7 @@
                         <th>T/R</th>
                         <th>Name</th>
                         <th>Mark</th>
-                        <th>Reason</th>
+                        <th>Desc</th>
                         <th>Recommendation</th>
                     </tr>
                     </thead>
@@ -27,7 +28,8 @@
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $student->name }}</td>
                             <td>
-                                <input type="number" class="form-control" style="width: 70px;" name="end_mark[]" required>
+                                <input type="number" class="form-control" style="width: 70px;" name="end_mark[]"
+                                       required>
                             </td>
                             <td>
                                 <input type="text" class="form-control" name="reason[]" required>
@@ -35,7 +37,11 @@
                             <td>
                                 <select class="form-select form-control" name="recommended[]" required>
                                     @foreach($groups as $group)
-                                        <option value="{{ $group->name }}">{{ $group->name }}</option>
+                                        <option value="{{ $group->name }}"
+                                                {{ $student->group->name == $group->name ? 'selected' : '' }}>
+                                            {{ $group->name }}
+                                        </option>
+
                                     @endforeach
                                 </select>
                             </td>

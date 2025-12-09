@@ -72,8 +72,8 @@
                 <div data-i18n="Analytics">My Groups</div>
             </a>
         </li>
-        <li class="menu-item @if(request()->routeIs('attendance.teacher.groups') || request()->routeIs('group.attendance')) active @endif">
-            <a href="{{ route('attendance.teacher.groups') }}" class="menu-link">
+        <li class="menu-item @if(request()->routeIs('attendance') || request()->routeIs('group.attendance')) active @endif">
+            <a href="{{ route('attendance') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-task"></i>
                 <div data-i18n="Analytics">Attendance</div>
             </a>

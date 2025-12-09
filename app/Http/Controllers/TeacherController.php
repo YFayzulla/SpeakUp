@@ -8,7 +8,6 @@ use App\Models\Group;
 use App\Models\GroupTeacher;
 use App\Models\Room;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -27,8 +26,8 @@ class TeacherController extends Controller
             // 1. with('room') - N+1 muammosini oldini olish (View da xona nomi kerak bo'lsa).
             // 2. paginate(20) - Ro'yxat uzun bo'lsa sahifalash.
             $teachers = User::role('user') // Changed from 'user' to 'teacher'
-                ->with('room:id,room') // Faqat kerakli ustunlar
-                ->orderBy('name')
+            ->with('room:id,room') // Faqat kerakli ustunlar
+            ->orderBy('name')
                 ->paginate(20);
 
             return view('admin.teacher.index', compact('teachers'));
@@ -75,16 +74,16 @@ class TeacherController extends Controller
         try {
             // 2. User yaratish
             $teacher = User::create([
-                'name'      => $request->name,
-                'password'  => Hash::make($request->phone), // Telefon raqam parol sifatida
-                'passport'  => $request->passport,
+                'name' => $request->name,
+                'password' => Hash::make($request->phone), // Telefon raqam parol sifatida
+                'passport' => $request->passport,
                 'date_born' => $request->date_born,
-                'location'  => $request->location,
+                'location' => $request->location,
                 // Telefon formatlash: Faqat raqamlarni qoldirib, oldiga 998 qo'shish (logikangiz bo'yicha)
-                'phone'     => '998' . preg_replace('/[^0-9]/', '', $request->phone),
-                'photo'     => $uploadedFilePath,
-                'percent'   => $request->percent,
-                'room_id'   => $request->room_id
+                'phone' => '998' . preg_replace('/[^0-9]/', '', $request->phone),
+                'photo' => $uploadedFilePath,
+                'percent' => $request->percent,
+                'room_id' => $request->room_id
             ]);
 
             $teacher->assignRole('teacher'); // Changed from 'user' to 'teacher'
@@ -95,7 +94,7 @@ class TeacherController extends Controller
 
             if ($groups->isNotEmpty()) {
                 $groupTeachers = $groups->map(fn($group) => [
-                    'group_id'   => $group->id,
+                    'group_id' => $group->id,
                     'teacher_id' => $teacher->id,
                     'created_at' => now(),
                     'updated_at' => now(),
@@ -159,14 +158,14 @@ class TeacherController extends Controller
 
             // 2. Ma'lumotlarni tayyorlash
             $updateData = [
-                'name'      => $request->name,
-                'phone'     => '998' . preg_replace('/[^0-9]/', '', $request->phone),
+                'name' => $request->name,
+                'phone' => '998' . preg_replace('/[^0-9]/', '', $request->phone),
                 'date_born' => $request->date_born,
-                'location'  => $request->location,
-                'passport'  => $request->passport,
-                'percent'   => $request->percent,
-                'photo'     => $newPhotoPath,
-                'room_id'   => $request->room_id,
+                'location' => $request->location,
+                'passport' => $request->passport,
+                'percent' => $request->percent,
+                'photo' => $newPhotoPath,
+                'room_id' => $request->room_id,
             ];
 
             if ($request->filled('password')) {
@@ -187,7 +186,7 @@ class TeacherController extends Controller
 
             if ($groups->isNotEmpty()) {
                 $groupTeachers = $groups->map(fn($group) => [
-                    'group_id'   => $group->id,
+                    'group_id' => $group->id,
                     'teacher_id' => $teacher->id,
                     'created_at' => now(),
                     'updated_at' => now(),

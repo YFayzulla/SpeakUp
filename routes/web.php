@@ -48,6 +48,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::controller(TestResultController::class)->prefix('Test')->group(function () {
         Route::get('/', 'index')->name('test');
         Route::get('/{id}/show', 'showResults')->name('test.show');
+        Route::delete('/{id}/delete', 'destroyAll')->name('test.destroy.all');
     });
 
     // --- PDF REPORTS ---
@@ -103,12 +104,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| SHARED ROUTES (Student || Admin)
+| SHARED ROUTES (Student || Admin || User)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:student|admin'])->group(function () {
-    // Bu yerda student va admin uchun umumiy marshrutlar bo'lishi mumkin
-    // Hozircha AssessmentController resursi studentlar uchun deb taxmin qilamiz
+Route::middleware(['auth', 'role:student|admin|user'])->group(function () {
     Route::resource('assessment', AssessmentController::class);
 });
 
@@ -121,7 +120,7 @@ Route::middleware(['auth', 'role:student|admin'])->group(function () {
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::controller(TeacherController::class)->group(function () {
         Route::get('teacher/groups', 'groups')->name('teacher.groups');
-        Route::get('teacher/attendance/groups', 'attendanceGroups')->name('attendance.teacher.groups');
+        Route::get('teacher/attendance', 'attendanceGroups')->name('attendance');
         Route::get('teacher/assessment/groups', 'assessmentGroups')->name('assessment.teacher.groups');
     });
 
@@ -142,6 +141,6 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     // Masalan, o'z test natijalarini ko'rish, davomatini ko'rish
     Route::controller(TeacherAdminPanel::class)->group(function () {
         Route::get('attendance/lists', 'attendanceIndex')->name('attendance.index');
-        Route::get('groups', 'group')->name('attendance');
+        Route::get('groups', 'group')->name('student.attendance');
     });
 });

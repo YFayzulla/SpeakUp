@@ -2,6 +2,7 @@
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="row">
+
             <!-- User's Group and Teacher Info -->
             <div class="col-lg-8 col-md-12 col-12 mb-4">
                 <div class="card h-100">

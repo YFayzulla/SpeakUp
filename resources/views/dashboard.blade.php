@@ -139,16 +139,16 @@
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="row">
             <!-- Test Results -->
-            <div class="col-md-8 col-12 mb-4">
-                <div class="card h-100">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Your Test Results</h5>
-                    </div>
-                    <div class="card-body">
-                        <canvas id="myChart"></canvas>
-                    </div>
-                </div>
-            </div>
+{{--            <div class="col-md-8 col-12 mb-4">--}}
+{{--                <div class="card h-100">--}}
+{{--                    <div class="card-header">--}}
+{{--                        <h5 class="card-title mb-0">Your Test Results</h5>--}}
+{{--                    </div>--}}
+{{--                    <div class="card-body">--}}
+{{--                        <canvas id="myChart"></canvas>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
 
             <!-- Salary Card -->
             <div class="col-md-4 col-12 mb-4">

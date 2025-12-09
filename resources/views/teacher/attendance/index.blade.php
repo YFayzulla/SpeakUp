@@ -6,7 +6,7 @@
             @forelse($groups as $group)
                 <tr>
                     <th>
-                        <a href="{{route('group.attendance', $group->group_id)}}" class="btn btn-outline-primary w-100 text-left">
+                        <a href="{{route('attendance.check', $group->group_id)}}" class="btn btn-outline-primary w-100 text-left">
                             <b>{{ $group->group->name }}</b>
                         </a>
                     </th>

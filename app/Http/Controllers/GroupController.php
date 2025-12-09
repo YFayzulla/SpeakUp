@@ -32,23 +32,34 @@ class GroupController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'            => 'required|string|max:255',
-            'start_time'      => 'required|date_format:H:i',
-            'finish_time'     => 'required|date_format:H:i|after:start_time',
+            'name' => 'required|string|max:255',
+            'start_time' => 'required|date_format:H:i',
+            'finish_time' => 'required|date_format:H:i|after:start_time',
             'monthly_payment' => 'required|numeric|min:0',
-            'room'            => 'required|exists:rooms,id',
+            'room' => 'required|exists:rooms,id',
         ]);
 
         try {
             // The GroupObserver will automatically handle assigning the teacher
             // after the group is created.
             $group = Group::create([
-                'name'            => $request->name,
-                'start_time'      => $request->start_time,
-                'finish_time'     => $request->finish_time,
-                'monthly_payment' => (int) $request->monthly_payment,
-                'room_id'         => $request->room,
+                'name' => $request->name,
+                'start_time' => $request->start_time,
+                'finish_time' => $request->finish_time,
+                'monthly_payment' => (int)$request->monthly_payment,
+                'room_id' => $request->room,
             ]);
+             // Agar guruh modelida hasTeacher() metodi bo'lsa va u ID qaytarsa
+            // (Bu mantiq sizning modelingizda borligiga tayandim)
+            if (method_exists($group, 'hasTeacher')) {
+                $teacherId = $group->hasTeacher();
+                if ($teacherId) {
+                    GroupTeacher::create([
+                        'group_id' => $group->id,
+                        'teacher_id' => $teacherId,
+                    ]);
+                }
+            }
 
             return redirect()->route('group.show', $group->room_id)
                 ->with('success', 'Guruh muvaffaqiyatli qo\'shildi va o\'qituvchiga biriktirildi.');
@@ -84,11 +95,11 @@ class GroupController extends Controller
     public function update(Request $request, Group $group)
     {
         $request->validate([
-            'name'            => 'required|string|max:255',
-            'start_time'      => 'required|date_format:H:i',
-            'finish_time'     => 'required|date_format:H:i|after:start_time',
+            'name' => 'required|string|max:255',
+            'start_time' => 'required|date_format:H:i',
+            'finish_time' => 'required|date_format:H:i|after:start_time',
             'monthly_payment' => 'required|numeric|min:0',
-            'room'            => 'required|exists:rooms,id',
+            'room' => 'required|exists:rooms,id',
         ]);
 
         try {

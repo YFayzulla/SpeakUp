@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class Group extends Model
 {
@@ -21,37 +23,56 @@ class Group extends Model
         'monthly_payment'
     ];
 
-    /**
-     * Get the room that the group belongs to.
-     */
     public function room(): BelongsTo
     {
         return $this->belongsTo(Room::class);
     }
 
-    /**
-     * Get the students that are in the group.
-     */
     public function students(): HasMany
     {
         return $this->hasMany(User::class, 'group_id');
     }
 
-    /**
-     * The teachers that belong to the group.
-     */
     public function teachers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'group_teachers', 'group_id', 'teacher_id');
     }
 
-    /**
-     * Get the number of students in the group.
-     * This is an accessor: $group->students_count
-     */
     public function getStudentsCountAttribute(): int
     {
-        // This avoids loading all student models just to count them.
         return $this->students()->count();
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($group) {
+            if (!is_null($group->room_id)) {
+                $room = Room::find($group->room_id);
+                if ($room && !is_null($room->teacher_id)) {
+                    DB::transaction(function () use ($group, $room) {
+                        GroupTeacher::create([
+                            'group_id' => $group->id,
+                            'teacher_id' => $room->teacher_id,
+                        ]);
+                    });
+                }
+            }
+        });
+
+        static::updated(function ($group) {
+            if ($group->isDirty('room_id') && !is_null($group->room_id)) {
+                $room = Room::find($group->room_id);
+                if ($room && !is_null($room->teacher_id)) {
+                    DB::transaction(function () use ($group, $room) {
+                        GroupTeacher::updateOrCreate(
+                            ['group_id' => $group->id],
+                            ['teacher_id' => $room->teacher_id]
+                        );
+                    });
+                }
+            }
+        });
     }
 }

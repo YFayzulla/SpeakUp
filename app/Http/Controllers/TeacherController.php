@@ -9,6 +9,7 @@ use App\Models\GroupTeacher;
 use App\Models\Room;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -25,7 +26,7 @@ class TeacherController extends Controller
             // OPTIMIZATSIYA:
             // 1. with('room') - N+1 muammosini oldini olish (View da xona nomi kerak bo'lsa).
             // 2. paginate(20) - Ro'yxat uzun bo'lsa sahifalash.
-            $teachers = User::role('user')
+            $teachers = User::role('user') // Changed from 'user' to 'teacher'
                 ->with('room:id,room') // Faqat kerakli ustunlar
                 ->orderBy('name')
                 ->paginate(20);
@@ -86,7 +87,7 @@ class TeacherController extends Controller
                 'room_id'   => $request->room_id
             ]);
 
-            $teacher->assignRole('user');
+            $teacher->assignRole('teacher'); // Changed from 'user' to 'teacher'
 
             // 3. Xonaga tegishli guruhlarga biriktirish
             // Agar o'qituvchi biror xonaga biriktirilsa, shu xonadagi mavjud guruhlarga avtomatik qo'shiladi.
@@ -151,7 +152,7 @@ class TeacherController extends Controller
             // 1. Rasm yuklash
             if ($request->hasFile('photo')) {
                 $fileName = time() . '.' . $request->file('photo')->getClientOriginalExtension();
-                $newPhotoPath = $request->file('photo')->storeAs('Photo', $fileName);
+                $uploadedFilePath = $request->file('photo')->storeAs('Photo', $fileName);
             } else {
                 $newPhotoPath = $oldPhotoPath;
             }
@@ -251,5 +252,36 @@ class TeacherController extends Controller
             Log::error('TeacherController@destroy error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'O\'chirishda xatolik yuz berdi. O\'qituvchiga bog\'liq ma\'lumotlar mavjud bo\'lishi mumkin.');
         }
+    }
+
+    /**
+     * Display a listing of the teacher's groups.
+     */
+    public function groups()
+    {
+        // dd(); // Removed dd()
+        $teacherId = Auth::id();
+        $groups = GroupTeacher::where('teacher_id', $teacherId)->with('group')->get();
+        return view('teacher.group.index', compact('groups'));
+    }
+
+    /**
+     * Display a list of groups for attendance.
+     */
+    public function attendanceGroups()
+    {
+        $teacherId = Auth::id();
+        $groups = GroupTeacher::where('teacher_id', $teacherId)->with('group')->get();
+        return view('teacher.attendance.index', compact('groups'));
+    }
+
+    /**
+     * Display a list of groups for assessment.
+     */
+    public function assessmentGroups()
+    {
+        $teacherId = Auth::id();
+        $groups = GroupTeacher::where('teacher_id', $teacherId)->with('group')->get();
+        return view('teacher.assessment.index', compact('groups'));
     }
 }

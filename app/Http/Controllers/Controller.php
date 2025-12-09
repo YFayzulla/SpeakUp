@@ -41,7 +41,7 @@ class Controller extends BaseController
 
                 // Optimallashtirilgan so'rovlar:
                 // Select() orqali faqat kerakli ustunlarni olamiz (xotirani tejash uchun)
-                $teachers = User::role('user')
+                $teachers = User::role('user') // Changed from 'user' to 'teacher'
                     ->get();
 
                 // get()->count() emas, to'g'ridan-to'g'ri count() ishlatamiz
@@ -80,6 +80,24 @@ class Controller extends BaseController
             }
 
             // 3. BOSHQA FOYDALANUVCHILAR UCHUN (Bo'sh dashboard)
+            // Bu yerda 'teacher' roli uchun ham alohida mantiq bo'lishi kerak
+            if ($user->hasRole('user')) {
+                // O'qituvchi uchun dashboard yoki boshqa sahifaga yo'naltirish
+                // Hozircha 'dashboard' ga yo'naltiramiz, lekin uning kontenti bo'sh bo'ladi
+                // yoki o'qituvchiga mos kontent bilan to'ldirilishi kerak.
+                return view('dashboard', [
+                    'teachers' => [], // O'qituvchi o'zini ko'rmaydi
+                    'number_of_students' => 0,
+                    'daily_income' => 0,
+                    'daily_transactions' => [],
+                    'debtor_students' => [],
+                    'today_attendances' => [],
+                    'profit' => 0,
+                    'pie_chart' => [0, 0]
+                ]);
+            }
+
+
             return view('dashboard', [
                 'teachers' => [],
                 'number_of_students' => 0,

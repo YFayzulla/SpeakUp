@@ -103,26 +103,45 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| SHARED ROUTES (User || Admin)
+| SHARED ROUTES (Student || Admin)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:user|admin'])->group(function () {
-    Route::get('group/assessment/{id}', [GroupExtraController::class, 'attendance'])->name('group.attendance');
+Route::middleware(['auth', 'role:student|admin'])->group(function () {
+    // Bu yerda student va admin uchun umumiy marshrutlar bo'lishi mumkin
+    // Hozircha AssessmentController resursi studentlar uchun deb taxmin qilamiz
+    Route::resource('assessment', AssessmentController::class);
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| TEACHER ROUTES
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'role:user'])->group(function () {
+    Route::controller(TeacherController::class)->group(function () {
+        Route::get('teacher/groups', 'groups')->name('teacher.groups');
+        Route::get('teacher/attendance/groups', 'attendanceGroups')->name('attendance.teacher.groups');
+        Route::get('teacher/assessment/groups', 'assessmentGroups')->name('assessment.teacher.groups');
+    });
+
+    // O'qituvchilar davomatni tekshirishi va yuborishi mumkin
+    Route::get('group/attendance/{id}', [GroupExtraController::class, 'attendance'])->name('group.attendance');
     Route::delete('attendance/delete/{id}', [ExtraTeacherController::class, 'attendanceDelete'])->name('attendance.delete');
+    Route::post('attendance/submit/{id}', [TeacherAdminPanel::class, 'attendance_submit'])->name('attendance.submit');
+    Route::get('attendance/{id}', [TeacherAdminPanel::class, 'attendance'])->name('attendance.check');
 });
 
 /*
 |--------------------------------------------------------------------------
-| TEACHER ROUTES (User only)
+| STUDENT ROUTES
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:user'])->group(function () {
-    Route::resource('assessment', AssessmentController::class);
-
+Route::middleware(['auth', 'role:student'])->group(function () {
+    // Studentlarga tegishli marshrutlar
+    // Masalan, o'z test natijalarini ko'rish, davomatini ko'rish
     Route::controller(TeacherAdminPanel::class)->group(function () {
         Route::get('attendance/lists', 'attendanceIndex')->name('attendance.index');
         Route::get('groups', 'group')->name('attendance');
-        Route::get('attendance/{id}', 'attendance')->name('attendance.check');
-        Route::post('attendance/submit/{id}', 'attendance_submit')->name('attendance.submit');
     });
 });

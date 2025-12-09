@@ -69,7 +69,7 @@
         </li>
         @endrole
 
-        @hasanyrole('user')
+        @role('user')
         <li class="menu-item @if(request()->routeIs('assessment.index', 'assessment.show')) active @endif">
             <a href="{{ route('assessment.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-list-check"></i>

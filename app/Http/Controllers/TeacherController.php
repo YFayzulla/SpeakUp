@@ -165,7 +165,7 @@ class TeacherController extends Controller
                 'passport'  => $request->passport,
                 'percent'   => $request->percent,
                 'photo'     => $newPhotoPath,
-                'room_id'   => $request->room_id
+                'room_id'   => $request->room_id,
             ];
 
             if ($request->filled('password')) {

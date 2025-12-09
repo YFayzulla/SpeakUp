@@ -96,7 +96,7 @@
             <!-- Side Cards -->
             <div class="col-lg-4 col-12">
                 <!-- Profit Card -->
-                <div class="card mb-4 h-100">
+                <div class="card mb-4">
                     <div class="card-header">
                         <h5 class="m-0">Total Profit</h5>
                     </div>
@@ -112,7 +112,7 @@
                 </div>
 
                 <!-- Absences Card -->
-                <div class="card h-100">
+                <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="m-0">Today's Absences</h5>
                         <span class="badge bg-danger">{{ count($today_attendances) }}</span>

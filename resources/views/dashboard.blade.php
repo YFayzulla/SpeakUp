@@ -76,7 +76,7 @@
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>{{ $teacher->teacherhasGroup($teacher->id) }}</td>
+                                            <td>{{ $teacher->teacherhasGroup() }}</td>
                                             <td>{{ $teacher->teacherHasStudents() }}</td>
                                             <td class="text-end">{{ number_format($teacher->teacherPayment(), 0, ' ', ' ') }} UZS</td>
                                         </tr>

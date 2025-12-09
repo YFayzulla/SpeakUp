@@ -179,7 +179,7 @@ class TeacherController extends Controller
             // biz eski biriktirmalarni o'chirib, joriy xonadagi guruhlarga qayta biriktiramiz.
 
             // Diqqat: Bu logika agar o'qituvchi qo'lda maxsus guruhlarga qo'shilgan bo'lsa, ularni o'chirib yuboradi.
-            // Lekin sizning kodingizda shunday yozilgan edi, men buni saqlab qoldim.
+            // Lekin sizning kodingizda shunday yozilgan edi, men buni saqlab qoldim
             GroupTeacher::where('teacher_id', $teacher->id)->delete();
 
             $groups = Group::where('room_id', $request->room_id)->get();
@@ -251,36 +251,5 @@ class TeacherController extends Controller
             Log::error('TeacherController@destroy error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'O\'chirishda xatolik yuz berdi. O\'qituvchiga bog\'liq ma\'lumotlar mavjud bo\'lishi mumkin.');
         }
-    }
-
-    /**
-     * Display a listing of the teacher's groups.
-     */
-    public function groups()
-    {
-        // dd(); // Removed dd()
-        $teacherId = Auth::id();
-        $groups = GroupTeacher::where('teacher_id', $teacherId)->with('group')->get();
-        return view('teacher.group.index', compact('groups'));
-    }
-
-    /**
-     * Display a list of groups for attendance.
-     */
-    public function attendanceGroups()
-    {
-        $teacherId = Auth::id();
-        $groups = GroupTeacher::where('teacher_id', $teacherId)->with('group')->get();
-        return view('teacher.attendance.index', compact('groups'));
-    }
-
-    /**
-     * Display a list of groups for assessment.
-     */
-    public function assessmentGroups()
-    {
-        $teacherId = Auth::id();
-        $groups = GroupTeacher::where('teacher_id', $teacherId)->with('group')->get();
-        return view('teacher.assessment.index', compact('groups'));
     }
 }

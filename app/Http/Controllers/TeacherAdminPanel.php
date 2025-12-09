@@ -7,6 +7,7 @@ use App\Models\GroupTeacher;
 use App\Models\LessonAndHistory;
 use App\Services\AttendanceService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -147,5 +148,35 @@ class TeacherAdminPanel extends Controller
             Log::error('TeacherAdminPanel@attendanceIndex error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Ma\'lumotlarni yuklashda xatolik.');
         }
+    }
+
+    /**
+     * Display a listing of the teacher's groups.
+     */
+    public function groups()
+    {
+        $teacherId = Auth::id();
+        $groups = GroupTeacher::where('teacher_id', $teacherId)->with('group')->get();
+        return view('teacher.group.index', compact('groups'));
+    }
+
+    /**
+     * Display a list of groups for attendance.
+     */
+    public function attendanceGroups()
+    {
+        $teacherId = Auth::id();
+        $groups = GroupTeacher::where('teacher_id', $teacherId)->with('group')->get();
+        return view('teacher.attendance.index', compact('groups'));
+    }
+
+    /**
+     * Display a list of groups for assessment.
+     */
+    public function assessmentGroups()
+    {
+        $teacherId = Auth::id();
+        $groups = GroupTeacher::where('teacher_id', $teacherId)->with('group')->get();
+        return view('teacher.assessment.index', compact('groups'));
     }
 }

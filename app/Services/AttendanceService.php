@@ -30,8 +30,11 @@ class AttendanceService
 
         // Fetch attendances
 
-        $attendances = \App\Models\Attendance::where('group_id', $id)->whereYear('created_at', $year)
+        $allAttendances = \App\Models\Attendance::where('group_id', $id)->whereYear('created_at', $year)
             ->whereMonth('created_at', $month)->get();
+
+        $attendances = \App\Models\Attendance::where('group_id', $id)->whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)->orderByDesc('created_at')->paginate(10);
 
         $data = [];
 
@@ -49,16 +52,12 @@ class AttendanceService
 
         }
 
-        foreach ($attendances as $attendance) {
+        foreach ($allAttendances as $attendance) {
 
             $day = $attendance->created_at->format('d');
             $data[$attendance->user->name][$day] = $attendance->status; // Adjust status if needed
 
         }
-
-
-//        'group'
-        $students = Attendance::where('group_id', $id)->orderByDesc('created_at')->paginate(10);
 
         $array = ['students'=>$students,'today'=>$today,'data'=>$data,'year'=>$year,'month'=>$month ,'attendances'=>$attendances,'group'=>$group];
         return $array;

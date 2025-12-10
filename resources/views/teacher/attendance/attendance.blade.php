@@ -22,7 +22,7 @@
                     </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
-                    @forelse($users as $index => $student)
+                    @forelse($students as $index => $student)
                         <tr>
                             <td>{{ $index + 1 }}</td>
                             <td><b>{{ $student->name }}</b></td>
@@ -163,7 +163,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                @forelse($students as $attendance)
+                @forelse($attendances as $attendance)
                     <tr>
                         <td>{{ $loop->index + 1 }}</td>
                         <td>{{ $attendance->user->name }}</td>
@@ -188,7 +188,7 @@
                 </tbody>
             </table>
             <div class="card-footer">
-                {{ $students->links('pagination::bootstrap-5') }}
+                {{ $attendances->links('pagination::bootstrap-5') }}
             </div>
         </div>
     </div>

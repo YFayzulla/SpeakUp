@@ -8,7 +8,6 @@ use App\Models\Group;
 use App\Models\GroupTeacher;
 use App\Models\Room;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -86,7 +85,7 @@ class TeacherController extends Controller
                 'room_id' => $request->room_id
             ]);
 
-            $teacher->assignRole('teacher'); // Changed from 'user' to 'teacher'
+            $teacher->assignRole('user'); // Changed from 'user' to 'teacher'
 
             // 3. Xonaga tegishli guruhlarga biriktirish
             // Agar o'qituvchi biror xonaga biriktirilsa, shu xonadagi mavjud guruhlarga avtomatik qo'shiladi.

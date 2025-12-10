@@ -18,14 +18,14 @@
                 @enderror
 
                 <label for="start_time" class="text-dark">Start Time</label>
-                <input id="start_time" name="start_time" value="{{$group->start_time}}" type="time" class="form-control">
+                <input id="start_time" name="start_time" value="{{$group->start_time}}" type="text" class="form-control" placeholder="HH:MM">
 
                 @error('start_time')
                 <div class="alert alert-danger" role="alert">{{ $message }}</div>
                 @enderror
 
                 <label for="finish_time" class="text-dark">Finish Time</label>
-                <input id="finish_time" name="finish_time" value="{{$group->finish_time}}" type="time" class="form-control">
+                <input id="finish_time" name="finish_time" value="{{$group->finish_time}}" type="text" class="form-control" placeholder="HH:MM">
 
                 @error('finish_time')
                 <div class="alert alert-danger" role="alert">{{ $message }}</div>
@@ -69,5 +69,38 @@
             let input = document.getElementById('monthly_payment');
             input.value = input.value.replace(/\s+/g, '');
         }
+
+        function timeInputHandler(e) {
+            let input = e.target;
+            let value = input.value;
+
+            // Basic formatting: allow only numbers, add colon, limit length
+            value = value.replace(/[^0-9:]/g, '').replace(/(\d{2})(\d)/, '$1:$2').slice(0, 5);
+
+            // Validate hour part
+            if (value.length >= 2) {
+                let hour = value.slice(0, 2);
+                if (parseInt(hour, 10) > 23) {
+                    value = '23' + value.slice(2);
+                }
+            }
+            // Validate minute part
+            if (value.length === 5) {
+                let minute = value.slice(3, 5);
+                if (parseInt(minute, 10) > 59) {
+                    value = value.slice(0, 3) + '59';
+                }
+            }
+
+            input.value = value;
+
+            // If the start_time input is full, move to the finish_time input
+            if (input.id === 'start_time' && value.length === 5) {
+                document.getElementById('finish_time').focus();
+            }
+        }
+
+        document.getElementById('start_time').addEventListener('input', timeInputHandler);
+        document.getElementById('finish_time').addEventListener('input', timeInputHandler);
     </script>
 @endsection

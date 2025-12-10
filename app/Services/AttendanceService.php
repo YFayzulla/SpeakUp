@@ -4,65 +4,81 @@ namespace App\Services;
 
 use App\Models\Attendance;
 use App\Models\Group;
+use App\Models\LessonAndHistory;
 use App\Models\User;
+use Carbon\Carbon;
 
 class AttendanceService
 {
-
-
     public function attendance($id)
     {
-
-
-//        dd($id);
-        $today = now()->day;
-        $group = Group::find($id);
-
-        //       new code !!!
-
-        $date = request('date', now()->format('Y-m')); // Default to current year-month if not provided
-
+        $group = Group::findOrFail($id);
+        $date = request('date', now()->format('Y-m'));
         list($year, $month) = explode('-', $date);
 
-        // Fetch students
-
+        // 1. Get all students in the group
         $students = User::role('student')->where('group_id', $group->id)->get();
+        $studentIds = $students->pluck('id');
+        $studentNames = $students->pluck('name', 'id');
 
-        // Fetch attendances
+        // 2. Find all days in the month where a lesson was recorded for this group
+        $lessonDays = LessonAndHistory::where('group', $id)
+            ->where('data', 1) // 1 = Attendance lesson
+            ->whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
+            ->get()
+            ->map(function ($lesson) {
+                return $lesson->created_at->format('d');
+            })
+            ->unique();
 
-        $allAttendances = \App\Models\Attendance::where('group_id', $id)->whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)->get();
+        // 3. Get all ABSENT and LATE records for the month
+        $absentLateRecords = Attendance::where('group_id', $id)
+            ->whereIn('status', [0, 2]) // 0 = Absent, 2 = Late
+            ->whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
+            ->get();
 
-        $attendances = \App\Models\Attendance::where('group_id', $id)->whereYear('created_at', $year)
-            ->whereMonth('created_at', $month)->orderByDesc('created_at')->paginate(10);
-
+        // 4. Build the data grid
         $data = [];
-
-//        dd($attendances, $data);
-
         foreach ($students as $student) {
-
             $data[$student->name] = [];
-
             for ($i = 1; $i <= 31; $i++) {
+                $day = str_pad($i, 2, '0', STR_PAD_LEFT);
 
-                $data[$student->name][str_pad($i, 2, '0', STR_PAD_LEFT)] = ''; // Initialize all days as empty
-
+                if ($lessonDays->contains($day)) {
+                    // A lesson happened on this day, assume PRESENT by default
+                    $data[$student->name][$day] = 1; // 1 = Present
+                } else {
+                    // No lesson on this day
+                    $data[$student->name][$day] = ''; // No status
+                }
             }
-
         }
 
-        foreach ($allAttendances as $attendance) {
-
-            $day = $attendance->created_at->format('d');
-            $data[$attendance->user->name][$day] = $attendance->status; // Adjust status if needed
-
+        // 5. Overlay the absent/late records onto the grid
+        foreach ($absentLateRecords as $record) {
+            $day = $record->created_at->format('d');
+            $studentName = $studentNames[$record->user_id] ?? null;
+            if ($studentName) {
+                $data[$studentName][$day] = $record->status;
+            }
         }
 
-        $array = ['students'=>$students,'today'=>$today,'data'=>$data,'year'=>$year,'month'=>$month ,'attendances'=>$attendances,'group'=>$group];
-        return $array;
+        // 6. Get recent attendance records for the bottom table (paginated)
+        $recentAttendances = Attendance::where('group_id', $id)
+            ->with(['user', 'teacher', 'lesson'])
+            ->orderByDesc('created_at')
+            ->paginate(10);
 
+        return [
+            'students' => $students,
+            'today' => now()->day,
+            'data' => $data,
+            'year' => $year,
+            'month' => $month,
+            'attendances' => $recentAttendances,
+            'group' => $group
+        ];
     }
-
-
 }

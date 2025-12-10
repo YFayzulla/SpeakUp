@@ -2,6 +2,7 @@
 
 @section('content')
 
+    @role('user')
     <div class="card shadow-md rounded-lg mb-4">
         <form action="{{ route('attendance.submit', $id) }}" method="post">
             @csrf
@@ -18,7 +19,7 @@
                     <tr>
                         <th>No</th>
                         <th>Name</th>
-                        <th class="text-center">Present</th>
+                        <th class="text-center">Status</th>
                     </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
@@ -27,9 +28,15 @@
                             <td>{{ $index + 1 }}</td>
                             <td><b>{{ $student->name }}</b></td>
                             <td class="text-center">
-                                <div class="form-check form-switch d-inline-block">
-                                    <input class="form-check-input" type="checkbox" id="status-{{ $student->id }}" name="status[{{ $student->id }}]" value="on" checked>
-                                    <label class="form-check-label" for="status-{{ $student->id }}"></label>
+                                <div class="btn-group" role="group" aria-label="Attendance status">
+                                    <input type="radio" class="btn-check" name="status[{{ $student->id }}]" id="status-present-{{ $student->id }}" value="1" checked>
+                                    <label class="btn btn-outline-success" for="status-present-{{ $student->id }}">Present</label>
+
+                                    <input type="radio" class="btn-check" name="status[{{ $student->id }}]" id="status-absent-{{ $student->id }}" value="0">
+                                    <label class="btn btn-outline-danger" for="status-absent-{{ $student->id }}">Absent</label>
+
+                                    <input type="radio" class="btn-check" name="status[{{ $student->id }}]" id="status-late-{{ $student->id }}" value="2">
+                                    <label class="btn btn-outline-warning" for="status-late-{{ $student->id }}">Late</label>
                                 </div>
                             </td>
                         </tr>
@@ -48,6 +55,7 @@
 
         </form>
     </div>
+    @endrole
 
 
     <div class="card shadow-md rounded-lg mt-4">
@@ -86,8 +94,6 @@
             <table class="table table-bordered table-hover text-center">
                 @php
                     use Carbon\Carbon;
-
-                    // Get the current year, month, day, and number of days in the month
                     $currentMonthDays = Carbon::createFromDate($year, $month)->daysInMonth;
                 @endphp
 
@@ -96,7 +102,6 @@
                     <th class="text-start">Name</th>
                     @for ($i = 1; $i <= $currentMonthDays; $i++)
                         @php
-                            // Create a date object for each day of the current month
                             $currentDate = Carbon::createFromDate($year, $month, $i);
                             $isWeekend = $currentDate->isWeekend();
                             $isToday = ($i == Carbon::now()->day && $month == Carbon::now()->month && $year == Carbon::now()->year);
@@ -114,22 +119,21 @@
                         <td class="text-start fw-bold">{{ $userName }}</td>
                         @for ($i = 1; $i <= $currentMonthDays; $i++)
                             @php
-                                // Pad the day with leading zeros if necessary
                                 $day = str_pad($i, 2, '0', STR_PAD_LEFT);
-                                // Get the status for the current day
-                                $status = $days[$day] ?? null; // Use null for clarity if not set
+                                $status = $days[$day] ?? null;
                                 $isAbsent = ($status === '0' || $status === 0);
                                 $isPresent = ($status === '1' || $status === 1);
-
-                                // Create a date object for the current year, month, and day
+                                $isLate = ($status === '2' || $status === 2);
                                 $currentDate = Carbon::createFromDate($year, $month, $i);
                                 $isWeekend = $currentDate->isWeekend();
                             @endphp
-                            <td class="{{ $isAbsent ? 'bg-danger-subtle text-danger' : ($isWeekend ? 'bg-secondary-subtle text-secondary' : ($isPresent ? 'text-success' : '')) }}">
+                            <td class="{{ $isAbsent ? 'bg-danger-subtle text-danger' : ($isWeekend ? 'bg-secondary-subtle text-secondary' : ($isLate ? 'bg-warning-subtle text-warning' : ($isPresent ? 'text-success' : ''))) }}">
                                 @if ($isPresent)
                                     <i class="bx bx-check-circle"></i>
                                 @elseif ($isAbsent)
                                     <i class="bx bx-x-circle"></i>
+                                @elseif ($isLate)
+                                    <i class="bx bx-time-five"></i>
                                 @else
                                     -
                                 @endif
@@ -158,6 +162,7 @@
                         <th>Name</th>
                         <th>Teacher</th>
                         <th>Lesson</th>
+                        <th>Status</th>
                         <th>Date</th>
                         <th class="text-center">Actions</th>
                     </tr>
@@ -169,6 +174,15 @@
                         <td>{{ $attendance->user->name }}</td>
                         <td>{{ $attendance->teacher->name }}</td>
                         <td>{{ $attendance->lesson->name }}</td>
+                        <td>
+                            @if($attendance->status == 1)
+                                <span class="badge bg-success">Present</span>
+                            @elseif($attendance->status == 0)
+                                <span class="badge bg-danger">Absent</span>
+                            @elseif($attendance->status == 2)
+                                <span class="badge bg-warning">Late</span>
+                            @endif
+                        </td>
                         <td>{{ $attendance->created_at->format('d M Y H:i') }}</td>
                         <td class="text-center">
                             <form action="{{route('attendance.delete', $attendance->id)}}" method="POST" onsubmit="return confirm('Are you sure you want to delete this attendance record?');">
@@ -182,7 +196,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center py-4 text-muted">No recent attendance records found.</td>
+                        <td colspan="7" class="text-center py-4 text-muted">No recent attendance records found.</td>
                     </tr>
                 @endforelse
                 </tbody>

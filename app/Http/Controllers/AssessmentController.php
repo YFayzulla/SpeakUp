@@ -9,26 +9,31 @@ use App\Models\GroupTeacher;
 use App\Models\LessonAndHistory;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class AssessmentController extends Controller
 {
     /**
-     * O'qituvchiga tegishli guruhlarni ko'rsatish.
+     * Display a listing of the resource.
      */
     public function index()
     {
         try {
-            $teacherId = auth()->id();
+            $user = Auth::user();
 
-            // O'zgartirish: ->with('group') qo'shildi.
-            // Bu orqali guruh ma'lumotlari alohida so'rovlar bilan emas, bitta so'rov bilan keladi.
-            $groups = GroupTeacher::where('teacher_id', $teacherId)
-                ->with('group')
-                ->get();
-
-            return view('teacher.assessment.index', compact('groups'));
+            if ($user->hasRole('admin')) {
+                // Admin sees all groups
+                $groups = Group::orderBy('name')->get();
+                return view('admin.assessment.index', compact('groups'));
+            } else {
+                // Teacher sees only their groups
+                $groups = GroupTeacher::where('teacher_id', $user->id)
+                    ->with('group')
+                    ->get();
+                return view('teacher.assessment.index', compact('groups'));
+            }
         } catch (\Exception $e) {
             Log::error('AssessmentController@index error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Guruhlarni yuklashda xatolik yuz berdi.');

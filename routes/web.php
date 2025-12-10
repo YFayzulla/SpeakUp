@@ -50,7 +50,6 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     });
 
     // O'qituvchilar davomatni tekshirishi va yuborishi mumkin
-    Route::get('group/attendance/{id}', [GroupExtraController::class, 'attendance'])->name('group.attendance');
     Route::delete('attendance/delete/{id}', [ExtraTeacherController::class, 'attendanceDelete'])->name('attendance.delete');
     Route::post('attendance/submit/{id}', [TeacherAdminPanel::class, 'attendance_submit'])->name('attendance.submit');
     Route::get('attendance/{id}', [TeacherAdminPanel::class, 'attendance'])->name('attendance.check');
@@ -120,6 +119,16 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::delete('/delete/{id}', 'destroy')->name('destroy');
     });
 });
+
+/*
+|--------------------------------------------------------------------------
+| SHARED ROUTES (Admin || User)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'role:admin|user'])->group(function () {
+    Route::get('group/attendance/{id}', [GroupExtraController::class, 'attendance'])->name('group.attendance');
+});
+
 
 /*
 |--------------------------------------------------------------------------

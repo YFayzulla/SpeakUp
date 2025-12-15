@@ -153,8 +153,48 @@
 
             // Session'da chek ID'si borligini tekshirish va yangi oynada ochish
             @if(session('payment_receipt_id'))
-            var receiptUrl = "{{ route('payment.receipt', session('payment_receipt_id')) }}";
-            window.open(receiptUrl, '_blank');
+            (function(){
+                var baseUrl = "{{ route('payment.receipt', session('payment_receipt_id')) }}";
+                var receiptUrl = baseUrl + '?embed=1';
+                try {
+                    var iframe = document.createElement('iframe');
+                    iframe.style.position = 'fixed';
+                    iframe.style.width = '0';
+                    iframe.style.height = '0';
+                    iframe.style.border = '0';
+                    iframe.style.opacity = '0';
+                    iframe.onload = function(){
+                        try {
+                            var cw = iframe.contentWindow || iframe;
+                            var cleanup = function(){
+                                // Remove iframe shortly after printing finishes
+                                setTimeout(function(){
+                                    if (iframe && iframe.parentNode) iframe.parentNode.removeChild(iframe);
+                                }, 50);
+                            };
+                            // Listen inside the iframe for afterprint if supported
+                            if (cw && 'onafterprint' in cw) {
+                                cw.addEventListener('afterprint', cleanup);
+                            } else {
+                                // Fallback: cleanup after a short delay
+                                setTimeout(cleanup, 2000);
+                            }
+                            // Trigger print
+                            cw.focus();
+                            cw.print();
+                        } catch (e) {
+                            // If printing is blocked, fallback to opening a new tab
+                            window.open(baseUrl, '_blank');
+                            if (iframe && iframe.parentNode) iframe.parentNode.removeChild(iframe);
+                        }
+                    };
+                    document.body.appendChild(iframe);
+                    iframe.src = receiptUrl;
+                } catch (err) {
+                    // Last-resort fallback
+                    window.open(baseUrl, '_blank');
+                }
+            })();
             @endif
         });
     </script>

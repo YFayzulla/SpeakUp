@@ -15,11 +15,19 @@ class DeptStudentController extends Controller
     {
         $students = User::role('student')
             ->with('deptStudent', 'group')
-            ->leftJoin('dept_students', 'users.id', '=', 'dept_students.user_id')
-            ->select('users.*', 'dept_students.payed')
-            ->orderByRaw("CASE WHEN dept_students.payed > 0 THEN 0 ELSE 1 END")
-            ->orderBy('status')
-            ->orderBy('name')
+            // Use a subquery to fetch the current payed value deterministically for sorting,
+            // avoiding any duplicate rows or mismatched joins
+            ->select('users.*')
+            ->selectRaw('(SELECT payed FROM dept_students WHERE dept_students.user_id = users.id ORDER BY id DESC LIMIT 1) AS payed_for_sort')
+            // Order groups explicitly:
+            // 0) Partially Paid (active)
+            // 1) Debtor (status <= 0, active)
+            // 2) Paid (status > 0, active)
+            // 3) Disabled (status IS NULL)
+            ->orderByRaw("CASE WHEN users.status IS NULL THEN 3 WHEN COALESCE(payed_for_sort, 0) > 0 THEN 0 WHEN users.status <= 0 THEN 1 ELSE 2 END")
+            // Inside groups, sort by status then by name
+            ->orderBy('users.status')
+            ->orderBy('users.name')
             ->get();
 
         return view('admin.dept.index', compact('students'));
@@ -128,7 +136,7 @@ class DeptStudentController extends Controller
      */
     public function showReceipt(int $paymentId)
     {
-        $payment = HistoryPayments::with('user')->findOrFail($paymentId);
+        $payment = HistoryPayments::with(['user.group.room'])->findOrFail($paymentId);
         $student = $payment->user;
         $monthlyDept = $student->deptStudent->dept ?? $student->should_pay;
 

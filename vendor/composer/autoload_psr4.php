@@ -93,6 +93,7 @@ return array(
     'Doctrine\\Deprecations\\' => array($vendorDir . '/doctrine/deprecations/src'),
     'Doctrine\\DBAL\\' => array($vendorDir . '/doctrine/dbal/src'),
     'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/src'),
+    'Doctrine\\Common\\' => array($vendorDir . '/doctrine/event-manager/src'),
     'Dflydev\\DotAccessData\\' => array($vendorDir . '/dflydev/dot-access-data/src'),
     'Database\\Seeders\\' => array($baseDir . '/database/seeders'),
     'Database\\Factories\\' => array($baseDir . '/database/factories'),

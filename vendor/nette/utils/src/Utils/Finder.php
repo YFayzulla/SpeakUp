@@ -26,6 +26,8 @@ use const GLOB_NOESCAPE, GLOB_NOSORT, GLOB_ONLYDIR;
  */
 class Finder implements \IteratorAggregate
 {
+	use Nette\SmartObject;
+
 	/** @var array<array{string, string}> */
 	private array $find = [];
 

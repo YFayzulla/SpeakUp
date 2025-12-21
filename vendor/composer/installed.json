@@ -981,31 +981,31 @@
         },
         {
             "name": "carbonphp/carbon-doctrine-types",
-            "version": "3.2.0",
-            "version_normalized": "3.2.0.0",
+            "version": "2.1.0",
+            "version_normalized": "2.1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CarbonPHP/carbon-doctrine-types.git",
-                "reference": "18ba5ddfec8976260ead6e866180bd5d2f71aa1d"
+                "reference": "99f76ffa36cce3b70a4a6abce41dba15ca2e84cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CarbonPHP/carbon-doctrine-types/zipball/18ba5ddfec8976260ead6e866180bd5d2f71aa1d",
-                "reference": "18ba5ddfec8976260ead6e866180bd5d2f71aa1d",
+                "url": "https://api.github.com/repos/CarbonPHP/carbon-doctrine-types/zipball/99f76ffa36cce3b70a4a6abce41dba15ca2e84cb",
+                "reference": "99f76ffa36cce3b70a4a6abce41dba15ca2e84cb",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.1"
+                "php": "^7.4 || ^8.0"
             },
             "conflict": {
-                "doctrine/dbal": "<4.0.0 || >=5.0.0"
+                "doctrine/dbal": "<3.7.0 || >=4.0.0"
             },
             "require-dev": {
-                "doctrine/dbal": "^4.0.0",
+                "doctrine/dbal": "^3.7.0",
                 "nesbot/carbon": "^2.71.0 || ^3.0.0",
                 "phpunit/phpunit": "^10.3"
             },
-            "time": "2024-02-09T16:56:22+00:00",
+            "time": "2023-12-11T17:09:12+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1033,7 +1033,7 @@
             ],
             "support": {
                 "issues": "https://github.com/CarbonPHP/carbon-doctrine-types/issues",
-                "source": "https://github.com/CarbonPHP/carbon-doctrine-types/tree/3.2.0"
+                "source": "https://github.com/CarbonPHP/carbon-doctrine-types/tree/2.1.0"
             },
             "funding": [
                 {
@@ -1340,42 +1340,50 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "4.4.1",
-            "version_normalized": "4.4.1.0",
+            "version": "3.10.4",
+            "version_normalized": "3.10.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "3d544473fb93f5c25b483ea4f4ce99f8c4d9d44c"
+                "reference": "63a46cb5aa6f60991186cc98c1d1b50c09311868"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/3d544473fb93f5c25b483ea4f4ce99f8c4d9d44c",
-                "reference": "3d544473fb93f5c25b483ea4f4ce99f8c4d9d44c",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/63a46cb5aa6f60991186cc98c1d1b50c09311868",
+                "reference": "63a46cb5aa6f60991186cc98c1d1b50c09311868",
                 "shasum": ""
             },
             "require": {
-                "doctrine/deprecations": "^1.1.5",
-                "php": "^8.2",
+                "composer-runtime-api": "^2",
+                "doctrine/deprecations": "^0.5.3|^1",
+                "doctrine/event-manager": "^1|^2",
+                "php": "^7.4 || ^8.0",
                 "psr/cache": "^1|^2|^3",
                 "psr/log": "^1|^2|^3"
             },
+            "conflict": {
+                "doctrine/cache": "< 1.11"
+            },
             "require-dev": {
+                "doctrine/cache": "^1.11|^2.0",
                 "doctrine/coding-standard": "14.0.0",
                 "fig/log-test": "^1",
-                "jetbrains/phpstorm-stubs": "2023.2",
+                "jetbrains/phpstorm-stubs": "2023.1",
                 "phpstan/phpstan": "2.1.30",
-                "phpstan/phpstan-phpunit": "2.0.7",
                 "phpstan/phpstan-strict-rules": "^2",
-                "phpunit/phpunit": "11.5.23",
+                "phpunit/phpunit": "9.6.29",
                 "slevomat/coding-standard": "8.24.0",
                 "squizlabs/php_codesniffer": "4.0.0",
-                "symfony/cache": "^6.3.8|^7.0|^8.0",
-                "symfony/console": "^5.4|^6.3|^7.0|^8.0"
+                "symfony/cache": "^5.4|^6.0|^7.0|^8.0",
+                "symfony/console": "^4.4|^5.4|^6.0|^7.0|^8.0"
             },
             "suggest": {
                 "symfony/console": "For helpful console commands such as SQL execution and import of files."
             },
-            "time": "2025-12-04T10:11:03+00:00",
+            "time": "2025-11-29T10:46:08+00:00",
+            "bin": [
+                "bin/doctrine-dbal"
+            ],
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1429,7 +1437,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/dbal/issues",
-                "source": "https://github.com/doctrine/dbal/tree/4.4.1"
+                "source": "https://github.com/doctrine/dbal/tree/3.10.4"
             },
             "funding": [
                 {
@@ -1497,6 +1505,100 @@
                 "source": "https://github.com/doctrine/deprecations/tree/1.1.5"
             },
             "install-path": "../doctrine/deprecations"
+        },
+        {
+            "name": "doctrine/event-manager",
+            "version": "2.0.1",
+            "version_normalized": "2.0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/event-manager.git",
+                "reference": "b680156fa328f1dfd874fd48c7026c41570b9c6e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/event-manager/zipball/b680156fa328f1dfd874fd48c7026c41570b9c6e",
+                "reference": "b680156fa328f1dfd874fd48c7026c41570b9c6e",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1"
+            },
+            "conflict": {
+                "doctrine/common": "<2.9"
+            },
+            "require-dev": {
+                "doctrine/coding-standard": "^12",
+                "phpstan/phpstan": "^1.8.8",
+                "phpunit/phpunit": "^10.5",
+                "vimeo/psalm": "^5.24"
+            },
+            "time": "2024-05-22T20:47:39+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Doctrine\\Common\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                },
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com"
+                }
+            ],
+            "description": "The Doctrine Event Manager is a simple PHP event system that was built to be used with the various Doctrine projects.",
+            "homepage": "https://www.doctrine-project.org/projects/event-manager.html",
+            "keywords": [
+                "event",
+                "event dispatcher",
+                "event manager",
+                "event system",
+                "events"
+            ],
+            "support": {
+                "issues": "https://github.com/doctrine/event-manager/issues",
+                "source": "https://github.com/doctrine/event-manager/tree/2.0.1"
+            },
+            "funding": [
+                {
+                    "url": "https://www.doctrine-project.org/sponsorship.html",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://www.patreon.com/phpdoctrine",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Fevent-manager",
+                    "type": "tidelift"
+                }
+            ],
+            "install-path": "../doctrine/event-manager"
         },
         {
             "name": "doctrine/inflector",
@@ -1738,21 +1840,21 @@
         },
         {
             "name": "dragonmantank/cron-expression",
-            "version": "v3.6.0",
-            "version_normalized": "3.6.0.0",
+            "version": "v3.5.0",
+            "version_normalized": "3.5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dragonmantank/cron-expression.git",
-                "reference": "d61a8a9604ec1f8c3d150d09db6ce98b32675013"
+                "reference": "1b2de7f4a468165dca07b142240733a1973e766d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dragonmantank/cron-expression/zipball/d61a8a9604ec1f8c3d150d09db6ce98b32675013",
-                "reference": "d61a8a9604ec1f8c3d150d09db6ce98b32675013",
+                "url": "https://api.github.com/repos/dragonmantank/cron-expression/zipball/1b2de7f4a468165dca07b142240733a1973e766d",
+                "reference": "1b2de7f4a468165dca07b142240733a1973e766d",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.2|^8.3|^8.4|^8.5"
+                "php": "^7.2|^8.0"
             },
             "replace": {
                 "mtdowling/cron-expression": "^1.0"
@@ -1762,7 +1864,7 @@
                 "phpstan/phpstan": "^1.12.32|^2.1.31",
                 "phpunit/phpunit": "^8.5.48|^9.0"
             },
-            "time": "2025-10-31T18:51:33+00:00",
+            "time": "2025-10-31T18:36:32+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1793,7 +1895,7 @@
             ],
             "support": {
                 "issues": "https://github.com/dragonmantank/cron-expression/issues",
-                "source": "https://github.com/dragonmantank/cron-expression/tree/v3.6.0"
+                "source": "https://github.com/dragonmantank/cron-expression/tree/v3.5.0"
             },
             "funding": [
                 {
@@ -3629,39 +3731,38 @@
         },
         {
             "name": "maennchen/zipstream-php",
-            "version": "3.2.1",
-            "version_normalized": "3.2.1.0",
+            "version": "3.1.1",
+            "version_normalized": "3.1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maennchen/ZipStream-PHP.git",
-                "reference": "682f1098a8fddbaf43edac2306a691c7ad508ec5"
+                "reference": "6187e9cc4493da94b9b63eb2315821552015fca9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maennchen/ZipStream-PHP/zipball/682f1098a8fddbaf43edac2306a691c7ad508ec5",
-                "reference": "682f1098a8fddbaf43edac2306a691c7ad508ec5",
+                "url": "https://api.github.com/repos/maennchen/ZipStream-PHP/zipball/6187e9cc4493da94b9b63eb2315821552015fca9",
+                "reference": "6187e9cc4493da94b9b63eb2315821552015fca9",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
                 "ext-zlib": "*",
-                "php-64bit": "^8.3"
+                "php-64bit": "^8.1"
             },
             "require-dev": {
-                "brianium/paratest": "^7.7",
                 "ext-zip": "*",
-                "friendsofphp/php-cs-fixer": "^3.86",
+                "friendsofphp/php-cs-fixer": "^3.16",
                 "guzzlehttp/guzzle": "^7.5",
                 "mikey179/vfsstream": "^1.6",
                 "php-coveralls/php-coveralls": "^2.5",
-                "phpunit/phpunit": "^12.0",
-                "vimeo/psalm": "^6.0"
+                "phpunit/phpunit": "^10.0",
+                "vimeo/psalm": "^5.0"
             },
             "suggest": {
                 "guzzlehttp/psr7": "^2.4",
                 "psr/http-message": "^2.0"
             },
-            "time": "2025-12-10T09:58:31+00:00",
+            "time": "2024-10-10T12:33:01+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -3698,7 +3799,7 @@
             ],
             "support": {
                 "issues": "https://github.com/maennchen/ZipStream-PHP/issues",
-                "source": "https://github.com/maennchen/ZipStream-PHP/tree/3.2.1"
+                "source": "https://github.com/maennchen/ZipStream-PHP/tree/3.1.1"
             },
             "funding": [
                 {
@@ -4230,21 +4331,21 @@
         },
         {
             "name": "nette/utils",
-            "version": "v4.1.0",
-            "version_normalized": "4.1.0.0",
+            "version": "v4.0.10",
+            "version_normalized": "4.0.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/utils.git",
-                "reference": "fa1f0b8261ed150447979eb22e373b7b7ad5a8e0"
+                "reference": "2778deb6aab136c8db4ed1f4d6e9f465ca2dbee3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/utils/zipball/fa1f0b8261ed150447979eb22e373b7b7ad5a8e0",
-                "reference": "fa1f0b8261ed150447979eb22e373b7b7ad5a8e0",
+                "url": "https://api.github.com/repos/nette/utils/zipball/2778deb6aab136c8db4ed1f4d6e9f465ca2dbee3",
+                "reference": "2778deb6aab136c8db4ed1f4d6e9f465ca2dbee3",
                 "shasum": ""
             },
             "require": {
-                "php": "8.2 - 8.5"
+                "php": "8.0 - 8.5"
             },
             "conflict": {
                 "nette/finder": "<3",
@@ -4264,11 +4365,11 @@
                 "ext-mbstring": "to use Strings::lower() etc...",
                 "ext-tokenizer": "to use Nette\\Utils\\Reflection::getUseStatements()"
             },
-            "time": "2025-12-01T17:49:23+00:00",
+            "time": "2025-12-01T17:30:42+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.1-dev"
+                    "dev-master": "4.0-dev"
                 }
             },
             "installation-source": "dist",
@@ -4316,7 +4417,7 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/utils/issues",
-                "source": "https://github.com/nette/utils/tree/v4.1.0"
+                "source": "https://github.com/nette/utils/tree/v4.0.10"
             },
             "install-path": "../nette/utils"
         },
@@ -6264,23 +6365,23 @@
         },
         {
             "name": "symfony/css-selector",
-            "version": "v7.4.0",
-            "version_normalized": "7.4.0.0",
+            "version": "v6.4.24",
+            "version_normalized": "6.4.24.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
-                "reference": "ab862f478513e7ca2fe9ec117a6f01a8da6e1135"
+                "reference": "9b784413143701aa3c94ac1869a159a9e53e8761"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/css-selector/zipball/ab862f478513e7ca2fe9ec117a6f01a8da6e1135",
-                "reference": "ab862f478513e7ca2fe9ec117a6f01a8da6e1135",
+                "url": "https://api.github.com/repos/symfony/css-selector/zipball/9b784413143701aa3c94ac1869a159a9e53e8761",
+                "reference": "9b784413143701aa3c94ac1869a159a9e53e8761",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.2"
+                "php": ">=8.1"
             },
-            "time": "2025-10-30T13:39:42+00:00",
+            "time": "2025-07-10T08:14:14+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -6312,7 +6413,7 @@
             "description": "Converts CSS selectors to XPath expressions",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/css-selector/tree/v7.4.0"
+                "source": "https://github.com/symfony/css-selector/tree/v6.4.24"
             },
             "funding": [
                 {
@@ -6488,25 +6589,25 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v7.4.0",
-            "version_normalized": "7.4.0.0",
+            "version": "v6.4.25",
+            "version_normalized": "6.4.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "9dddcddff1ef974ad87b3708e4b442dc38b2261d"
+                "reference": "b0cf3162020603587363f0551cd3be43958611ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/9dddcddff1ef974ad87b3708e4b442dc38b2261d",
-                "reference": "9dddcddff1ef974ad87b3708e4b442dc38b2261d",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/b0cf3162020603587363f0551cd3be43958611ff",
+                "reference": "b0cf3162020603587363f0551cd3be43958611ff",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.2",
+                "php": ">=8.1",
                 "symfony/event-dispatcher-contracts": "^2.5|^3"
             },
             "conflict": {
-                "symfony/dependency-injection": "<6.4",
+                "symfony/dependency-injection": "<5.4",
                 "symfony/service-contracts": "<2.5"
             },
             "provide": {
@@ -6515,16 +6616,15 @@
             },
             "require-dev": {
                 "psr/log": "^1|^2|^3",
-                "symfony/config": "^6.4|^7.0|^8.0",
-                "symfony/dependency-injection": "^6.4|^7.0|^8.0",
-                "symfony/error-handler": "^6.4|^7.0|^8.0",
-                "symfony/expression-language": "^6.4|^7.0|^8.0",
-                "symfony/framework-bundle": "^6.4|^7.0|^8.0",
-                "symfony/http-foundation": "^6.4|^7.0|^8.0",
+                "symfony/config": "^5.4|^6.0|^7.0",
+                "symfony/dependency-injection": "^5.4|^6.0|^7.0",
+                "symfony/error-handler": "^5.4|^6.0|^7.0",
+                "symfony/expression-language": "^5.4|^6.0|^7.0",
+                "symfony/http-foundation": "^5.4|^6.0|^7.0",
                 "symfony/service-contracts": "^2.5|^3",
-                "symfony/stopwatch": "^6.4|^7.0|^8.0"
+                "symfony/stopwatch": "^5.4|^6.0|^7.0"
             },
-            "time": "2025-10-28T09:38:46+00:00",
+            "time": "2025-08-13T09:41:44+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -6552,7 +6652,7 @@
             "description": "Provides tools that allow your application components to communicate with each other by dispatching events and listening to them",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/event-dispatcher/tree/v7.4.0"
+                "source": "https://github.com/symfony/event-dispatcher/tree/v6.4.25"
             },
             "funding": [
                 {
@@ -8051,24 +8151,23 @@
         },
         {
             "name": "symfony/string",
-            "version": "v7.4.0",
-            "version_normalized": "7.4.0.0",
+            "version": "v6.4.30",
+            "version_normalized": "6.4.30.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "d50e862cb0a0e0886f73ca1f31b865efbb795003"
+                "reference": "50590a057841fa6bf69d12eceffce3465b9e32cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/d50e862cb0a0e0886f73ca1f31b865efbb795003",
-                "reference": "d50e862cb0a0e0886f73ca1f31b865efbb795003",
+                "url": "https://api.github.com/repos/symfony/string/zipball/50590a057841fa6bf69d12eceffce3465b9e32cb",
+                "reference": "50590a057841fa6bf69d12eceffce3465b9e32cb",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.2",
-                "symfony/deprecation-contracts": "^2.5|^3.0",
+                "php": ">=8.1",
                 "symfony/polyfill-ctype": "~1.8",
-                "symfony/polyfill-intl-grapheme": "~1.33",
+                "symfony/polyfill-intl-grapheme": "~1.0",
                 "symfony/polyfill-intl-normalizer": "~1.0",
                 "symfony/polyfill-mbstring": "~1.0"
             },
@@ -8076,13 +8175,12 @@
                 "symfony/translation-contracts": "<2.5"
             },
             "require-dev": {
-                "symfony/emoji": "^7.1|^8.0",
-                "symfony/http-client": "^6.4|^7.0|^8.0",
-                "symfony/intl": "^6.4|^7.0|^8.0",
+                "symfony/http-client": "^5.4|^6.0|^7.0",
+                "symfony/intl": "^6.2|^7.0",
                 "symfony/translation-contracts": "^2.5|^3.0",
-                "symfony/var-exporter": "^6.4|^7.0|^8.0"
+                "symfony/var-exporter": "^5.4|^6.0|^7.0"
             },
-            "time": "2025-11-27T13:27:24+00:00",
+            "time": "2025-11-21T18:03:05+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -8121,7 +8219,7 @@
                 "utf8"
             ],
             "support": {
-                "source": "https://github.com/symfony/string/tree/v7.4.0"
+                "source": "https://github.com/symfony/string/tree/v6.4.30"
             },
             "funding": [
                 {

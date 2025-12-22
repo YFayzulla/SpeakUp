@@ -93,7 +93,7 @@ class StudentController extends Controller
                 'photo'        => $uploadedFilePath,
                 'should_pay'   => (int) $request->should_pay,
                 'description'  => $request->description,
-                'status'       => ($group->id == 1) ? null : 0, // 1-guruh uchun maxsus logika
+                'status'       => null,
                 'room_id'      => $group->room_id,
             ]);
 

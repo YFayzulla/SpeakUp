@@ -11,12 +11,13 @@ namespace Nette\Utils;
 
 use Nette;
 use function array_map, array_search, array_splice, count, explode, implode, is_a, is_resource, is_string, strcasecmp, strtolower, substr, trim;
+use const PHP_VERSION_ID;
 
 
 /**
  * PHP type reflection.
  */
-final readonly class Type
+final class Type
 {
 	/** @var array<int, string|self> */
 	private array $types;
@@ -33,7 +34,7 @@ final readonly class Type
 	): ?self
 	{
 		$type = $reflection instanceof \ReflectionFunctionAbstract
-			? $reflection->getReturnType() ?? ($reflection instanceof \ReflectionMethod ? $reflection->getTentativeReturnType() : null)
+			? $reflection->getReturnType() ?? (PHP_VERSION_ID >= 80100 && $reflection instanceof \ReflectionMethod ? $reflection->getTentativeReturnType() : null)
 			: $reflection->getType();
 
 		return $type ? self::fromReflectionType($type, $reflection, asObject: true) : null;
@@ -229,7 +230,7 @@ final readonly class Type
 	}
 
 
-	#[\Deprecated('use isSimple()')]
+	/** @deprecated use isSimple() */
 	public function isSingle(): bool
 	{
 		return $this->simple;

@@ -62,7 +62,7 @@ class TeacherController extends Controller
         if ($request->hasFile('photo')) {
             try {
                 $fileName = time() . '.' . $request->file('photo')->getClientOriginalExtension();
-                $uploadedFilePath = $request->file('photo')->storeAs('Photo', $fileName);
+                $uploadedFilePath = $request->file('photo')->storeAs('Photo', $fileName, 'public');
             } catch (\Exception $e) {
                 return redirect()->back()->withInput()->with('error', 'Rasmni yuklashda xatolik.');
             }
@@ -110,8 +110,8 @@ class TeacherController extends Controller
             DB::rollBack();
 
             // XATO BO'LSA: Yuklangan rasmni o'chirib tashlash
-            if ($uploadedFilePath && Storage::exists($uploadedFilePath)) {
-                Storage::delete($uploadedFilePath);
+            if ($uploadedFilePath && Storage::disk('public')->exists($uploadedFilePath)) {
+                Storage::disk('public')->delete($uploadedFilePath);
             }
 
             Log::error('TeacherController@store error: ' . $e->getMessage());
@@ -150,7 +150,7 @@ class TeacherController extends Controller
             // 1. Rasm yuklash
             if ($request->hasFile('photo')) {
                 $fileName = time() . '.' . $request->file('photo')->getClientOriginalExtension();
-                $uploadedFilePath = $request->file('photo')->storeAs('Photo', $fileName);
+                $newPhotoPath = $request->file('photo')->storeAs('Photo', $fileName, 'public');
             } else {
                 $newPhotoPath = $oldPhotoPath;
             }
@@ -197,8 +197,8 @@ class TeacherController extends Controller
             DB::commit();
 
             // MUVAFFAQIYATLI: Eski rasmni o'chirish (agar yangisi yuklangan bo'lsa)
-            if ($request->hasFile('photo') && $oldPhotoPath && Storage::exists($oldPhotoPath)) {
-                Storage::delete($oldPhotoPath);
+            if ($request->hasFile('photo') && $oldPhotoPath && Storage::disk('public')->exists($oldPhotoPath)) {
+                Storage::disk('public')->delete($oldPhotoPath);
             }
 
             return redirect()->route('teacher.index')->with('success', 'Ma\'lumotlar muvaffaqiyatli yangilandi.');
@@ -207,8 +207,8 @@ class TeacherController extends Controller
             DB::rollBack();
 
             // XATOLIK: Yangi yuklangan rasmni o'chirish
-            if ($request->hasFile('photo') && $newPhotoPath && Storage::exists($newPhotoPath)) {
-                Storage::delete($newPhotoPath);
+            if ($request->hasFile('photo') && $newPhotoPath && Storage::disk('public')->exists($newPhotoPath)) {
+                Storage::disk('public')->delete($newPhotoPath);
             }
 
             Log::error('TeacherController@update error: ' . $e->getMessage());
@@ -239,8 +239,8 @@ class TeacherController extends Controller
             DB::commit();
 
             // 3. Rasmni o'chirish (Tranzaksiya tugagandan keyin)
-            if ($photoPath && Storage::exists($photoPath)) {
-                Storage::delete($photoPath);
+            if ($photoPath && Storage::disk('public')->exists($photoPath)) {
+                Storage::disk('public')->delete($photoPath);
             }
 
             return redirect()->back()->with('success', 'O\'qituvchi muvaffaqiyatli o\'chirildi.');

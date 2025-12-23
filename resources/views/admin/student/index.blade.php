@@ -77,7 +77,7 @@
             </table>
         </div>
         <div class="d-flex justify-content-end m-3">
-            {{ $students->links() }}
+            {{ $students->links('pagination::bootstrap-5') }}
         </div>
     </div>
 @endsection

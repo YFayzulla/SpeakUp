@@ -68,7 +68,8 @@
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="avatar avatar-sm me-3">
-                                                        <img src="{{ $teacher->photo ? asset('storage/' . $teacher->photo) : asset('assets/img/avatars/1.png') }}" alt="Avatar" class="rounded-circle">
+                                                        <img src="{{ $teacher->photo ? asset('storage/' . $teacher->photo) : asset('storage/app/public'.$teacher->photo) }}"
+                                                             alt="Avatar" class="rounded-circle">
                                                     </div>
                                                     <div>
                                                         <h6 class="mb-0">{{ $teacher->name }}</h6>
@@ -78,7 +79,9 @@
                                             </td>
                                             <td>{{ $teacher->teacherhasGroup() }}</td>
                                             <td>{{ $teacher->teacherHasStudents() }}</td>
-                                            <td class="text-end">{{ number_format($teacher->teacherPayment(), 0, ' ', ' ') }} UZS</td>
+                                            <td class="text-end">{{ number_format($teacher->teacherPayment(), 0, ' ', ' ') }}
+                                                UZS
+                                            </td>
                                         </tr>
                                     @empty
                                         <tr>
@@ -139,16 +142,16 @@
     <div class="container-xxl flex-grow-1 container-p-y">
         <div class="row">
             <!-- Test Results -->
-{{--            <div class="col-md-8 col-12 mb-4">--}}
-{{--                <div class="card h-100">--}}
-{{--                    <div class="card-header">--}}
-{{--                        <h5 class="card-title mb-0">Your Test Results</h5>--}}
-{{--                    </div>--}}
-{{--                    <div class="card-body">--}}
-{{--                        <canvas id="myChart"></canvas>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
+            {{--            <div class="col-md-8 col-12 mb-4">--}}
+            {{--                <div class="card h-100">--}}
+            {{--                    <div class="card-header">--}}
+            {{--                        <h5 class="card-title mb-0">Your Test Results</h5>--}}
+            {{--                    </div>--}}
+            {{--                    <div class="card-body">--}}
+            {{--                        <canvas id="myChart"></canvas>--}}
+            {{--                    </div>--}}
+            {{--                </div>--}}
+            {{--            </div>--}}
 
             <!-- Salary Card -->
             <div class="col-md-4 col-12 mb-4">

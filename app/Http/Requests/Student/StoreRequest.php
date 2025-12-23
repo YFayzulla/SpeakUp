@@ -51,7 +51,6 @@ class StoreRequest extends FormRequest
             'phone.required' => 'The phone number is required.',
             'phone.digits' => 'The phone number must be exactly 9 digits.',
             'phone.unique' => 'The phone number has already been taken.',
-            'parents_tel.unique' => 'The phone number has already been taken.',
             'passport.regex' => 'The passport must consist of 2 uppercase English letters followed by 7 digits.',
             'passport.unique' => 'This passport number already exists.',
             'photo.image' => 'The uploaded file must be an image.',

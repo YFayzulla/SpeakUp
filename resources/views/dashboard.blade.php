@@ -72,7 +72,6 @@
                                                              alt="Avatar" class="rounded-circle">
                                                     </div>
 
-                                                    @dd($teacher->photo)
                                                     <div>
                                                         <h6 class="mb-0">{{ $teacher->name }}</h6>
                                                         <small class="text-muted">{{ $teacher->percent }}%</small>

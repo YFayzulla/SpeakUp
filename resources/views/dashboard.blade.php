@@ -68,7 +68,7 @@
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="avatar avatar-sm me-3">
-                                                        <img src="{{ 'storage/'.$teacher->photo }}"
+                                                        <img src="{{asset( 'storage/Photo/1766403945.png') }}"
                                                              alt="Avatar" class="rounded-circle">
                                                     </div>
                                                     <div>

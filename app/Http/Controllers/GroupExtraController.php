@@ -138,9 +138,9 @@ class GroupExtraController extends Controller
                 ->with('group:id,name')
                 ->orderBy('name')
                 // MUHIM: 'group_id' ni select ichiga qo'shish SHART, bo'lmasa relationship ishlamaydi
-                ->select('id', 'name', 'email', 'image', 'phone', 'status', 'group_id')
+                ->select('id', 'name', 'image', 'phone', 'status', 'group_id')
                 ->get();
-
+                dd($students);
             return view('admin.group.student', compact('students'));
         } catch (\Exception $e) {
             Log::error('GroupExtraController@show error: ' . $e->getMessage());

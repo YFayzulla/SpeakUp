@@ -50,45 +50,41 @@
                     <div class="col-12">
                         <div class="card m-2">
                             <h5 class="card-header">Active Teachers</h5>
-                            <div class="table-responsive">
+                            <div class="table-responsive text-nowrap">
                                 <table class="table table-hover">
                                     <thead>
                                     <tr>
-                                        <th>#</th>
                                         <th>Teacher</th>
                                         <th>Groups</th>
                                         <th>Students</th>
                                         <th class="text-end">Salary</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody class="table-border-bottom-0">
                                     @forelse($teachers as $teacher)
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="avatar avatar-sm me-3">
-                                                        <img src="{{asset($teacher->photo)}}"
-                                                             alt="Avatar" class="rounded-circle">
-
-
+                                                        @if($teacher->photo)
+                                                            <img src="{{ asset('storage/' . $teacher->photo) }}" alt="Avatar" class="rounded-circle">
+                                                        @else
+                                                            <span class="avatar-initial rounded-circle bg-label-primary">{{ strtoupper(substr($teacher->name, 0, 2)) }}</span>
+                                                        @endif
                                                     </div>
-
                                                     <div>
-                                                        <h6 class="mb-0">{{ $teacher->name }}</h6>
+                                                        <h6 class="mb-0 text-truncate" style="max-width: 150px;">{{ $teacher->name }}</h6>
                                                         <small class="text-muted">{{ $teacher->percent }}%</small>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>{{ $teacher->teacherhasGroup() }}</td>
-                                            <td>{{ $teacher->teacherHasStudents() }}</td>
-                                            <td class="text-end">{{ number_format($teacher->teacherPayment(), 0, ' ', ' ') }}
-                                                UZS
-                                            </td>
+                                            <td><span class="badge bg-label-info">{{ $teacher->teacherhasGroup() }} Groups</span></td>
+                                            <td><span class="badge bg-label-warning">{{ $teacher->teacherHasStudents() }} Students</span></td>
+                                            <td class="text-end fw-bold text-success">{{ number_format($teacher->teacherPayment(), 0, ' ', ' ') }} UZS</td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="5" class="text-center text-muted">No teachers found.</td>
+                                            <td colspan="4" class="text-center text-muted py-4">No active teachers found.</td>
                                         </tr>
                                     @endforelse
                                     </tbody>

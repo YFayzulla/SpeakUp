@@ -37,10 +37,11 @@
 
                     <div class="mb-3">
                         <label for="group_id" class="form-label text-dark">Group</label>
-                        <select id="group_id" name="group_id" class="form-control" required>
+                        <select id="group_id" name="group_id[]" class="form-select choices" multiple required data-placeholder="Select groups">
+                            <option value="">-- Select Groups --</option>
                             @foreach($groups as $group)
                                 <option value="{{ $group->id }}"
-                                        data-payment="{{ $group->monthly_payment }}" {{ old('group_id', $student->group_id) == $group->id ? 'selected' : '' }}>
+                                        data-payment="{{ $group->monthly_payment }}" {{ $student->groups->contains($group->id) ? 'selected' : '' }}>
                                     {{ optional($group->room)->room ?? 'No Room' }} -> {{ $group->name }}
                                 </option>
                             @endforeach
@@ -134,22 +135,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const groupSelect = document.getElementById('group_id');
             const shouldPayInput = document.getElementById('should_pay');
-
-            function updatePayment() {
-                const selectedOption = groupSelect.options[groupSelect.selectedIndex];
-                if (selectedOption) {
-                    const payment = selectedOption.getAttribute('data-payment');
-                    const currentPayment = shouldPayInput.value.replace(/\s/g, '');
-                    const studentPayment = "{{ $student->should_pay }}";
-                    if (currentPayment === studentPayment || currentPayment === '' || currentPayment === selectedOption.getAttribute('data-payment')) {
-                         shouldPayInput.value = formatNumberWithSpaces(payment);
-                    }
-                }
-            }
-
-            groupSelect.addEventListener('change', updatePayment);
 
             function formatNumberWithSpaces(value) {
                 if (!value) return '';

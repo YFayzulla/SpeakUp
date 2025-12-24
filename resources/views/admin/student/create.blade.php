@@ -36,10 +36,11 @@
 
                     <div class="mb-3">
                         <label for="group_id" class="form-label text-dark">Group</label>
-                        <select id="group_id" name="group_id" class="form-control" required>
+                        <select id="group_id" name="group_id[]" class="form-select choices" multiple required data-placeholder="Select groups">
+                            <option value="">-- Select Groups --</option>
                             @foreach($groups as $group)
                                 <option value="{{ $group->id }}"
-                                        data-payment="{{ $group->monthly_payment }}" {{ old('group_id') == $group->id ? 'selected' : '' }}>
+                                        data-payment="{{ $group->monthly_payment }}" {{ (is_array(old('group_id')) && in_array($group->id, old('group_id'))) ? 'selected' : '' }}>
                                     {{ optional($group->room)->room ?? 'No Room' }} -> {{ $group->name }}
                                 </option>
                             @endforeach
@@ -128,19 +129,6 @@
             const groupSelect = document.getElementById('group_id');
             const shouldPayInput = document.getElementById('should_pay');
 
-            function updatePayment() {
-                const selectedOption = groupSelect.options[groupSelect.selectedIndex];
-                if (selectedOption) {
-                    const payment = selectedOption.getAttribute('data-payment');
-                    shouldPayInput.value = formatNumberWithSpaces(payment);
-                }
-            }
-
-            groupSelect.addEventListener('change', updatePayment);
-
-            // Initial call to set payment based on pre-selected group
-            updatePayment();
-
             // Function to format number with spaces
             function formatNumberWithSpaces(value) {
                 if (!value) return '';
@@ -157,6 +145,11 @@
             shouldPayInput.form.addEventListener('submit', function () {
                 shouldPayInput.value = shouldPayInput.value.replace(/\s/g, '');
             });
+            
+            // Note: Automatic payment update based on selection is tricky with multi-select.
+            // We'll leave it manual or default for now, or you can implement logic to sum payments or pick the highest.
+            // For simplicity and to avoid confusion with multiple groups, we won't auto-update payment here
+            // unless you specifically want to sum them up.
         });
     </script>
 

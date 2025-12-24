@@ -4,7 +4,7 @@
     <div class="card">
 
         <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-            <h5 class="mb-0">Student`s data</h5>
+            <h5 class="mb-0">Student's Data</h5>
             <div class="dt-action-buttons text-end pt-3 pt-md-0">
                 <div class="dt-buttons btn-group flex-wrap">
                     <div class="btn-group">
@@ -36,10 +36,17 @@
                                 <h4><b>Parents tel: </b> {{$student->parents_tel}}</h4>
                                 <h4><b>Description: </b> {{($student->description)}}</h4>
                                 <h4><b>Last Test Result: </b>{{$student->mark}}</h4>
+                                <h4><b>Current Groups: </b> {{ $student->groups->pluck('name')->implode(', ') }}</h4>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <img class="card-img card-img-right" src="{{asset( 'storage/'.$student->photo) }}" alt="No Photo" />
+                            @if($student->photo)
+                                <img class="card-img card-img-right" src="{{asset( 'storage/'.$student->photo) }}" alt="Student Photo" />
+                            @else
+                                <div class="d-flex justify-content-center align-items-center h-100">
+                                    <p class="text-muted">No Photo</p>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -51,28 +58,24 @@
 
         <div class="col-md-6 mt-4">
             <div class="card">
-                <h5 class="card-header">Payment history</h5>
+                <h5 class="card-header">Payment History</h5>
                 <div class="table-responsive text-nowrap">
                     <table class="table">
                         <thead>
                         <tr>
                             <th>No</th>
                             <th>Paid</th>
-                            <th>type</th>
+                            <th>Type</th>
                             <th>Date</th>
                         </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
                         @forelse($student->studenthistory as $item)
                             <tr>
-                                <th>{{$loop->index+1}}</th>
-                                <th>{{number_format($item->payment,0,'',' ')}}</th>
-                                <th>{{$item->type_of_money}}</th>
-                                <th>@if($item->date ==null)
-                                        {{$item->created_at.'data'}}
-                                    @else
-                                        {{$item->date}}
-                                    @endif</th>
+                                <td>{{$loop->iteration}}</td>
+                                <td>{{number_format($item->payment,0,'',' ')}}</td>
+                                <td>{{$item->type_of_money}}</td>
+                                <td>{{ \Carbon\Carbon::parse($item->date ?? $item->created_at)->format('d M Y') }}</td>
                             </tr>
                         @empty
                             <tr>
@@ -87,23 +90,22 @@
 
         <div class="col-md-6 mt-4">
             <div class="card">
-                <h5 class="card-header">Travel of group</h5>
+                <h5 class="card-header">Group History</h5>
                 <div class="table-responsive text-nowrap">
                     <table class="table">
                         <thead>
                         <tr>
                             <th>No</th>
-                            <th>group</th>
-                            <th>Date</th>
+                            <th>Group</th>
+                            <th>Date Joined</th>
                         </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
-                        @forelse($student->studentinformation as $item)
-
+                        @forelse($groupHistory as $item)
                             <tr>
-                                <th>{{$loop->index+1}}</th>
-                                <th>{{$item->group}}</th>
-                                <th>{{$item->created_at}}</th>
+                                <td>{{$loop->iteration}}</td>
+                                <td>{{$item->group}}</td>
+                                <td>{{$item->created_at->format('d M Y, H:i')}}</td>
                             </tr>
                         @empty
                             <tr>

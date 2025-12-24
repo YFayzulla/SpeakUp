@@ -14,7 +14,7 @@ class DeptStudentController extends Controller
     public function index()
     {
         $students = User::role('student')
-            ->with('deptStudent', 'group')
+            ->with('deptStudent', 'groups') // Changed 'group' to 'groups'
             // Use a subquery to fetch the current payed value deterministically for sorting,
             // avoiding any duplicate rows or mismatched joins
             ->select('users.*')
@@ -67,7 +67,7 @@ class DeptStudentController extends Controller
             return redirect()->back()->with('error', 'To\'lov miqdori noto\'g\'ri kiritildi.');
         }
 
-        $user = User::with('deptStudent', 'group')->findOrFail($id);
+        $user = User::with('deptStudent', 'groups')->findOrFail($id); // Changed 'group' to 'groups'
         $deptStudent = $user->deptStudent;
 
         if (!$deptStudent) {
@@ -110,11 +110,15 @@ class DeptStudentController extends Controller
             $deptStudent->save();
             $user->save();
 
+            // Handle group name for history. If multiple groups, maybe join names or pick first.
+            // For now, picking the first group name or 'No Group'
+            $groupName = $user->groups->isNotEmpty() ? $user->groups->first()->name : 'No Group';
+
             $paymentHistory = HistoryPayments::create([
                 'user_id' => $user->id,
                 'name' => $user->name,
                 'payment' => $cleanPayment,
-                'group' => $user->group->name,
+                'group' => $groupName,
                 'date' => $paidDate->format('Y-m-d'),
                 'type_of_money' => $request->money_type,
             ]);
@@ -136,7 +140,8 @@ class DeptStudentController extends Controller
      */
     public function showReceipt(int $paymentId)
     {
-        $payment = HistoryPayments::with(['user.group.room'])->findOrFail($paymentId);
+        // Eager load groups instead of group
+        $payment = HistoryPayments::with(['user.groups.room'])->findOrFail($paymentId);
         $student = $payment->user;
         $monthlyDept = $student->deptStudent->dept ?? $student->should_pay;
 

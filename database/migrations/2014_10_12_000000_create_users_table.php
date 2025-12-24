@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('parents_name')->nullable();
             $table->unsignedBigInteger('parents_tel')->unique()->nullable();
-            $table->integer('group_id')->nullable();
+            // $table->integer('group_id')->nullable(); // Removed group_id
             $table->string('photo')->nullable();
             $table->mediumInteger('should_pay')->nullable();
             $table->tinyinteger('status')->nullable();

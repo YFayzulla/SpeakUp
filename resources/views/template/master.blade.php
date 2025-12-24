@@ -47,6 +47,9 @@
 
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}"/>
 
+    <!-- Choices.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
+
     <!-- Page CSS -->
 
     <!-- Helpers -->
@@ -153,6 +156,49 @@
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Choices.js JS -->
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function initializeChoices(selects) {
+            selects.forEach(select => {
+                if (select.choicesInstance) {
+                    select.choicesInstance.destroy();
+                }
+                select.choicesInstance = new Choices(select, {
+                    removeItemButton: true,
+                    searchEnabled: true,
+                    placeholder: true,
+                    placeholderValue: select.dataset.placeholder || '',
+                    noResultsText: 'No results found',
+                    itemSelectText: '',
+                    shouldSort: false,
+                    callbackOnInit: function () {
+                        const selectedValues = Array.from(select.querySelectorAll('option[selected]')).map(opt => opt.value);
+                        if (selectedValues.length > 0) {
+                            this.setChoiceByValue(selectedValues);
+                        }
+                    }
+                });
+            });
+        }
+
+        initializeChoices(document.querySelectorAll('.choices:not(.modal .choices)'));
+
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('shown.coreui.modal', function () { // Adjust event name if not using CoreUI
+                initializeChoices(modal.querySelectorAll('.choices'));
+            });
+            // Fallback for standard Bootstrap modal
+            modal.addEventListener('shown.bs.modal', function () {
+                initializeChoices(modal.querySelectorAll('.choices'));
+            });
+        });
+    });
+</script>
+
 </body>
 
 </html>

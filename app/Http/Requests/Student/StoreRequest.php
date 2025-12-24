@@ -35,7 +35,8 @@ class StoreRequest extends FormRequest
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'percent' => 'nullable|integer|min:0|max:100',
             'room_id' => 'nullable|exists:rooms,id',
-            'group_id' => 'required|exists:groups,id',
+            'group_id' => 'required|array',
+            'group_id.*' => 'exists:groups,id',
         ];
     }
 
@@ -60,7 +61,8 @@ class StoreRequest extends FormRequest
             'percent.min' => 'The percent must be at least 0.',
             'percent.max' => 'The percent must not exceed 100.',
             'group_id.required' => 'The group field is required.',
-            'group_id.exists' => 'The selected group does not exist.',
+            'group_id.array' => 'The group field must be an array.',
+            'group_id.*.exists' => 'One of the selected groups does not exist.',
         ];
     }
 }

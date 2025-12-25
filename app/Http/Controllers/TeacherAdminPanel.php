@@ -64,7 +64,7 @@ class TeacherAdminPanel extends Controller
     public function attendance_submit(Request $request, $id)
     {
         $request->validate([
-            'lesson' => 'required|string|max:255',
+            'lesson' => 'nullable|string|max:255', // Made nullable
             'status' => 'required|array',
         ]);
 
@@ -72,8 +72,11 @@ class TeacherAdminPanel extends Controller
 
         DB::beginTransaction();
         try {
+            // Auto-generate lesson name if not provided
+            $lessonName = $request->lesson ?? 'Lesson: ' . now()->format('d M Y');
+
             $lesson = LessonAndHistory::create([
-                'name' => $request->lesson,
+                'name' => $lessonName,
                 'data' => 1,
                 'group' => $id,
             ]);
@@ -84,6 +87,7 @@ class TeacherAdminPanel extends Controller
 
             foreach ($statuses as $userId => $statusValue) {
                 // ONLY save if status is NOT 'Present' (1)
+                // 0 = Absent, 2 = Late. We skip 1.
                 if ((int)$statusValue !== 1) {
                     if (!is_numeric($userId)) continue;
 

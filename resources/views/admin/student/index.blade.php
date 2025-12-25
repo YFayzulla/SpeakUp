@@ -11,6 +11,7 @@
             <h5 class="mb-0">Students</h5>
             <div class="dt-action-buttons text-end pt-3 pt-md-0">
                 <div class="dt-buttons btn-group flex-wrap">
+                    @role('admin')
                     <div class="btn-group">
                         <a class="btn buttons-collection dropdown-toggle btn-label-primary me-2" tabindex="0"
                            aria-controls="DataTables_Table_0" type="button" id="dropdownMenuButton"
@@ -23,6 +24,7 @@
                                             class="bx bxs-file-pdf me-1"></i> Pdf</a></li>
                         </ul>
                     </div>
+                    @endrole
                     <a href="{{route('student.create')}}" class="btn btn-secondary create-new btn-primary" tabindex="0"
                        aria-controls="DataTables_Table_0">
                         <span><i class="bx bx-plus me-sm-1"></i> <span

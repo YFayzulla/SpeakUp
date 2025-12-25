@@ -23,7 +23,7 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td><strong>{{ $student->name }}</strong></td>
-                        <td>{{ $student->group?->name ?? 'No group' }}</td>
+                        <td>{{ $student->groups->isNotEmpty() ? $student->groups->pluck('name')->implode(', ') : 'No group' }}</td>
                         <td>
                             @if($student->deptStudent && $student->deptStudent->payed > 0)
                                 <span class="badge bg-label-warning">Partially Paid</span>

@@ -18,7 +18,7 @@ class PdfController extends Controller
     {
         // Increase execution time and memory limit for PDF generation
         set_time_limit(300);
-        ini_set('memory_limit', '256M');
+        ini_set('memory_limit', '512M'); // Increased to 512M
     }
 
     /**
@@ -47,7 +47,7 @@ class PdfController extends Controller
 
             $payments = $query->latest('date')->get();
 
-            $pdf = PDF::loadView('user.pdf.payments', ['users' => $payments]);
+            $pdf = PDF::loadView('admin.pdf.payments', ['users' => $payments]);
             $fileName = 'payments_report_' . now()->format('Y-m-d_H-i') . '.pdf';
 
             return $pdf->download($fileName);
@@ -64,16 +64,16 @@ class PdfController extends Controller
     public function history($id)
     {
         try {
-            $student = User::select('id', 'name', 'phone', 'group_id')
-                ->with('group:id,name') // Eager load group name
+            $student = User::with('groups') // Eager load groups without column constraints
                 ->findOrFail($id);
 
+            // Fetch attendances with necessary relationships
             $attendances = Attendance::where('user_id', $id)
-                ->select('created_at', 'status')
+                ->with(['group', 'user']) // Load group and user info
                 ->latest()
                 ->get();
 
-            $pdf = PDF::loadView('user.pdf.student_show', [
+            $pdf = PDF::loadView('admin.pdf.student_show', [
                 'student'     => $student,
                 'attendances' => $attendances
             ]);
@@ -101,7 +101,7 @@ class PdfController extends Controller
                 ->orderBy('name')
                 ->get();
 
-            $pdf = PDF::loadView('user.pdf.teacher', ['teacher' => $teachers]);
+            $pdf = PDF::loadView('admin.pdf.teacher', ['teacher' => $teachers]);
             $fileName = 'teachers_list_' . now()->format('Y-m-d') . '.pdf';
 
             return $pdf->download($fileName);
@@ -123,7 +123,7 @@ class PdfController extends Controller
                 ->orderBy('name')
                 ->get();
 
-            $pdf = PDF::loadView('user.pdf.group', ['group' => $groups]);
+            $pdf = PDF::loadView('admin.pdf.group', ['group' => $groups]);
             $fileName = 'groups_list_' . now()->format('Y-m-d') . '.pdf';
 
             return $pdf->download($fileName);
@@ -139,19 +139,22 @@ class PdfController extends Controller
     public function student()
     {
         try {
+            // Select only necessary columns to reduce memory usage
             $students = User::role('student')
-                ->select('id', 'name', 'phone', 'group_id', 'status')
-                ->with('group:id,name') // Prevent N+1 problem
+                ->select('id', 'name', 'phone', 'parents_tel', 'parents_name', 'should_pay')
+                ->with('groups:id,name') // Load only id and name of groups
                 ->orderBy('name')
                 ->get();
 
-            $pdf = PDF::loadView('user.pdf.student', ['student' => $students]);
+            $pdf = PDF::loadView('admin.pdf.student', ['student' => $students]);
             $fileName = 'students_list_' . now()->format('Y-m-d') . '.pdf';
 
             return $pdf->download($fileName);
         } catch (\Exception $e) {
+            // Log the full error for debugging
             Log::error('PdfController@student error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Talabalar ro\'yxatini yuklashda xatolik.');
+            // Return the actual error message to the user for now (for debugging purposes)
+            return redirect()->back()->with('error', 'Xatolik: ' . $e->getMessage());
         }
     }
 
@@ -161,26 +164,20 @@ class PdfController extends Controller
     public function Assessment($id)
     {
         try {
-            // Assuming 'assessments' table has a 'group_id' column.
-            // If it stores the group name, the logic needs to be different, but using ID is better practice.
-            $assessments = Assessment::where('group_id', $id)
+            $group = Group::findOrFail($id);
+            
+            // Assessment jadvalida 'group' ustuni string bo'lgani uchun, nom bo'yicha qidiramiz
+            $assessments = Assessment::where('group', $group->name)
                 ->with('user:id,name') // Eager load student name
                 ->get();
 
             if ($assessments->isEmpty()) {
-                 // Try to find by group name as a fallback
-                 $group = Group::find($id);
-                 if($group) {
-                    $assessments = Assessment::where('group', $group->name)->with('user:id,name')->get();
-                 }
-                 if ($assessments->isEmpty()) {
-                    return redirect()->back()->with('warning', 'Ushbu guruh uchun baholash natijalari topilmadi.');
-                 }
+                 return redirect()->back()->with('warning', 'Ushbu guruh uchun baholash natijalari topilmadi.');
             }
             
-            $groupName = $assessments->first()->group; // Get group name from the first record
+            $groupName = $group->name;
 
-            $pdf = PDF::loadView('user.pdf.group_assessment', ['groups' => $assessments, 'groupName' => $groupName]);
+            $pdf = PDF::loadView('admin.pdf.group_assessment', ['groups' => $assessments, 'groupName' => $groupName]);
             $fileName = 'group_assessment_' . str_replace(' ', '_', $groupName) . '_' . now()->format('Y-m-d') . '.pdf';
 
             return $pdf->download($fileName);

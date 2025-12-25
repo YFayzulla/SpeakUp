@@ -7,12 +7,12 @@
 
 
             <form action="{{ URL::to('/dept/pdf') }}">
-
+                @role('admin')
                 <input type="hidden" name="startDate" value="{{$start_date}}">
                 <input type="hidden" name="endDate" value="{{$end_date}}">
 
                 <button class="btn btn-danger float-right m-2" > Report </button>
-
+                @endrole
             </form>
 
             <div class="container" style="display: flex; justify-content: space-between;">

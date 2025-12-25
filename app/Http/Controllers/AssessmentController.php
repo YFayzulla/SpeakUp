@@ -51,11 +51,12 @@ class AssessmentController extends Controller
         try {
             $group = Group::findOrFail($id);
 
-            // Talabalarni ism bo'yicha saralab olish
-            // Kerakli ustunlarni tanlab olish (select) xotirani tejaydi
-            $students = User::where('group_id', $id)
+            // Talabalarni ism bo'yicha saralab olish (Many-to-Many)
+            $students = User::whereHas('groups', function ($query) use ($id) {
+                    $query->where('groups.id', $id);
+                })
                 ->orderBy('name')
-                ->get(); // Agar user table juda katta bo'lsa ->select('id', 'name', 'group_id', 'mark') qo'shish tavsiya etiladi
+                ->get();
 
             $allGroups = Group::orderBy('name')->get();
 

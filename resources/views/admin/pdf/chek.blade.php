@@ -181,10 +181,14 @@
     @endif
 
     <?php
-    // --- DATA PREP (Kept exactly the same as your code) ---
+    // --- DATA PREP (Updated for Many-to-Many) ---
     $studentName = $student->name ?? ($payment->name ?? 'Unknown Student');
-    $roomName = data_get($student, 'group.room.room', 'Unknown Room');
-    $courseName = $student->group->name ?? 'IELTS/CEFR/GEN.ENG';
+    
+    // Get room from the first group, or fallback
+    $roomName = $student->groups->first()?->room?->room ?? 'Unknown Room';
+    
+    // Use payment group name if available, otherwise list student's groups
+    $courseName = $payment->group ?? ($student->groups->pluck('name')->implode(', ') ?: 'IELTS/CEFR/GEN.ENG');
 
     $methodRaw = strtolower($payment->type_of_money ?? 'cash');
     $method = $methodRaw === 'electronic' ? 'CARD' : 'CASH';

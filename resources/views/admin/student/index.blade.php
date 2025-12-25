@@ -20,7 +20,8 @@
                                         class="d-none d-sm-inline-block">Export</span></span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <li><a class="dropdown-item" href="{{ URL::to('/student/pdf') }}"><i
+                            {{-- XATO TUZATILDI: URL to'g'irlandi --}}
+                            <li><a class="dropdown-item" href="{{ URL::to('/student/pdf-list') }}"><i
                                             class="bx bxs-file-pdf me-1"></i> Pdf</a></li>
                         </ul>
                     </div>

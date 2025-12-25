@@ -119,9 +119,16 @@ class GroupController extends Controller
     {
         DB::beginTransaction();
         try {
+            // 1. O'qituvchi bog'lanishini o'chirish
             GroupTeacher::where('group_id', $group->id)->delete();
-            User::where('group_id', $group->id)->update(['group_id' => 1]); // Move students to "Unassigned"
+            
+            // 2. Talabalar bog'lanishini o'chirish (Pivot jadvaldan)
+            // detach() metodi pivot jadvaldan (group_user) yozuvlarni o'chiradi
+            $group->students()->detach();
+
+            // 3. Guruhni o'chirish
             $group->delete();
+            
             DB::commit();
             return redirect()->back()->with('success', 'Guruh muvaffaqiyatli o\'chirildi.');
         } catch (\Exception $e) {

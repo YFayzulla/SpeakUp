@@ -8,6 +8,7 @@ use App\Models\Attendance;
 use App\Models\Group;
 use App\Models\StudentInformation;
 use App\Models\User;
+use App\Services\AttendanceService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +18,11 @@ use PDF;
 
 class GroupExtraController extends Controller
 {
+    public function __construct(protected AttendanceService $serviceAttendance)
+    {
+        // Service avtomatik inject qilinadi
+    }
+
     /**
      * Ko'plab baholarni birdaniga o'chirish.
      */
@@ -56,8 +62,9 @@ class GroupExtraController extends Controller
             $user = User::findOrFail($id);
             $group = Group::findOrFail($request->group_id);
 
-            // 1. User guruhini yangilash
-            $user->update(['group_id' => $group->id]);
+            // 1. User guruhini yangilash (Eski guruhlardan chiqarib, yangisiga qo'shish)
+            // Agar faqat qo'shish kerak bo'lsa attach() ishlatilardi, lekin "change" bo'lgani uchun sync()
+            $user->groups()->sync([$group->id]);
 
             // 2. Tarix (StudentInformation) yaratish
             StudentInformation::create([
@@ -99,6 +106,9 @@ class GroupExtraController extends Controller
                 ->get();
 
             if ($task === 'show') {
+                // Endi bu metod ishlatilmasligi mumkin, chunki biz attendance metodini o'zgartirdik.
+                // Lekin agar filter alohida ishlatilsa, uni ham teacher view ga yo'naltirish kerak.
+                // Hozircha qoldiramiz, lekin attendance metodi asosiy hisoblanadi.
                 return view('admin.group.attendance', compact('items', 'group', 'selectedDate'));
             }
 
@@ -132,14 +142,17 @@ class GroupExtraController extends Controller
     public function show($id)
     {
         try {
-            $students = User::where('group_id', $id)
+            // Guruhga tegishli talabalarni pivot jadval orqali olish
+            $students = User::whereHas('groups', function ($query) use ($id) {
+                    $query->where('groups.id', $id);
+                })
                 ->role('student')
-                // MUHIM: Guruh nomini olish uchun relationshipni yuklaymiz
-                ->with('group:id,name')
+                // Guruh nomini olish uchun relationshipni yuklaymiz
+                ->with('groups:id,name')
                 ->orderBy('name')
-                // MUHIM: 'group_id' ni select ichiga qo'shish SHART, bo'lmasa relationship ishlamaydi
-                ->select('id', 'name', 'phone', 'status', 'group_id')
+                ->select('id', 'name', 'phone', 'status') // group_id olib tashlandi
                 ->get();
+                
             return view('admin.group.student', compact('students'));
         } catch (\Exception $e) {
             Log::error('GroupExtraController@show error: ' . $e->getMessage());
@@ -153,73 +166,19 @@ class GroupExtraController extends Controller
     public function attendance($id)
     {
         try {
-            $group = Group::findOrFail($id);
+            // Use the shared AttendanceService to get data
+            $serviceData = $this->serviceAttendance->attendance($id);
 
-            // 1. Sana validatsiyasi
-            $dateInput = request('date', now()->format('Y-m'));
-            try {
-                $dateObj = Carbon::createFromFormat('Y-m', $dateInput);
-            } catch (\Exception $e) {
-                $dateObj = now();
-            }
-
-            $year = $dateObj->year;
-            $month = $dateObj->month;
-
-            // 2. Matritsa uchun talabalar ro'yxati (Ism bo'yicha)
-            $students = User::role('student')
-                ->where('group_id', $group->id)
-                ->orderBy('name')
-                ->get(['id', 'name']);
-
-            // 3. Matritsa ichini to'ldirish uchun davomatlar (faqat status)
-            $matrixAttendances = Attendance::where('group_id', $id)
-                ->whereYear('created_at', $year)
-                ->whereMonth('created_at', $month)
-                ->get(['user_id', 'status', 'created_at'])
-                ->groupBy('user_id');
-
-            // 4. PASTKI JADVAL UCHUN: To'liq davomat tarixi (Pagination bilan)
-            // with() yordamida teacher va lesson ma'lumotlarini ham olamiz (N+1 oldini olish)
-            // DIQQAT: Attendance modelida 'teacher' (who_checked) va 'lesson' relationlari bo'lishi kerak.
-            $attendanceRecords = Attendance::where('group_id', $id)
-                ->whereYear('created_at', $year)
-                ->whereMonth('created_at', $month)
-                ->with([
-                    'user:id,name',      // Talaba ismi
-                    'teacher:id,name',   // Tekshirgan o'qituvchi ismi (Attendance modelida 'teacher' funksiyasi bo'lishi kerak)
-                    'lesson:id,name'     // Dars mavzusi
-                ])
-                ->latest()
-                ->paginate(20);
-
-            $daysInMonth = $dateObj->daysInMonth;
-
-            // 5. Matritsani shakllantirish
-            $data = $students->mapWithKeys(function ($student) use ($matrixAttendances, $daysInMonth) {
-                $studentAttendances = $matrixAttendances->get($student->id);
-                $days = [];
-
-                for ($i = 1; $i <= $daysInMonth; $i++) {
-                    $dayStr = str_pad($i, 2, '0', STR_PAD_LEFT);
-                    $days[$dayStr] = ''; // Default bo'sh
-                }
-
-                if ($studentAttendances) {
-                    foreach ($studentAttendances as $attendance) {
-                        $day = $attendance->created_at->format('d');
-                        $days[$day] = $attendance->status;
-                    }
-                }
-                return [$student->name => $days];
-            });
-
-            return view('admin.group.attendance', [
-                'group' => $group,
-                'data' => $data,         // Matritsa uchun array
-                'year' => $year,
-                'month' => str_pad($month, 2, '0', STR_PAD_LEFT),
-                'attendanceRecords' => $attendanceRecords, // Pastki jadval uchun (YANGI)
+            // Return the TEACHER view instead of the admin view
+            return view('teacher.attendance.attendance', [
+                'id' => $id,
+                'today' => $serviceData['today'] ?? now(),
+                'data' => $serviceData['data'] ?? [],
+                'year' => $serviceData['year'] ?? date('Y'),
+                'month' => $serviceData['month'] ?? date('m'),
+                'attendances' => $serviceData['attendances'] ?? [],
+                'group' => $serviceData['group'] ?? null,
+                'students' => $serviceData['students'] ?? [],
             ]);
 
         } catch (\Exception $e) {

@@ -6,6 +6,7 @@
                 <h5 class="mb-0">Groups in Room {{ $id }}</h5>
                 <div class="dt-action-buttons text-end pt-3 pt-md-0">
                     <div class="dt-buttons btn-group flex-wrap">
+                        @role('admin')
                         <div class="btn-group">
                             <button class="btn buttons-collection dropdown-toggle btn-label-primary me-2" tabindex="0"
                                     aria-controls="DataTables_Table_0" type="button" id="dropdownMenuButton"
@@ -18,6 +19,7 @@
                                                 class="bx bxs-file-pdf me-1"></i> Pdf</a></li>
                             </ul>
                         </div>
+                        @endrole
                         <a href="{{ route('group.create.room', $id) }}" class="btn btn-secondary create-new btn-primary"
                            tabindex="0"
                            aria-controls="DataTables_Table_0">

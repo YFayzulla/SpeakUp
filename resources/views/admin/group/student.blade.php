@@ -23,10 +23,9 @@
                         <td>{{ $student->phone }}</td>
 
                         {{-- XATOLIK BO'LGAN JOY TUZATILDI: --}}
-                        {{-- ?->name ishlatildi va ?? '...' qo'shildi --}}
                         <td>
                             <span class="badge bg-label-primary">
-                                {{ $student->group?->name ?? 'No group' }}
+                                {{ $student->groups->isNotEmpty() ? $student->groups->pluck('name')->implode(', ') : 'No group' }}
                             </span>
                         </td>
                     </tr>

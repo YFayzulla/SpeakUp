@@ -4,33 +4,35 @@
     <div class="container" style="display: flex; justify-content: space-between;">
         <div class="table-responsive text-nowrap">
             <table class="table">
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Phone Number</th>
-                    <th>Parents tel</th>
-                    <th>Parents name</th>
-                    {{--                <th>oylik to`lov</th>--}}
-                    <th>Group</th>
-                    <th>Should Pay</th>
-                </tr>
-                @forelse($student as $students)
+                <thead>
                     <tr>
-                        <th>{{$loop->index+1}}</th>
-                        {{--                    @dd($student->name)--}}
-                        <th>{{$students->name}}</th>
-                        <th>{{$students->phone}}</th>
-                        <th>{{$students->parents_tel}}</th>
-                        <th>{{$students->parents_name}}</th>
-                        {{--                    <th>@if(Carbon::parse( $student->studentdept->date)->greaterThan(Carbon::parse(now()->format('Y-m-d')) )) <p style="color: #a52834" >{{ 'qarz' }}</p> @else <p style="color: #0f5132">{{ 't`olangan' }}</p> @endif </th>--}}
-                        <th>{{$students->group->name}}</th>
-                        <th>{{$students->should_pay}}</th>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Phone Number</th>
+                        <th>Parents tel</th>
+                        <th>Parents name</th>
+                        <th>Group</th>
+                        <th>Should Pay</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @forelse($student as $item)
+                    <tr>
+                        <td>{{$loop->index+1}}</td>
+                        <td>{{$item->name}}</td>
+                        <td>{{$item->phone}}</td>
+                        <td>{{$item->parents_tel}}</td>
+                        <td>{{$item->parents_name}}</td>
+                        {{-- Group nomlarini vergul bilan ajratib chiqarish --}}
+                        <td>{{ $item->groups->pluck('name')->implode(', ') ?: 'No Group' }}</td>
+                        <td>{{ number_format($item->should_pay, 0, '.', ' ') }}</td>
                     </tr>
                 @empty
                     <tr>
                         <td colspan="7" class="text-center">No student data available.</td>
                     </tr>
                 @endforelse
+                </tbody>
             </table>
         </div>
     </div>

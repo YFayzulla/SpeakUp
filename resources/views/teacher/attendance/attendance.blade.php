@@ -2,15 +2,14 @@
 
 @section('content')
 
-    @role('user')
+    @role('user|admin')
     <div class="card shadow-md rounded-lg mb-4">
         <form action="{{ route('attendance.submit', $id) }}" method="post">
             @csrf
             <div class="card-header bg-light border-bottom d-flex justify-content-between align-items-center flex-wrap py-3">
                 <h5 class="card-title mb-0 text-primary">Mark Attendance</h5>
                 <div class="d-flex align-items-center">
-                    <label for="lesson" class="form-label mb-0 me-2">Lesson:</label>
-                    <input type="text" name="lesson" id="lesson" class="form-control w-auto" placeholder="Enter lesson topic" required>
+                    {{-- Lesson input removed as per request --}}
                 </div>
             </div>
             <div class="table-responsive text-nowrap">
@@ -63,7 +62,7 @@
             <h5 class="card-title mb-0 text-primary">Attendance for {{ \Carbon\Carbon::createFromDate($year, $month)->format('F Y') }}</h5>
 
             <div class="d-flex align-items-center">
-                @role('admin')
+                @role('user|admin')
                 <form method="GET" action="{{ route('group.attendance', $group->id) }}" class="d-flex me-3">
                     <select id="month" name="date" class="form-select me-2">
                         <option value="">Select Month</option>

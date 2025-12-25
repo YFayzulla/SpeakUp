@@ -16,8 +16,13 @@ class AttendanceService
         $date = request('date', now()->format('Y-m'));
         list($year, $month) = explode('-', $date);
 
-        // 1. Get all students in the group
-        $students = User::role('student')->where('group_id', $group->id)->get();
+        // 1. Get all students in the group (UPDATED for Many-to-Many)
+        $students = User::role('student')
+            ->whereHas('groups', function ($query) use ($group) {
+                $query->where('groups.id', $group->id);
+            })
+            ->get();
+            
         $studentIds = $students->pluck('id');
         $studentNames = $students->pluck('name', 'id');
 

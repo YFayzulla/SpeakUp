@@ -1,4 +1,1 @@
-@extends('template.master')
-@section('content')
-@include('layouts.attendance')
-@endsection
+{{-- This file is deprecated. Use resources/views/teacher/attendance/attendance.blade.php instead. --}}

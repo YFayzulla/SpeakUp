@@ -61,17 +61,18 @@
 
                 <table class="table">
                     <tr>
+                        <th> Student </th>
                         <th> Group </th>
-                        <th> Teacher </th>
                         <th> Date</th>
 
                     </tr>
 
                     @forelse($attendances as $attendance)
                         <tr>
-                            <th>{{$attendance->student->name}}</th>
-                            <th>{{$attendance->group->name}}</th>
-                            <th>{{$attendance->created_at}}</th>
+                            {{-- TUZATILDI: student -> user, va null check qo'shildi --}}
+                            <th>{{ $attendance->user->name ?? 'Unknown Student' }}</th>
+                            <th>{{ $attendance->group->name ?? 'Unknown Group' }}</th>
+                            <th>{{ $attendance->created_at }}</th>
                         </tr>
                     @empty
                         <tr>

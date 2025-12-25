@@ -36,10 +36,10 @@
                             </td>
                             <td>
                                 <select class="form-select form-control" name="recommended[]" required>
-                                    @foreach($groups as $group)
-                                        <option value="{{ $group->name }}"
-                                                {{ $student->group->name == $group->name ? 'selected' : '' }}>
-                                            {{ $group->name }}
+                                    @foreach($groups as $g)
+                                        <option value="{{ $g->name }}"
+                                                {{ $groupName == $g->name ? 'selected' : '' }}>
+                                            {{ $g->name }}
                                         </option>
 
                                     @endforeach

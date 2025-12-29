@@ -23,10 +23,23 @@ class StudentController extends Controller
     public function index()
     {
         try {
-            $students = User::role('student')
+            $query = User::role('student')
                 ->with('groups.room')
-                ->orderBy("name")
-                ->paginate(20);
+                ->orderBy("name");
+
+            // Server-side search using request() helper
+            if (request()->has('search') && request('search') != '') {
+                $search = request('search');
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', '%' . $search . '%')
+                      ->orWhere('phone', 'like', '%' . $search . '%')
+                      ->orWhereHas('groups', function ($groupQuery) use ($search) {
+                          $groupQuery->where('name', 'like', '%' . $search . '%');
+                      });
+                });
+            }
+
+            $students = $query->paginate(20)->withQueryString(); // withQueryString() keeps search query in pagination links
 
             return view('admin.student.index', compact('students'));
         } catch (\Exception $e) {

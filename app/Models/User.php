@@ -85,6 +85,7 @@ class User extends Authenticatable
         return $this->hasMany(Assessment::class);
     }
 
+
     public function deptStudent()
     {
         return $this->hasOne(DeptStudent::class, 'user_id', 'id');

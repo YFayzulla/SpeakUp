@@ -32,9 +32,18 @@ class User extends Authenticatable
         'room_id',
     ];
 
+    // O'qituvchining guruhlari (group_teachers orqali)
+    public function teacherGroupsRel(): BelongsToMany
+    {
+        return $this->belongsToMany(Group::class, 'group_teachers', 'teacher_id', 'group_id');
+    }
+
     public function teacherHasStudents()
     {
-        $groupIds = $this->groups()->pluck('groups.id');
+        // O'qituvchining guruhlarini olamiz
+        $groupIds = $this->teacherGroupsRel()->pluck('groups.id');
+        
+        // Shu guruhlarga a'zo bo'lgan talabalarni sanaymiz
         return User::role('student')->whereHas('groups', function ($q) use ($groupIds) {
             $q->whereIn('groups.id', $groupIds);
         })->count();
@@ -42,7 +51,8 @@ class User extends Authenticatable
 
     public function teacherPayment()
     {
-        $groups = $this->groups()->withCount('students')->get();
+        // O'qituvchining guruhlarini talabalar soni bilan birga olamiz
+        $groups = $this->teacherGroupsRel()->withCount('students')->get();
 
         $totalPayment = $groups->sum(function ($group) {
             if ($group) {
@@ -54,6 +64,7 @@ class User extends Authenticatable
         return $totalPayment * $this->percent / 100;
     }
 
+    // Talabaning guruhlari (group_user orqali)
     public function groups(): BelongsToMany
     {
         return $this->belongsToMany(Group::class, 'group_user', 'user_id', 'group_id');
@@ -86,7 +97,7 @@ class User extends Authenticatable
 
     public function teacherHasGroup()
     {
-        return $this->groups()->count();
+        return $this->teacherGroupsRel()->count();
     }
 
     public function checkAttendanceStatus()

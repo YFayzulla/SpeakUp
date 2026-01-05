@@ -196,7 +196,7 @@
     $amount = (float)($payment->payment ?? 0);
     $monthlyBase = (float)($dept ?? ($student->deptStudent->dept ?? $student->should_pay ?? 0));
     $partialPaid = (float) data_get($student, 'deptStudent.payed', 0);
-    $remainingToPay = max(0, $monthlyBase - $partialPaid);
+    $remainingToPay = $partialPaid > 0 ? max(0, $monthlyBase - $partialPaid) : 0;
 
     $createdAt = $payment->created_at ?? now();
     $dateDisplay = ($payment->date ?? optional($createdAt)->format('Y-m-d'));

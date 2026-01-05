@@ -13,16 +13,23 @@ class DeptStudentController extends Controller
 {
     public function index()
     {
-        $students = User::role('student')
+        $query = User::role('student')
             ->with('deptStudent', 'groups')
             ->leftJoin('dept_students', 'users.id', '=', 'dept_students.user_id')
-            ->select('users.*') // Select only user columns to avoid conflicts, dept_students data is loaded via with() or we can select specific columns if needed for sorting
-            // Order groups explicitly:
-            // 0) Partially Paid (payed > 0)
-            // 1) Debtor (status <= 0)
-            // 2) Paid (status > 0)
-            // 3) Disabled (status IS NULL)
-            ->orderByRaw("
+            ->select('users.*');
+
+        if (request()->has('search') && request('search') != '') {
+            $search = request('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('users.name', 'like', '%' . $search . '%')
+                  ->orWhere('users.phone', 'like', '%' . $search . '%')
+                  ->orWhereHas('groups', function ($groupQuery) use ($search) {
+                      $groupQuery->where('name', 'like', '%' . $search . '%');
+                  });
+            });
+        }
+
+        $students = $query->orderByRaw("
                 CASE 
                     WHEN users.status IS NULL THEN 3 
                     WHEN COALESCE(dept_students.payed, 0) > 0 THEN 0 
@@ -30,10 +37,10 @@ class DeptStudentController extends Controller
                     ELSE 2 
                 END
             ")
-            // Inside groups, sort by status then by name
             ->orderBy('users.status')
             ->orderBy('users.name')
-            ->get();
+            ->paginate(20)
+            ->withQueryString();
 
         return view('admin.dept.index', compact('students'));
     }

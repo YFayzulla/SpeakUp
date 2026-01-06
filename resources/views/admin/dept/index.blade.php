@@ -146,6 +146,18 @@
             // Form submit bo'lganda bo'sh joylarni olib tashlash
             document.querySelectorAll('.submit-payment-form').forEach(form => {
                 form.addEventListener('submit', function (e) {
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    
+                    // Agar tugma allaqachon bosilgan bo'lsa, qayta yuborishni to'xtatish
+                    if (submitBtn.disabled) {
+                        e.preventDefault();
+                        return;
+                    }
+
+                    // Tugmani o'chirish va matnini o'zgartirish
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
+
                     const input = this.querySelector('.payment-input');
                     input.value = input.value.replace(/\s+/g, '');
                 });

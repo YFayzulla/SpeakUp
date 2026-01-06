@@ -28,14 +28,19 @@
                             <td><b>{{ $student->name }}</b></td>
                             <td class="text-center">
                                 <div class="btn-group" role="group" aria-label="Attendance status">
-                                    <input type="radio" class="btn-check" name="status[{{ $student->id }}]" id="status-present-{{ $student->id }}" value="1" checked>
+                                    <input type="radio" class="btn-check" name="status[{{ $student->id }}]"
+                                           id="status-present-{{ $student->id }}" value="1" checked>
                                     <label class="btn btn-outline-success" for="status-present-{{ $student->id }}">Present</label>
 
-                                    <input type="radio" class="btn-check" name="status[{{ $student->id }}]" id="status-absent-{{ $student->id }}" value="0">
-                                    <label class="btn btn-outline-danger" for="status-absent-{{ $student->id }}">Absent</label>
+                                    <input type="radio" class="btn-check" name="status[{{ $student->id }}]"
+                                           id="status-absent-{{ $student->id }}" value="0">
+                                    <label class="btn btn-outline-danger"
+                                           for="status-absent-{{ $student->id }}">Absent</label>
 
-                                    <input type="radio" class="btn-check" name="status[{{ $student->id }}]" id="status-late-{{ $student->id }}" value="2">
-                                    <label class="btn btn-outline-warning" for="status-late-{{ $student->id }}">Late</label>
+                                    <input type="radio" class="btn-check" name="status[{{ $student->id }}]"
+                                           id="status-late-{{ $student->id }}" value="2">
+                                    <label class="btn btn-outline-warning"
+                                           for="status-late-{{ $student->id }}">Late</label>
                                 </div>
                             </td>
                         </tr>
@@ -59,10 +64,11 @@
 
     <div class="card shadow-md rounded-lg mt-4">
         <div class="card-header bg-light border-bottom d-flex justify-content-between align-items-center flex-wrap py-3">
-            <h5 class="card-title mb-0 text-primary">Attendance for {{ \Carbon\Carbon::createFromDate($year, $month)->format('F Y') }}</h5>
+            <h5 class="card-title mb-0 text-primary">Attendance
+                for {{ \Carbon\Carbon::createFromDate($year, $month)->format('F Y') }}</h5>
 
             <div class="d-flex align-items-center">
-                @role('user|admin')
+                @role('admin')
                 <form method="GET" action="{{ route('group.attendance', $group->id) }}" class="d-flex me-3">
                     <select id="month" name="date" class="form-select me-2">
                         <option value="">Select Month</option>
@@ -80,7 +86,8 @@
                     <button type="submit" class="btn btn-outline-primary">Show</button>
                 </form>
 
-                <form method="GET" action="{{ route('export.attendances', ['id' => $group->id, 'date' => $year . '-' . $month]) }}">
+                <form method="GET"
+                      action="{{ route('export.attendances', ['id' => $group->id, 'date' => $year . '-' . $month]) }}">
                     <button type="submit" class="btn btn-success d-flex align-items-center">
                         <i class="bx bxs-file-export me-1"></i> Export to Excel
                     </button>
@@ -141,7 +148,9 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="{{ $currentMonthDays + 1 }}" class="text-center py-4 text-muted">No attendance data available for this month.</td>
+                        <td colspan="{{ $currentMonthDays + 1 }}" class="text-center py-4 text-muted">No attendance data
+                            available for this month.
+                        </td>
                     </tr>
                 @endforelse
                 </tbody>
@@ -156,15 +165,15 @@
         <div class="table-responsive text-nowrap">
             <table class="table table-hover">
                 <thead class="table-light">
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Teacher</th>
-                        <th>Lesson</th>
-                        <th>Status</th>
-                        <th>Date</th>
-                        <th class="text-center">Actions</th>
-                    </tr>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Teacher</th>
+                    <th>Lesson</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th class="text-center">Actions</th>
+                </tr>
                 </thead>
                 <tbody>
                 @forelse($attendances as $attendance)
@@ -184,7 +193,8 @@
                         </td>
                         <td>{{ $attendance->created_at->format('d M Y H:i') }}</td>
                         <td class="text-center">
-                            <form action="{{route('attendance.delete', $attendance->id)}}" method="POST" onsubmit="return confirm('Are you sure you want to delete this attendance record?');">
+                            <form action="{{route('attendance.delete', $attendance->id)}}" method="POST"
+                                  onsubmit="return confirm('Are you sure you want to delete this attendance record?');">
                                 @csrf
                                 @method("DELETE")
                                 <button type="submit" class="btn btn-sm btn-danger d-inline-flex align-items-center">

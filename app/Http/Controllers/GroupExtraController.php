@@ -76,7 +76,7 @@ class GroupExtraController extends Controller
             // 3. Eski davomatlarni yangi guruhga o'tkazish
             // (Mantiqan to'g'riligini loyiha talabidan kelib chiqib tekshiring.
             // Odatda eski davomat eski guruhda qolishi kerak, lekin sizning kodingizda o'zgartirilmoqda)
-            Attendance::where('user_id', $user->id)->update(['group_id' => $group->id]);
+            // Attendance::where('user_id', $user->id)->update(['group_id' => $group->id]);
 
             DB::commit();
 

@@ -32,7 +32,7 @@ class WaitersController extends Controller
             // - latest(): Eng oxirgi ro'yxatdan o'tganlar tepada turadi.
             $students = User::role('student')
                 ->where('group_id', 1)
-                ->select('id', 'name', 'phone', 'created_at', 'image') // Viewga kerakli ustunlarni yozing
+                ->select('id', 'name', 'phone', 'created_at', 'avatar') // Viewga kerakli ustunlarni yozing
                 ->latest('created_at') // Yoki ->orderBy('name')
                 ->paginate(20);
 

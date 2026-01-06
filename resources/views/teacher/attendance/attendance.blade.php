@@ -61,7 +61,6 @@
     </div>
     @endrole
 
-
     <div class="card shadow-md rounded-lg mt-4">
         <div class="card-header bg-light border-bottom d-flex justify-content-between align-items-center flex-wrap py-3">
             <h5 class="card-title mb-0 text-primary">Attendance
@@ -109,10 +108,11 @@
                     @for ($i = 1; $i <= $currentMonthDays; $i++)
                         @php
                             $currentDate = Carbon::createFromDate($year, $month, $i);
-                            $isWeekend = $currentDate->isWeekend();
+                            // Only Sunday is considered a weekend/holiday now
+                            $isSunday = $currentDate->dayOfWeek === Carbon::SUNDAY;
                             $isToday = ($i == Carbon::now()->day && $month == Carbon::now()->month && $year == Carbon::now()->year);
                         @endphp
-                        <th class="{{ $isToday ? 'bg-primary text-white' : ($isWeekend ? 'bg-secondary text-white' : '') }}">
+                        <th class="{{ $isToday ? 'bg-primary text-white' : ($isSunday ? 'bg-secondary text-white' : '') }}">
                             {{ $i }}
                         </th>
                     @endfor
@@ -131,9 +131,10 @@
                                 $isPresent = ($status === '1' || $status === 1);
                                 $isLate = ($status === '2' || $status === 2);
                                 $currentDate = Carbon::createFromDate($year, $month, $i);
-                                $isWeekend = $currentDate->isWeekend();
+                                // Only Sunday is considered a weekend/holiday now
+                                $isSunday = $currentDate->dayOfWeek === Carbon::SUNDAY;
                             @endphp
-                            <td class="{{ $isAbsent ? 'bg-danger-subtle text-danger' : ($isWeekend ? 'bg-secondary-subtle text-secondary' : ($isLate ? 'bg-warning-subtle text-warning' : ($isPresent ? 'text-success' : ''))) }}">
+                            <td class="{{ $isAbsent ? 'bg-danger-subtle text-danger' : ($isSunday ? 'bg-secondary-subtle text-secondary' : ($isLate ? 'bg-warning-subtle text-warning' : ($isPresent ? 'text-success' : ''))) }}">
                                 @if ($isPresent)
                                     <i class="bx bx-check-circle"></i>
                                 @elseif ($isAbsent)

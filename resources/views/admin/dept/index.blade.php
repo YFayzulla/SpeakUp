@@ -126,6 +126,9 @@
                 </tbody>
             </table>
         </div>
+        <div class="d-flex justify-content-end m-3">
+            {{ $students->links('pagination::bootstrap-5') }}
+        </div>
     </div>
 
     <script>
@@ -147,7 +150,7 @@
             document.querySelectorAll('.submit-payment-form').forEach(form => {
                 form.addEventListener('submit', function (e) {
                     const submitBtn = this.querySelector('button[type="submit"]');
-                    
+
                     // Agar tugma allaqachon bosilgan bo'lsa, qayta yuborishni to'xtatish
                     if (submitBtn.disabled) {
                         e.preventDefault();
@@ -165,12 +168,12 @@
 
             // Session'da chek ID'si borligini tekshirish va yangi oynada ochish
             @if(session('payment_receipt_id'))
-            (function(){
+            (function () {
                 var baseUrl = "{{ route('payment.receipt', session('payment_receipt_id')) }}";
                 var receiptUrl = baseUrl + '?embed=1';
-                
+
                 var iframe = document.createElement('iframe');
-                
+
                 // Iframe'ni "haqiqiyroq" qilish (CSS o'zgarishi)
                 // Brauzerlar width: 0; height: 0; opacity: 0; bo'lgan elementlarni ba'zan "ko'rinmas" deb hisoblab,
                 // pechatga chiqarishda e'tiborsiz qoldiradi va asosiy oynani pechatga beradi.
@@ -185,33 +188,33 @@
                 iframe.style.pointerEvents = 'none';
 
                 document.body.appendChild(iframe);
-                
-                iframe.onload = function(){
-                    setTimeout(function(){
+
+                iframe.onload = function () {
+                    setTimeout(function () {
                         try {
                             var cw = iframe.contentWindow || iframe;
-                            
+
                             // Focusni aniq o'tkazish (juda muhim)
                             cw.focus();
-                            
+
                             // Pechatga berish
                             cw.print();
-                            
+
                         } catch (e) {
                             console.error(e);
                             // Xatolik bo'lsa yangi oynada ochish
                             window.open(baseUrl, '_blank');
                         }
-                        
+
                         // Iframe'ni darhol o'chirmaslik kerak, chunki pechat oynasi ochilishi uchun vaqt kerak
                         // 1 daqiqadan keyin tozalash
-                        setTimeout(function(){
-                            if(iframe.parentNode) iframe.parentNode.removeChild(iframe);
+                        setTimeout(function () {
+                            if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
                         }, 60000);
-                        
+
                     }, 500); // Render bo'lishi uchun biroz kutish
                 };
-                
+
                 iframe.src = receiptUrl;
             })();
             @endif

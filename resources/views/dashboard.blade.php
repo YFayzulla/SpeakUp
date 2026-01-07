@@ -74,13 +74,17 @@
                                                     </div>
                                                     <div>
                                                         <h6 class="mb-0 text-truncate" style="max-width: 150px;">{{ $teacher->name }}</h6>
-                                                        <small class="text-muted">{{ $teacher->percent }}%</small>
+                                                        <small class="text-muted blur-text" style="cursor: pointer;" onclick="this.classList.toggle('blur-text')">{{ $teacher->percent }}%</small>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td><span class="badge bg-label-info">{{ $teacher->teacherhasGroup() }} Groups</span></td>
                                             <td><span class="badge bg-label-warning">{{ $teacher->teacherHasStudents() }} Students</span></td>
-                                            <td class="text-end fw-bold text-success">{{ number_format($teacher->teacherPayment(), 0, ' ', ' ') }} UZS</td>
+                                            <td class="text-end fw-bold text-success">
+                                                <span class="blur-text" style="cursor: pointer;" onclick="this.classList.toggle('blur-text')">
+                                                    {{ number_format($teacher->teacherPayment(), 0, ' ', ' ') }} UZS
+                                                </span>
+                                            </td>
                                         </tr>
                                     @empty
                                         <tr>
@@ -135,6 +139,18 @@
             </div>
         </div>
     </div>
+
+    <style>
+        .blur-text {
+            color: transparent !important;
+            text-shadow: 0 0 8px rgba(0,0,0,0.5);
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+        .blur-text:hover {
+            text-shadow: 0 0 5px rgba(0,0,0,0.7);
+        }
+    </style>
     @endrole
 
     @role('user')

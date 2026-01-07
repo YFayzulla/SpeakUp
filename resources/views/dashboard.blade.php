@@ -49,7 +49,12 @@
                     <!-- Teachers Table -->
                     <div class="col-12">
                         <div class="card m-2">
-                            <h5 class="card-header">Active Teachers</h5>
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Active Teachers</h5>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" id="toggle-salary-btn" onclick="toggleAllSalaries()">
+                                    <i class="bx bx-show me-1"></i> Show All
+                                </button>
+                            </div>
                             <div class="table-responsive text-nowrap">
                                 <table class="table table-hover">
                                     <thead>
@@ -74,14 +79,14 @@
                                                     </div>
                                                     <div>
                                                         <h6 class="mb-0 text-truncate" style="max-width: 150px;">{{ $teacher->name }}</h6>
-                                                        <small class="text-muted blur-text" style="cursor: pointer;" onclick="this.classList.toggle('blur-text')">{{ $teacher->percent }}%</small>
+                                                        <small class="text-muted blur-text salary-blur" style="cursor: pointer;" onclick="this.classList.toggle('blur-text')">{{ $teacher->percent }}%</small>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td><span class="badge bg-label-info">{{ $teacher->teacherhasGroup() }} Groups</span></td>
                                             <td><span class="badge bg-label-warning">{{ $teacher->teacherHasStudents() }} Students</span></td>
                                             <td class="text-end fw-bold text-success">
-                                                <span class="blur-text" style="cursor: pointer;" onclick="this.classList.toggle('blur-text')">
+                                                <span class="blur-text salary-blur" style="cursor: pointer;" onclick="this.classList.toggle('blur-text')">
                                                     {{ number_format($teacher->teacherPayment(), 0, ' ', ' ') }} UZS
                                                 </span>
                                             </td>
@@ -139,6 +144,32 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function toggleAllSalaries() {
+            const elements = document.querySelectorAll('.salary-blur');
+            const btn = document.getElementById('toggle-salary-btn');
+            
+            // Check if we are currently showing or hiding based on the button text
+            const isCurrentlyHidden = btn.innerText.includes('Show');
+            
+            elements.forEach(el => {
+                if (isCurrentlyHidden) {
+                    el.classList.remove('blur-text');
+                } else {
+                    el.classList.add('blur-text');
+                }
+            });
+
+            if (isCurrentlyHidden) {
+                btn.innerHTML = '<i class="bx bx-hide me-1"></i> Hide All';
+                btn.classList.replace('btn-outline-secondary', 'btn-outline-primary');
+            } else {
+                btn.innerHTML = '<i class="bx bx-show me-1"></i> Show All';
+                btn.classList.replace('btn-outline-primary', 'btn-outline-secondary');
+            }
+        }
+    </script>
 
     <style>
         .blur-text {

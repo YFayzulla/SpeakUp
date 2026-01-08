@@ -29,15 +29,20 @@ class DeptStudentController extends Controller
             });
         }
 
+        // Sorting logic:
+        // 1. Partly paid (has deptStudent with payed > 0 and dept > 0)
+        // 2. Debtors (has deptStudent with dept = 1)
+        // 3. Paid (has deptStudent with dept = 0)
+        // 4. Disabled (no deptStudent record)
         $students = $query->orderByRaw("
-                CASE 
-                    WHEN users.status IS NULL THEN 3 
-                    WHEN COALESCE(dept_students.payed, 0) > 0 THEN 0 
-                    WHEN users.status <= 0 THEN 1 
-                    ELSE 2 
+                CASE
+                    WHEN dept_students.payed > 0 AND dept_students.dept > 0 THEN 0
+                    WHEN users.status IS NOT NULL AND users.status <= 0 THEN 1
+                    WHEN users.status IS NOT NULL AND users.status > 0 THEN 2
+                    WHEN dept_students.id IS NULL THEN 3
+                    ELSE 4
                 END
             ")
-            ->orderBy('users.status')
             ->orderBy('users.name')
             ->paginate(20)
             ->withQueryString();

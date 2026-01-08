@@ -33,7 +33,7 @@
                                 <div class="d-flex align-items-center justify-content-between">
                                     <div class="d-flex flex-column">
                                         <h5 class="card-title text-nowrap mb-2">Today's Income</h5>
-                                        <h3 class="mb-0">{{ number_format($daily_income, 0, '.', ' ') }} UZS</h3>
+                                        <h3 class="mb-0 blur-text income-blur" style="cursor: pointer;" onclick="this.classList.toggle('blur-text')">{{ number_format($daily_income, 0, '.', ' ') }} UZS</h3>
                                     </div>
                                     <div class="avatar avatar-md bg-label-success p-2 rounded-circle">
                                         <span class="avatar-content text-success">
@@ -117,7 +117,7 @@
                                 <i class="bx bx-line-chart bx-lg"></i>
                             </span>
                         </div>
-                        <h4 class="mb-0">{{ number_format($profit, 0, '.', ' ') }} UZS</h4>
+                        <h4 class="mb-0 blur-text profit-blur" style="cursor: pointer;" onclick="this.classList.toggle('blur-text')">{{ number_format($profit, 0, '.', ' ') }} UZS</h4>
                         <small class="text-muted">As of {{ today()->format('d M Y') }}</small>
                     </div>
                 </div>

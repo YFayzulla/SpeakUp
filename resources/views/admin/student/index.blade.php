@@ -50,7 +50,7 @@
                 <tbody id="myTable" class="table-border-bottom-0">
                 @forelse($students as $student)
                     <tr>
-                        <th>{{$loop->iteration + ($students->currentPage() - 1) * $students->perPage()}}</th>
+                        <th>{{$student->id}}</th>
                         <th>{{$student->name}}</th>
                         <th>+998 {{$student->phone}}</th>
                         <th>{{$student->parents_tel}}</th>

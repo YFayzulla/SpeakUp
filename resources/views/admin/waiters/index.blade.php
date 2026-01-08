@@ -53,7 +53,7 @@
                                                     <label for="group-select-{{$student->id}}" class="col-form-label">Select Group:</label>
                                                     <select name="group_id" id="group-select-{{$student->id}}" class="form-select">
                                                         @forelse($groups as $group)
-                                                            <option value="{{ $group->id }}">{{ $group->name }}</option>
+                                                            <option value="{{ $group->id }}">{{ $group->name }} @if($group->room) - {{ $group->room->room }} @endif</option>
                                                         @empty
                                                             <option value="" disabled>No groups available</option>
                                                         @endforelse

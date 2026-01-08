@@ -18,11 +18,15 @@ class WaitersController extends Controller
     public function index()
     {
         try {
-            // 1. Mavjud guruhlarni olish (Kutish zali ID=1 dan tashqari)
-            $groups = Group::select('id', 'name')
+            // 1. Mavjud guruhlarni olish (Kutish zali ID=1 dan tashqari) - room bilan sorted
+            $groups = Group::select('id', 'name', 'room_id')
                 ->where('id', '!=', 1)
-                ->orderBy('name')
-                ->get();
+                ->with('room')
+                ->get()
+                ->sortBy(function ($group) {
+                    return $group->room ? $group->room->room : '';
+                })
+                ->values();
 
             // 2. Kutish zalidagi talabalarni olish
             // MANTIQ:

@@ -32,6 +32,7 @@
                                 <h4><b>Full Name: </b>{{$student->name}}</h4>
                                 <h4><b>Location:</b> {{$student->location}}</h4>
                                 <h4><b>Tel: </b>{{$student->phone}}</h4>
+                                <h4><b>Should pay: </b>{{number_format($student->should_pay,0,'',' ')}}</h4>
                                 <h4><b>Parents name: </b>{{$student->parents_name}} </h4>
                                 <h4><b>Parents tel: </b> {{$student->parents_tel}}</h4>
                                 <h4><b>Description: </b> {{($student->description)}}</h4>

@@ -130,7 +130,7 @@ class StudentController extends Controller
             }
 
             Log::error('StudentController@store error: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with('error', 'Saqlashda tizim xatoligi yuz berdi.');
+            return redirect()->back()->withInput()->with('error', 'Saqlashda tizim xatoligi yuz berdi: ' . $e->getMessage());
         }
     }
 
@@ -240,7 +240,7 @@ class StudentController extends Controller
             }
 
             Log::error('StudentController@update error: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with('error', 'Yangilashda xatolik yuz berdi.');
+            return redirect()->back()->withInput()->with('error', 'Yangilashda xatolik yuz berdi: ' . $e->getMessage());
         }
     }
 

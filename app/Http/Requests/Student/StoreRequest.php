@@ -27,7 +27,16 @@ class StoreRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'password' => 'nullable|string|min:8|max:16',
-            'phone' => ['required',  'digits:9',Rule::unique('users', 'phone')],
+            'phone' => [
+                'required',
+                'digits:9',
+                // Custom unique check because DB has prefix '998' but input doesn't
+                function ($attribute, $value, $fail) {
+                    if (\App\Models\User::where('phone', '998' . $value)->exists()) {
+                        $fail('The phone number has already been taken.');
+                    }
+                },
+            ],
             'parents_tel' => ['nullable'  , 'digits:9'],
 //            'passport' => ['nullable', 'string', 'regex:/^[A-Z]{2}\d{7}$/', Rule::unique('users', 'passport')],
             'date_born' => 'nullable|date',

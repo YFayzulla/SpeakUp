@@ -32,7 +32,19 @@ class UpdateRequest extends FormRequest
             'date_born' => 'nullable|date',
             'location' => 'nullable|string|max:255',
             'phone' => [
-                'required', 'string', 'digits:9', Rule::unique('users', 'phone')->ignore($this->route('teacher')),
+                'required', 
+                'string', 
+                'digits:9', 
+                // Custom unique check for update
+                function ($attribute, $value, $fail) {
+                    $fullPhone = '998' . $value;
+                    $teacherId = $this->route('teacher'); // Get the ID from the route
+                    
+                    // Check if any OTHER user has this phone number
+                    if (\App\Models\User::where('phone', $fullPhone)->where('id', '!=', $teacherId)->exists()) {
+                        $fail('The phone number has already been taken.');
+                    }
+                },
             ],
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10048',
             'percent' => 'nullable|integer|min:0|max:100',

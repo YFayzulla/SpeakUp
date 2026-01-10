@@ -23,12 +23,32 @@ class StoreRequest extends FormRequest
      */
     public function rules(): array
     {
+        // Prepare phone for validation (add prefix if needed for uniqueness check)
+        // However, standard validation usually checks the input value.
+        // If you store '998' + phone in DB, you need a custom rule or prepareForValidation.
+        // For simplicity, let's assume we check uniqueness against the stored format if possible,
+        // or just rely on the input.
+        // Since the controller adds '998', the DB has '998xxxxxxxxx'.
+        // The input is just 'xxxxxxxxx'.
+        // To check uniqueness correctly, we might need a closure or a custom rule,
+        // but often 'unique:users,phone' works if the input matches the DB.
+        // Here, input is 9 digits, DB is 12. This is the problem.
+        
         return [
             'name' => 'required|string|max:255',
             'passport' => 'nullable|string|regex:/^[A-Z]{2}\d{7}$/|unique:users,passport|max:9',
             'date_born' => 'nullable|date',
             'location' => 'nullable|string|max:255',
-            'phone' => 'required|digits:9',
+            'phone' => [
+                'required',
+                'digits:9',
+                // Custom unique check because DB has prefix '998' but input doesn't
+                function ($attribute, $value, $fail) {
+                    if (\App\Models\User::where('phone', '998' . $value)->exists()) {
+                        $fail('The phone number has already been taken.');
+                    }
+                },
+            ],
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10048',
             'percent' => 'nullable|integer|min:0|max:100',
             'room_id' => 'nullable|exists:rooms,id',

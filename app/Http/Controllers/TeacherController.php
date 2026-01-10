@@ -64,7 +64,7 @@ class TeacherController extends Controller
                 $fileName = time() . '.' . $request->file('photo')->getClientOriginalExtension();
                 $uploadedFilePath = $request->file('photo')->storeAs('Photo', $fileName, 'public');
             } catch (\Exception $e) {
-                return redirect()->back()->withInput()->with('error', 'Rasmni yuklashda xatolik.');
+                return redirect()->back()->withInput()->with('error', 'Rasmni yuklashda xatolik: ' . $e->getMessage());
             }
         }
 
@@ -115,7 +115,8 @@ class TeacherController extends Controller
             }
 
             Log::error('TeacherController@store error: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with('error', 'Saqlashda tizim xatoligi yuz berdi.');
+            // Xatolik sababini aniqroq ko'rsatish
+            return redirect()->back()->withInput()->with('error', 'Saqlashda tizim xatoligi yuz berdi: ' . $e->getMessage());
         }
     }
 
@@ -212,7 +213,7 @@ class TeacherController extends Controller
             }
 
             Log::error('TeacherController@update error: ' . $e->getMessage());
-            return redirect()->back()->withInput()->with('error', 'Yangilashda xatolik yuz berdi.');
+            return redirect()->back()->withInput()->with('error', 'Yangilashda xatolik yuz berdi: ' . $e->getMessage());
         }
     }
 

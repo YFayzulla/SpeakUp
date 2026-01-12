@@ -42,15 +42,31 @@ class UpdateRequest extends FormRequest
                 },
             ],
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-//            'passport' => [
-//                'nullable', 'string', 'regex:/^[A-Z]{2}\d{7}$/', Rule::unique('users', 'passport')->ignore($this->route('student'))
-//            ],
+            'passport' => [
+                'nullable', 
+                'string', 
+                // 'regex:/^[A-Z]{2}\d{7}$/', // Regex removed to allow flexible input as per logs
+                Rule::unique('users', 'passport')->ignore($this->route('student'))
+            ],
             'group_id' => 'required|array',
             'group_id.*' => 'exists:groups,id',
             'parents_name' => 'nullable|string|max:255',
-//            'parents_tel' => [
-//                'nullable', 'string', 'digits:9', Rule::unique('users', 'parents_tel')->ignore($this->route('student')),
-//            ],
+            'parents_tel' => [
+                'nullable', 
+                'string', 
+                'digits:9', 
+                // Custom unique check for parents_tel update
+                function ($attribute, $value, $fail) {
+                    if (empty($value)) return;
+                    
+                    $fullPhone = '998' . $value;
+                    $studentId = $this->route('student');
+                    
+                    if (\App\Models\User::where('parents_tel', $fullPhone)->where('id', '!=', $studentId)->exists()) {
+                        $fail('The parents phone number has already been taken.');
+                    }
+                },
+            ],
             'location' => 'nullable|string|max:255',
             'should_pay' => 'nullable|numeric|min:0',
             'description' => 'nullable|string',
@@ -76,6 +92,7 @@ class UpdateRequest extends FormRequest
             'group_id.*.exists' => 'One of the selected groups does not exist.',
             'should_pay.numeric' => 'The payment amount must be a number.',
             'should_pay.min' => 'The payment amount must be zero or greater.',
+            'passport.unique' => 'This passport number already exists.',
         ];
     }
 }

@@ -103,13 +103,13 @@
                         @enderror
                     </div>
 
-                    <div class="mb-3">
-                        <label for="password" class="form-label text-dark">New Password <span class="text-muted">(not necessary)</span></label>
-                        <input id="password" name="password" type="password" class="form-control">
-                         @error('password')
-                        <div class="text-danger mt-1">{{ $message }}</div>
-                        @enderror
-                    </div>
+{{--                    <div class="mb-3">--}}
+{{--                        <label for="password" class="form-label text-dark">New Password <span class="text-muted">(not necessary)</span></label>--}}
+{{--                        <input id="password" name="password" type="password" class="form-control">--}}
+{{--                         @error('password')--}}
+{{--                        <div class="text-danger mt-1">{{ $message }}</div>--}}
+{{--                        @enderror--}}
+{{--                    </div>--}}
 
                     <div class="mb-3 md:col-span-2">
                         <label for="location" class="form-label text-dark">Location <span class="text-muted">(not necessary)</span></label>

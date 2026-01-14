@@ -43,24 +43,33 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="assignGroupModalLabel{{$student->id}}">Assign {{ $student->name }} to a group</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            <h5 class="modal-title" id="assignGroupModalLabel{{$student->id}}">
+                                                Assign {{ $student->name }} to a group</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="{{ route('student.change.group', $student->id) }}" method="post">
+                                            <form action="{{ route('student.change.group', $student->id) }}"
+                                                  method="post">
                                                 @csrf
                                                 <div class="mb-3">
-                                                    <label for="group-select-{{$student->id}}" class="col-form-label">Select Group:</label>
-                                                    <select name="group_id" id="group-select-{{$student->id}}" class="form-select">
+                                                    <label for="group-select-{{$student->id}}" class="col-form-label">Select
+                                                        Group:</label>
+                                                    <select name="group_id" id="group-select-{{$student->id}}"
+                                                            class="form-select">
                                                         @forelse($groups as $group)
-                                                            <option value="{{ $group->id }}">{{ $group->name }} @if($group->room) - {{ $group->room->room }} @endif</option>
+                                                            <option value="{{ $group->id }}">{{ $group->name }} @if($group->room)
+                                                                    - {{ $group->room->room }}
+                                                                @endif</option>
                                                         @empty
                                                             <option value="" disabled>No groups available</option>
                                                         @endforelse
                                                     </select>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Close
+                                                    </button>
                                                     <button type="submit" class="btn btn-primary">Save</button>
                                                 </div>
                                             </form>
@@ -68,6 +77,14 @@
                                     </div>
                                 </div>
                             </div>
+                            <form action="{{route('student.destroy',$student->id)}}" method="post"
+                                  onsubmit="return confirm('are you sure for deleting ');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" style="" class="btn-outline-danger btn m-1">
+                                    <i class='bx bx-trash-alt'></i>
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 @empty

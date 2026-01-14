@@ -102,6 +102,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::resource('dept', DeptStudentController::class);
     Route::get('payment-receipt/{paymentId}', [DeptStudentController::class, 'showReceipt'])->name('payment.receipt');
+    Route::post('payment/reverse/{paymentId}', [DeptStudentController::class, 'reversePayment'])->name('payment.reverse');
     Route::get('refresh/{id}/update', [RefreshController::class, 'update'])->name('refresh.update');
 
     // --- TEACHERS ---

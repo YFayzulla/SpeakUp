@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\DeptStudent;
 use App\Models\HistoryPayments;
 use App\Models\User;
+use App\Services\PaymentReversalService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DeptStudentController extends Controller
 {
@@ -172,5 +174,40 @@ class DeptStudentController extends Controller
     public function destroy(DeptStudent $deptStudent)
     {
         // This action is not implemented.
+    }
+
+    /**
+     * Reverse a payment and restore student's status.
+     * Only admins can reverse payments.
+     *
+     * @param int $paymentId The ID of the HistoryPayments record to reverse
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function reversePayment(int $paymentId)
+    {
+        try {
+            // Find the payment
+            $payment = HistoryPayments::findOrFail($paymentId);
+
+            // Verify authorization (only admins can reverse)
+            if (!auth()->user()->hasRole('admin')) {
+                return redirect()->back()->with('error', 'Unauthorized action.');
+            }
+
+            // Use the PaymentReversalService to reverse the payment
+            $service = new PaymentReversalService();
+            $result = $service->reversePayment($paymentId);
+
+            if ($result['success']) {
+                return redirect()->back()->with('success', $result['message']);
+            } else {
+                return redirect()->back()->with('error', $result['message']);
+            }
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()->back()->with('error', 'Payment record not found.');
+        } catch (\Exception $e) {
+            Log::error('PaymentReversalController error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error reversing payment: ' . $e->getMessage());
+        }
     }
 }

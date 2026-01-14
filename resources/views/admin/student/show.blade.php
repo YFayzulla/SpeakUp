@@ -68,19 +68,42 @@
                             <th>Paid</th>
                             <th>Type</th>
                             <th>Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
                         </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
                         @forelse($student->studenthistory as $item)
-                            <tr>
+                            <tr @if($item->is_reversed) style="opacity: 0.6;" @endif>
                                 <td>{{$loop->iteration}}</td>
-                                <td>{{number_format($item->payment,0,'',' ')}}</td>
+                                <td @if($item->payment < 0) style="color: red;" @endif>{{number_format($item->payment,0,'',' ')}}</td>
                                 <td>{{$item->type_of_money}}</td>
                                 <td>{{ \Carbon\Carbon::parse($item->date ?? $item->created_at)->format('d M Y') }}</td>
+                                <td>
+                                    @if($item->is_reversed)
+                                        <span class="badge bg-label-danger">Reversed</span>
+                                    @elseif($item->payment < 0)
+                                        <span class="badge bg-label-warning">Reversal</span>
+                                    @else
+                                        <span class="badge bg-label-success">Active</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if(!$item->is_reversed && $item->payment > 0)
+                                        <form action="{{ route('payment.reverse', $item->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to reverse this payment?');">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Reverse this payment">
+                                                <i class="bx bx-undo"></i>
+                                            </button>
+                                        </form>
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="text-center">No payment history found.</td>
+                                <td colspan="6" class="text-center">No payment history found.</td>
                             </tr>
                         @endforelse
                         </tbody>

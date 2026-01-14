@@ -25,22 +25,47 @@
                             <th>group</th>
                             <th>type</th>
                             <th>date</th>
+                            <th>status</th>
+                            <th>action</th>
                         </tr>
-                        @forelse($users as $student)
-                            <tr>
+                        @forelse($historyPayments as $student)
+                            <tr @if($student->is_reversed) style="opacity: 0.6;" @endif>
                                 <th>{{$loop->index+1}}</th>
                                 <th>{{$student->name}}</th>
-                                <th>{{$student->payment}}</th>
+                                <th @if($student->payment < 0) style="color: red;" @endif>{{$student->payment}}</th>
                                 <th>{{$student->group}}</th>
                                 <th>{{$student->type_of_money}}</th>
                                 <th>{{$student->date}}</th>
+                                <th>
+                                    @if($student->is_reversed)
+                                        <span class="badge bg-label-danger">Reversed</span>
+                                    @elseif($student->payment < 0)
+                                        <span class="badge bg-label-warning">Reversal</span>
+                                    @else
+                                        <span class="badge bg-label-success">Active</span>
+                                    @endif
+                                </th>
+                                <th>
+                                    @if(!$student->is_reversed && $student->payment > 0)
+                                        <form action="{{ route('payment.reverse', $student->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to reverse this payment?');">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Reverse this payment">
+                                                <i class="bx bx-undo"></i> Reverse
+                                            </button>
+                                        </form>
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </th>
                                 @php
-                                    $sum += $student->payment
+                                    if (!$student->is_reversed && $student->payment > 0) {
+                                        $sum += $student->payment;
+                                    }
                                 @endphp
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center">No payment records found for the selected period.</td>
+                                <td colspan="8" class="text-center">No payment records found for the selected period.</td>
                             </tr>
                         @endforelse
                     </table>

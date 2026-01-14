@@ -30,7 +30,7 @@
                             {{-- Talaba guruhsiz bo'lgani uchun "Waiting" statusini ko'rsatamiz --}}
                             <span class="badge bg-label-warning">Waiting</span>
                         </td>
-                        <td class="d-flex">
+                        <td class="d-flex justify-content-center">
                             <button type="button" class="btn btn-sm btn-outline-success" data-bs-toggle="modal"
                                     data-bs-target="#assignGroupModal{{$student->id}}">
                                 Assign to Group

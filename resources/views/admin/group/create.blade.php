@@ -19,14 +19,14 @@
 
                 <label for="start_time" class="text-dark">Start Time</label>
                 <input type="text" id="start_time" name="start_time" value="{{ old('start_time') }}"
-                       placeholder="HH:MM" class="form-control" required>
+                       class="form-control">
                 @error('start_time')
                 <div class="alert alert-danger" role="alert">This field is required</div>
                 @enderror
 
                 <label for="finish_time" class="text-dark">Finish Time</label>
-                <input id="finish_time" placeholder="HH:MM" type="text"  name="finish_time" value="{{ old('finish_time') }}"
-                       class="form-control" required>
+                <input id="finish_time" type="text" name="finish_time" value="{{ old('finish_time') }}"
+                       class="form-control">
                 @error('finish_time')
                 <div class="alert alert-danger" role="alert">This field is required</div>
                 @enderror

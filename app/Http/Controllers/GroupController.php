@@ -33,8 +33,6 @@ class GroupController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'start_time' => 'required|date_format:H:i',
-            'finish_time' => 'required|date_format:H:i|after:start_time',
             'monthly_payment' => 'required|numeric|min:0',
             'room' => 'required|exists:rooms,id',
         ]);
@@ -96,8 +94,6 @@ class GroupController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'start_time' => 'required|date_format:H:i',
-            'finish_time' => 'required|date_format:H:i|after:start_time',
             'monthly_payment' => 'required|numeric|min:0',
             'room' => 'required|exists:rooms,id',
         ]);

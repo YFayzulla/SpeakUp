@@ -249,6 +249,10 @@
         <div class="label">COURSE:</div>
         <div class="value uppercase">{{ $courseName }}</div>
     </div>
+    <div class="row">
+        <div class="label">ASSIGNED:</div>
+        <div class="value">{{ $student->created_at->format('d/m/Y') }}</div>
+    </div>
 
     <div class="line"></div>
 

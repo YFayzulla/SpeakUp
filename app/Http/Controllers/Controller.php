@@ -42,7 +42,7 @@ class Controller extends BaseController
                 // Optimallashtirilgan so'rovlar:
                 // Select() orqali faqat kerakli ustunlarni olamiz (xotirani tejash uchun)
                 $teachers = User::role('user') // Changed from 'user' to 'teacher'
-                    ->get();
+                ->get();
 
                 // get()->count() emas, to'g'ridan-to'g'ri count() ishlatamiz
                 $numberOfStudents = User::role('student')->count();
@@ -59,7 +59,7 @@ class Controller extends BaseController
                     ->get();
 
                 $todayAttendances = Attendance::whereDate('created_at', $today)
-                    ->with('user:id,name') // Agar user bog'langan bo'lsa, N+1 muammosini oldini olish
+                    ->with('user:id,name', 'group.room') // Agar user bog'langan bo'lsa, N+1 muammosini oldini olish
                     ->get();
 
                 return view('dashboard', [

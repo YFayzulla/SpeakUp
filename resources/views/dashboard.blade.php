@@ -133,7 +133,7 @@
                             <ul class="list-unstyled mb-0">
                                 <li class="d-flex justify-content-between align-items-center mb-2">
                                     <span>{{ $loop->iteration }}. {{ $attendance->user->name }}</span>
-                                    <small class="fw-semibold text-muted">{{$attendance->group->room}}{{ $attendance->group->name }}</small>
+                                    <small class="fw-semibold text-muted">{{$attendance->group->room->room}}{{ $attendance->group->name }}</small>
                                 </li>
                             </ul>
                         @empty

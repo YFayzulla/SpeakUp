@@ -18,32 +18,30 @@
             background: #fff;
             color: #000;
             font-family: "Times New Roman", Times, serif;
-            /* Reduced slightly to 10px to prevent price wrapping on 58mm paper */
             font-size: 10px;
             line-height: 1.2;
         }
 
         /* --- RECEIPT CONTAINER --- */
         .receipt {
-            /*
-               58mm Paper Width.
-               We set width to 100% of the @page size defined below.
-            */
             width: 100%;
             max-width: 58mm;
             margin: 0 auto;
-            /*
-               Right/Left padding adjusted to ensure text isn't cut off
-               by the printer's hardware rails.
-            */
             padding: 2mm 3mm;
             background: #fff;
         }
 
-        /* --- UTILITIES --- */
-        .bold { font-weight: bold; }
-        .center { text-align: center; }
-        .uppercase { text-transform: uppercase; }
+        .bold {
+            font-weight: bold;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .uppercase {
+            text-transform: uppercase;
+        }
 
         /* --- HEADER & LOGO --- */
         .logo-container {
@@ -54,7 +52,7 @@
         }
 
         .logo-img {
-            height: 22px; /* Slightly smaller to fit safely */
+            height: 22px;
             width: auto;
             margin-right: 3px;
         }
@@ -62,7 +60,7 @@
         .logo-text {
             font-family: sans-serif;
             font-weight: 800;
-            font-size: 18px; /* Adjusted for 58mm scale */
+            font-size: 18px;
             letter-spacing: -0.5px;
             color: #000;
         }
@@ -74,7 +72,6 @@
             margin-bottom: 8px;
         }
 
-        /* --- TITLE BOX --- */
         .receipt-title-box {
             border: 1.5px solid #4a934a;
             border-radius: 4px;
@@ -90,11 +87,10 @@
             text-transform: uppercase;
         }
 
-        /* --- DATA ROWS --- */
         .row {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start; /* Better alignment for wrapped text */
+            align-items: flex-start;
             margin-bottom: 4px;
         }
 
@@ -107,12 +103,10 @@
         .value {
             text-align: right;
             font-weight: bold;
-            /* Ensures long names wrap instead of pushing layout wide */
             white-space: normal;
             max-width: 65%;
         }
 
-        /* --- INDENTED ROWS --- */
         .indent-row {
             display: flex;
             justify-content: space-between;
@@ -121,34 +115,27 @@
         }
 
         .indent-label {
-            padding-left: 20px; /* Reduced indent to save space on 58mm */
+            padding-left: 20px;
             font-weight: bold;
             font-size: 9px;
         }
 
-        /* --- SEPARATORS --- */
         .line {
-            border-top: 1px dashed #000; /* Dashed lines often look better on thermal */
+            border-top: 1px dashed #000;
             margin: 6px 0;
             width: 100%;
         }
 
-        /* --- FOOTER --- */
         .footer {
             text-align: center;
             margin-top: 10px;
             margin-bottom: 10px;
         }
 
-        /* --- PRINT CONFIGURATION (CRITICAL) --- */
         @media print {
             @page {
-                /*
-                   58mm width.
-                   'auto' height allows the roll to cut only after content ends.
-                */
                 size: 58mm auto;
-                margin: 0; /* Important: removes browser default header/footer space */
+                margin: 0;
             }
 
             body {
@@ -157,8 +144,7 @@
             }
 
             .receipt {
-                width: 58mm; /* Force exact width */
-                /* Remove screen shadows/margins */
+                width: 58mm;
                 box-shadow: none;
                 margin: 0;
                 page-break-inside: avoid;
@@ -175,38 +161,48 @@
             window.addEventListener('load', function () {
                 setTimeout(function () {
                     window.print();
-                }, 500); // Increased delay slightly to ensure styles load
+                }, 500);
             });
         </script>
     @endif
 
     <?php
-    // --- DATA PREP (Updated for Many-to-Many) ---
+// --- DATA PREP ---
     $studentName = $student->name ?? ($payment->name ?? 'Unknown Student');
-    
-    // Get room from the first group, or fallback
     $roomName = $student->groups->first()?->room?->room ?? 'Unknown Room';
-    
-    // Use payment group name if available, otherwise list student's groups
     $courseName = $payment->group ?? ($student->groups->pluck('name')->implode(', ') ?: 'IELTS/CEFR/GEN.ENG');
 
     $methodRaw = strtolower($payment->type_of_money ?? 'cash');
     $method = $methodRaw === 'electronic' ? 'CARD' : 'CASH';
 
+
     $amount = (float)($payment->payment ?? 0);
     $monthlyBase = (float)($dept ?? ($student->deptStudent->dept ?? $student->should_pay ?? 0));
-    $partialPaid = (float) data_get($student, 'deptStudent.payed', 0);
+    $partialPaid = (float)data_get($student, 'deptStudent.payed', 0);
     $remainingToPay = $partialPaid > 0 ? max(0, $monthlyBase - $partialPaid) : 0;
 
+    // Dates
     $createdAt = $payment->created_at ?? now();
-    $dateDisplay = ($payment->date ?? optional($createdAt)->format('Y-m-d'));
-    $dateObj = \Carbon\Carbon::parse($dateDisplay);
+    $dateDisplay = ($payment->date ?? $createdAt->format('Y-m-d'));
+    $payDateObj = \Carbon\Carbon::parse($dateDisplay);
 
-    $printDate = $dateObj->format('d.m.Y');
-    $printTime = optional($createdAt)->format('H.i');
+    $printDate = $payDateObj->format('d.m.Y');
+    $printTime = $createdAt->format('H:i');
 
-    $periodFrom = $dateObj->format('d/m/Y');
-    $periodTo = $dateObj->copy()->addMonth()->format('d/m/Y');
+    // --- LOGIC FOR PERIOD (FROM/TO) ---
+    // We anchor the "Day" to the student's registration date
+    $registrationDate = $student->created_at ?? $createdAt;
+    $billingDay = $registrationDate->day;
+
+    // Period From: Take the Month/Year of payment, but the Day of registration
+    // We use "subMonths(0)" trick or explicit creation to avoid Carbon overflow bugs
+    $periodFromObj = \Carbon\Carbon::create($payDateObj->year, $payDateObj->month, $billingDay);
+
+    // If registration was on 31st but payment is in June (30 days),
+    // Carbon automatically adjusts to June 30.
+
+    $periodFrom = $periodFromObj->format('d/m/Y');
+    $periodTo = $periodFromObj->copy()->addMonth()->format('d/m/Y');
 
     $debtMonths = isset($student->status) && $student->status < 0 ? abs((int)$student->status) : 0;
     ?>
@@ -215,20 +211,16 @@
 <body>
 
 <div class="receipt">
-    <!-- Header -->
     <div class="logo-container">
-        <!-- Ensure image path is correct -->
         <img src="/logos/SymbolRed.svg" class="logo-img" alt="S">
         <span class="logo-text">SpeakUp</span>
     </div>
     <div class="sub-header">LEARNING CENTER</div>
 
-    <!-- Title -->
     <div class="receipt-title-box">
         <span class="receipt-title-text">MONTHLY PAYMENT RECEIPT</span>
     </div>
 
-    <!-- Meta Info -->
     <div class="row">
         <div>Date: <span class="bold">{{ $printDate }}</span></div>
         <div>Time: <span class="bold">{{ $printTime }}</span></div>
@@ -236,7 +228,6 @@
 
     <div class="line"></div>
 
-    <!-- Student Info -->
     <div class="row">
         <div class="label">STUDENT:</div>
         <div class="value uppercase">{{ $studentName }}</div>
@@ -251,7 +242,7 @@
     </div>
     <div class="row">
         <div class="label">ASSIGNED:</div>
-        <div class="value">{{ $student->created_at->format('d/m/Y') }}</div>
+        <div class="value">{{ $registrationDate->format('d/m/Y') }}</div>
     </div>
 
     <div class="line"></div>
@@ -261,12 +252,10 @@
         <div class="value">{{ number_format($monthlyBase, 0, '.', ' ') }}</div>
     </div>
 
-    <!-- Payment Range Section -->
     <div class="row" style="margin-top: 5px; margin-bottom: 2px;">
         <div class="label" style="font-weight:bold; font-size: 9px;">PERIOD COVERED:</div>
     </div>
 
-    <!-- Dynamic FROM / TO dates -->
     <div class="indent-row">
         <div class="indent-label">FROM:</div>
         <div class="value">{{ $periodFrom }}</div>
@@ -291,19 +280,16 @@
         <div class="value">{{ number_format($remainingToPay, 0, '.', ' ') }}</div>
     </div>
 
-    <!-- Separator -->
     <div class="line" style="border-top: 2px solid #000;"></div>
 
-    <!-- TOTAL PAID -->
     <div class="row">
         <div class="label bold" style="font-size: 14px;">PAID:</div>
         <div class="value bold" style="font-size: 14px;">{{ number_format($amount, 0, '.', ' ') }}</div>
     </div>
 
-    <!-- Footer Line -->
     <div class="line" style="border-top: 1px solid #000; margin-top: 10px;"></div>
 
-    <!-- Footer Content -->
+
     <div class="footer">
         <div class="bold" style="margin-bottom: 4px;">THANK YOU!</div>
         <div class="row" style="justify-content: center;">
@@ -314,10 +300,8 @@
         </div>
     </div>
 
-    <!-- Extra padding at bottom for printer tear-off -->
     <div style="height: 10px;"></div>
 
-    <!-- Print Button (Visible only on screen) -->
     <div class="center no-print" style="margin-top: 20px; padding-top: 10px; border-top: 1px dashed #ccc;">
         <button onclick="window.print()" style="padding: 10px 20px; cursor: pointer;">Print Receipt</button>
     </div>
